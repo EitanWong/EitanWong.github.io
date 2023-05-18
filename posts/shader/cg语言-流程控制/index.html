@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>CG语言-流程控制 | Eitan&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="switch…case 💡 需要注意的是早期版本Cg不支持switch…case语句，但是保留了这些关键字！ switch(条件变量) { case 条件1: [语句块] break; case 条件2: [语句块] break; ... default: [语句块] break; } 示例如下： Shader &#34;lxt610/NewSurfaceShaderTest2&#34; { SubShader { Pass { CGPROGRAM #pragma fragment frag #pragma vertex vert void vert(in float2 objPos:POSITION,out float4 pos:POSITION,out float4 col:COLOR0) { pos = float4(objPos,0,1); col = pos; } void frag(inout float4 col:COLOR0) { col = float4(1,1,0,1); /">
+<meta name="author" content="Sulv">
+<link rel="canonical" href="https://EitanWong.github.io/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.0dcd30655f684635e8d387636982f36d45e2607d9dde19da5180cecacb25b773.css" integrity="sha256-Dc0wZV9oRjXo04djaYLzbUXiYH2d3hnaUYDOysslt3M=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="apple-touch-icon" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="mask-icon" href="https://EitanWong.github.io/img/Avatar.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="CG语言-流程控制" />
+<meta property="og:description" content="switch…case 💡 需要注意的是早期版本Cg不支持switch…case语句，但是保留了这些关键字！ switch(条件变量) { case 条件1: [语句块] break; case 条件2: [语句块] break; ... default: [语句块] break; } 示例如下： Shader &#34;lxt610/NewSurfaceShaderTest2&#34; { SubShader { Pass { CGPROGRAM #pragma fragment frag #pragma vertex vert void vert(in float2 objPos:POSITION,out float4 pos:POSITION,out float4 col:COLOR0) { pos = float4(objPos,0,1); col = pos; } void frag(inout float4 col:COLOR0) { col = float4(1,1,0,1); /" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://EitanWong.github.io/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-05T22:24:59+00:00" />
+<meta property="article:modified_time" content="2023-04-05T22:24:59+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="CG语言-流程控制"/>
+<meta name="twitter:description" content="switch…case 💡 需要注意的是早期版本Cg不支持switch…case语句，但是保留了这些关键字！ switch(条件变量) { case 条件1: [语句块] break; case 条件2: [语句块] break; ... default: [语句块] break; } 示例如下： Shader &#34;lxt610/NewSurfaceShaderTest2&#34; { SubShader { Pass { CGPROGRAM #pragma fragment frag #pragma vertex vert void vert(in float2 objPos:POSITION,out float4 pos:POSITION,out float4 col:COLOR0) { pos = float4(objPos,0,1); col = pos; } void frag(inout float4 col:COLOR0) { col = float4(1,1,0,1); /"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "Posts",
+          "item": "https://EitanWong.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "🖼️ Shader",
+          "item": "https://EitanWong.github.io/posts/shader/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "CG语言-流程控制",
+      "item": "https://EitanWong.github.io/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CG语言-流程控制",
+  "name": "CG语言-流程控制",
+  "description": "switch…case 💡 需要注意的是早期版本Cg不支持switch…case语句，但是保留了这些关键字！ switch(条件变量) { case 条件1: [语句块] break; case 条件2: [语句块] break; ... default: [语句块] break; } 示例如下： Shader \u0026#34;lxt610/NewSurfaceShaderTest2\u0026#34; { SubShader { Pass { CGPROGRAM #pragma fragment frag #pragma vertex vert void vert(in float2 objPos:POSITION,out float4 pos:POSITION,out float4 col:COLOR0) { pos = float4(objPos,0,1); col = pos; } void frag(inout float4 col:COLOR0) { col = float4(1,1,0,1); /",
+  "keywords": [
+    
+  ],
+  "articleBody": "switch…case 💡 需要注意的是早期版本Cg不支持switch…case语句，但是保留了这些关键字！\nswitch(条件变量) { case 条件1: [语句块] break; case 条件2: [语句块] break; ... default: [语句块] break; } 示例如下：\nShader \"lxt610/NewSurfaceShaderTest2\" { SubShader { Pass { CGPROGRAM #pragma fragment frag #pragma vertex vert void vert(in float2 objPos:POSITION,out float4 pos:POSITION,out float4 col:COLOR0) { pos = float4(objPos,0,1); col = pos; } void frag(inout float4 col:COLOR0) { col = float4(1,1,0,1); //关于switch case验证 int i = 3; switch(i) { case 0: col = float4(1,0,0,1);//红色 break; case 1: col = float4(0,1,0,1);//绿色 break; case 2: col = float4(0,0,1,1);//蓝色 break; case 3: col = float4(1,0,0.5,1); break; case 4: col = float4(1,0.5,1,1); break; default: col = float4(1,1,1,1);//白色 break; } } ENDCG } } } 这里修改i的值使其进入相应的条件，发现颜色发生了相应的变化并没有进入default条件中，这说明现在的Cg支持了这个语句！或者说至少我这里是支持的，我这里使用的是unity2017.4.27f1，shader model 3.0是支持的！\nif…else条件语句 if…else条件语句的语法为:\nif(条件语句) { //语句块1 } elseif(条件语句) { //语句块2 } ... else { //语句块 } 示例如下：\nShader \"lxt610/NewSurfaceShaderTest2\" { SubShader { Pass { CGPROGRAM #pragma fragment frag #pragma vertex vert void vert(in float2 objPos:POSITION,out float4 col:COLOR0,out float4 pos:POSITION) { pos = float4(objPos,0,1); if(pos.x \u003c 0) { col = float4(1,0,0,1);//红色 } else { col = float4(0,1,0,1);//绿色 } //col = pos; } void frag(inout float4 col:COLOR0) { } ENDCG } } } 💡 回到unity中编译通过我们我们发现，左边变成了红色，右边成了绿色，中间是一个过渡区域。这是因为在摄像机的剪裁空间cvv中坐标范围是（-1，1），而物体的模型坐标处于（-0.5，0.5）之间（左下角（-0.5,-0.5），右上角（0.5,0.5）），所以物体的左边就变成了红色，右边就成了绿色。而中间的部分我们发现是一个缓慢的融合过程区域！这是由于顶点的颜色处理过后，还有大量的像素没有处理这时在光栅化阶段就是片元函数处理的过程中做了一个差值的运算。\nwhile循环语句 while语句的语法格式 while(条件语句)//满足条件执行，否则退出循坏（先判断，再执行)） { 语句块； } 下面是一个示例，代码和效果如下\nShader \"lxt610/NewSurfaceShaderTest2\" { SubShader { Pass { CGPROGRAM #pragma fragment frag #pragma vertex vert void vert(in float2 objPos:POSITION,out float4 col:COLOR0,out float4 pos:POSITION) { pos = float4(objPos,0,1); if(pos.x \u003c 0 \u0026\u0026 pos.y \u003c 0) { col = float4(1,0,0,1);//红色 } else if(pos.x \u003c 0) { col = float4(0,1,0,1);//绿色 } else if(pos.y \u003e 0) { col = float4(1,1,0,1);//黄色 } else { col = float4(0,0,1,1);//蓝色 } //col = pos; } void frag(inout float4 col:COLOR0) { int i = 0; while(i \u003c 10) { i++; } if(i == 10) col = float4(0,0,0,1); } ENDCG } } } 这里为了方便演示我们只是循环了十次，由于没有控制台输出这里为了方便观察，结束循环后颜色设为黑色（float4(0,0,0,1)）！这说明循环执行了10次！\ndo…while循环语句 do…while语句的语法格式 { 语句块； } while(条件语句);//满足条件执行，否则退出循坏(先执行一次，再判断) 下面是一个示例，代码和效果如下： Shader \"lxt610/NewSurfaceShaderTest2\" { SubShader { Pass { CGPROGRAM #pragma fragment frag #pragma vertex vert void vert(in float2 objPos:POSITION,out float4 col:COLOR0,out float4 pos:POSITION) { pos = float4(objPos,0,1); if(pos.x \u003c 0 \u0026\u0026 pos.y \u003c 0) { col = float4(1,0,0,1);//红色 } else if(pos.x \u003c 0) { col = float4(0,1,0,1);//绿色 } else if(pos.y \u003e 0) { col = float4(1,1,0,1);//黄色 } else { col = float4(0,0,1,1);//蓝色 } //col = pos; } void frag(inout float4 col:COLOR0) { int i = 0; while(i \u003c 10) { i++; } if(i == 10) col = float4(0,0,0,1); i = 0; do{ i++; } while(i \u003c 10); if(i == 10) col = float4(1,1,1,1); } ENDCG } } } 这里为了方便演示我们只是循环了十次，由于没有控制台输出这里为了方便观察，结束循环后颜色设为白色（float4(1,1,1,1)）！这说明循环执行了10次退出，然后设为了白色！\nfor循环 for循环的语法 for(int i = 0; i \u003c 10; i++)（初始值，条件1，语句2） { 语句块； } 下面是一个示例，代码和效果如下：\nShader \"lxt610/NewSurfaceShaderTest2\" { SubShader { Pass { CGPROGRAM #pragma fragment frag #pragma vertex vert void vert(in float2 objPos:POSITION,out float4 col:COLOR0,out float4 pos:POSITION) { pos = float4(objPos,0,1); if(pos.x \u003c 0 \u0026\u0026 pos.y \u003c 0) { col = float4(1,0,0,1);//红色 } else if(pos.x \u003c 0) { col = float4(0,1,0,1);//绿色 } else if(pos.y \u003e 0) { col = float4(1,1,0,1);//黄色 } else { col = float4(0,0,1,1);//蓝色 } //col = pos; } void frag(inout float4 col:COLOR0) { for(int i = 0; i \u003c 10; i++) { } if(i == 10) col = float4(0.5,0.5,0,1); } ENDCG } } } 💡 观察发现变为暗黄色，说明执行了条件语句中的内容，说明了能够正常跳出循环！ 💡 值得注意的是for循环的次数有些版本是有限制的，超过了1024就会报运行异常，有的则不会根据实际情况测试！\n",
+  "wordCount" : "1784",
+  "inLanguage": "en",
+  "datePublished": "2023-04-05T22:24:59Z",
+  "dateModified": "2023-04-05T22:24:59Z",
+  "author":{
+    "@type": "Person",
+    "name": "Sulv"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://EitanWong.github.io/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Eitan's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://EitanWong.github.io/img/Avatar.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://EitanWong.github.io/" accesskey="h" title="Eitan&#39;s Blog (Alt + H)">
+            <img src="https://EitanWong.github.io/img/Avatar.png" alt="logo" aria-label="logo"
+                 height="35">Eitan&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://EitanWong.github.io/" title="🏠 Home">
+                <span>🏠 Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/search" title="🔍 Search (Alt &#43; /)" accesskey=/>
+                <span>🔍 Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/posts" title="📚 Posts">
+                <span>📚 Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/tags" title="🧩 Tags">
+                <span>🧩 Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/archives/" title="⏱️ Archives">
+                <span>⏱️ Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/about" title="🙋🏻‍♂️ About">
+                <span>🙋🏻‍♂️ About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://EitanWong.github.io/">🏠 Home</a>&nbsp;»&nbsp;<a href="https://EitanWong.github.io/posts/">Posts</a>&nbsp;»&nbsp;<a href="https://EitanWong.github.io/posts/shader/">🖼️ Shader</a></div>
+            <h1 class="post-title">
+                CG语言-流程控制
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-04-05
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1784字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>4分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Sulv
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://EitanWong.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">📖 Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#switchcase" aria-label="switch…case">switch…case</a></li>
+                <li>
+                    <a href="#ifelse%e6%9d%a1%e4%bb%b6%e8%af%ad%e5%8f%a5" aria-label="if…else条件语句">if…else条件语句</a></li>
+                <li>
+                    <a href="#while%e5%be%aa%e7%8e%af%e8%af%ad%e5%8f%a5" aria-label="while循环语句">while循环语句</a><ul>
+                        
+                <li>
+                    <a href="#while%e8%af%ad%e5%8f%a5%e7%9a%84%e8%af%ad%e6%b3%95%e6%a0%bc%e5%bc%8f" aria-label="while语句的语法格式">while语句的语法格式</a></li></ul>
+                </li>
+                <li>
+                    <a href="#dowhile%e5%be%aa%e7%8e%af%e8%af%ad%e5%8f%a5" aria-label="do…while循环语句">do…while循环语句</a><ul>
+                        
+                <li>
+                    <a href="#dowhile%e8%af%ad%e5%8f%a5%e7%9a%84%e8%af%ad%e6%b3%95%e6%a0%bc%e5%bc%8f" aria-label="do…while语句的语法格式">do…while语句的语法格式</a></li></ul>
+                </li>
+                <li>
+                    <a href="#for%e5%be%aa%e7%8e%af" aria-label="for循环">for循环</a><ul>
+                        
+                <li>
+                    <a href="#for%e5%be%aa%e7%8e%af%e7%9a%84%e8%af%ad%e6%b3%95" aria-label="for循环的语法">for循环的语法</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h1 id="switchcase">switch…case<a hidden class="anchor" aria-hidden="true" href="#switchcase">#</a></h1>
+<p>💡 需要注意的是早期版本Cg不支持switch…case语句，但是保留了这些关键字！</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>switch(条件变量)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span> case 条件1:
+</span></span><span style="display:flex;"><span> [语句块]
+</span></span><span style="display:flex;"><span> break;
+</span></span><span style="display:flex;"><span> case 条件2:
+</span></span><span style="display:flex;"><span> [语句块]
+</span></span><span style="display:flex;"><span> break;
+</span></span><span style="display:flex;"><span> ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> default:
+</span></span><span style="display:flex;"><span> [语句块]
+</span></span><span style="display:flex;"><span> break;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>示例如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Shader &#34;lxt610/NewSurfaceShaderTest2&#34; {
+</span></span><span style="display:flex;"><span> SubShader 
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> Pass
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> CGPROGRAM
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #pragma fragment frag
+</span></span><span style="display:flex;"><span> #pragma vertex vert
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> void vert(in float2 objPos:POSITION,out float4 pos:POSITION,out float4 col:COLOR0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> pos = float4(objPos,0,1);
+</span></span><span style="display:flex;"><span> col = pos;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> void frag(inout float4 col:COLOR0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(1,1,0,1);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> //关于switch case验证
+</span></span><span style="display:flex;"><span> int i = 3;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> switch(i)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> case 0:
+</span></span><span style="display:flex;"><span> col = float4(1,0,0,1);//红色
+</span></span><span style="display:flex;"><span> break;
+</span></span><span style="display:flex;"><span> case 1:
+</span></span><span style="display:flex;"><span> col = float4(0,1,0,1);//绿色
+</span></span><span style="display:flex;"><span> break;
+</span></span><span style="display:flex;"><span> case 2:
+</span></span><span style="display:flex;"><span> col = float4(0,0,1,1);//蓝色
+</span></span><span style="display:flex;"><span> break;
+</span></span><span style="display:flex;"><span> case 3:
+</span></span><span style="display:flex;"><span> col = float4(1,0,0.5,1);
+</span></span><span style="display:flex;"><span> break;
+</span></span><span style="display:flex;"><span> case 4:
+</span></span><span style="display:flex;"><span> col = float4(1,0.5,1,1);
+</span></span><span style="display:flex;"><span> break;
+</span></span><span style="display:flex;"><span> default:
+</span></span><span style="display:flex;"><span> col = float4(1,1,1,1);//白色
+</span></span><span style="display:flex;"><span> break;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> ENDCG
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<p>这里修改i的值使其进入相应的条件，发现颜色发生了相应的变化并没有进入default条件中，这说明现在的Cg支持了这个语句！或者说至少我这里是支持的，我这里使用的是unity2017.4.27f1，<strong>shader model 3.0是支持的！</strong></p>
+</blockquote>
+<h1 id="ifelse条件语句">if…else条件语句<a hidden class="anchor" aria-hidden="true" href="#ifelse条件语句">#</a></h1>
+<p>if…else条件语句的语法为:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>if(条件语句)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> //语句块1
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> elseif(条件语句)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> //语句块2
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> ...
+</span></span><span style="display:flex;"><span> else
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> //语句块
+</span></span><span style="display:flex;"><span> }
+</span></span></code></pre></div><p>示例如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Shader &#34;lxt610/NewSurfaceShaderTest2&#34; {
+</span></span><span style="display:flex;"><span> SubShader 
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> Pass
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> CGPROGRAM
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #pragma fragment frag
+</span></span><span style="display:flex;"><span> #pragma vertex vert
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> void vert(in float2 objPos:POSITION,out float4 col:COLOR0,out float4 pos:POSITION)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> pos = float4(objPos,0,1);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> if(pos.x &lt; 0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(1,0,0,1);//红色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> else
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(0,1,0,1);//绿色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> //col = pos;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> void frag(inout float4 col:COLOR0)
+</span></span><span style="display:flex;"><span> { 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> ENDCG
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><img loading="lazy" src="data:image/webp;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4&#43;JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAHSA4MDASIAAhEBAxEB/8QAHAABAQACAwEBAAAAAAAAAAAAAAEDAgQFBggH/8QARxAAAgEDAQQGBggEBQQCAgMBAAECAxESBAUhURMxYZFSFEEiBoFxFdIWoVOSVDKTsWLRQiOiVZQz8DRygiTB4XOy8SVEwv/EABsBAQEBAQEBAQEAAAAAAAAAAAABAwIFBgQH/8QAOREBAAECAgQMBQQDAQADAAAAAAERAhITUSExA1JBkWGh0fAFFLFxBBVCgTRywTPhBiIyQxYjU4L/2gAMAwEAAhEDEQA/AP0H1p9c9F6vVaOhjV089o6lpU6daqqcKcfOc5P8sfrfkeU9Yqeo9ZdTKhsn1glr61GjPV1ZaWouRRUU8ILHpk5Lzd0lc9n6yequk9YY0K2UdPr9LLLT6rlqbjxjKL3Si/NM8b61af1l0GslqdjerThWdGppJ19C4ulqKck8ZOmvShKMrNdPmrsD9E2Zqqms2TpNXVpunUr0IVJwkrOLcU2mcCh6w8/1d2ftfwuPjZUFyuZfDmSjHptvtlwV7eR2GzNH8P2VpNDm5&#43;HoQpZN3csYpX&#43;o8/pNhbapaPQ7GqvQx2doa8Jx1MKs3WqU6csoRdNxSi90U5ZPoe7fuRt7fUnZ20dbvI7Z2ZV1ctDR2no56xKT5Crxc1i2neKd9zTT4WZ1mh9b9meIo7N2htXZq2h4WnWqSo6iPJk5eUG5Xfk11NPzMdD1Zr0qVJf&#43;tnHa2o10pK&#43;&#43;NTmJeX5rTin7uk4UPV&#43;ey9n0YbVraKOz47GhoNdVnXcOXin6Ubxs03LzcWuslaRWe2rtC00PXRr0Z150I1YOrTSlOmpLKKd7NryvZ9jOor7c1mi2tp9Prdn0qOk1dadGhWjqcqjcYSneVPGyi1CW9Sb6LpXdtPVChqlsda/aDctZr2q1RuNvRUVGCt5ejFO3Fs4&#43;k2VtmW16&#43;o2no9BqFWlUpx1K103OjQbdowpOlina2XpXb6W7JKzWJ1du2rpSNca&#43;3bqZtnesuq1dah4jZTo0tdQnX0LhXUp1Yxs8ZxaioScZJpXa6btW35tDtnaO09namvpdl0qeqoamVDw&#43;p1WKtFre5QjKzs&#43;hJq/m&#43;k4&#43;yNi7To6nZ/xF6VUdk0JUNNKhUlKVe6Uc5pxSh6Mfypy3ye/dv5FDZm0NHs3a8NNVoLV6qvWraaUm8YuS9HLd5PptcTzdter&#43;SNe1l2DtTWbVo6mpq9FQ06o15UYSoal1oVcd0mm4Re6V49HTFmmk9YKet9ZdVsejQbhpqKm9TnulPK0oJW8t13fpuvJmSOzdTotm6HZuzalOlQpR5VapJvmRhg1lB71nli/S3dJ02k9U9p7G13idmbZqaiNHQPT6elrVTxc7tpT5dOLcb7208m&#43;I4zidptTbWt2Xqqc6mzqUtnyr0qDr&#43;JtVcqklFONPGzSlJJ3knue52V8VTbW1tLtnT6LV7O2fChW5k5Vqe0JSlSpQV3UlF0opK&#43;K/N0y97MFTZ&#43;3anrB43U6PZ2toUpx8LnrqlPw6xSlJU&#43;U053ytJyvZ2Vru/Z6PZ9antraG0dTKEnX5dLTqLbwpRV7Pd0ucpvd5WA6LS&#43;ulat6vy21Ro6faNGWocFHSVIxjpY5JJVZObcpNNP0Y&#43;a3Jekeq1Oop6TTVdTWljSowc5vgkrs6L6P6v6FrYvMo&#43;IVvSyeH&#43;5l02v0dR2m2tFPaWw9foaUlGpqdPUpRcuhOUWlfq3k4u2jrWP8AaK9tfU6jWetstK9JQlS0Gn1mopxqyp67aCoQgpNqEVLCTlN2/KlZWe/ovzdresMNmbT2ds&#43;NB162trRhPGdlRg7pTe7fdqyXnv4M6rV7J2jtKNfW6LSaRPaugjpNVDX5050McldJRea9OXo&#43;inZNSsyan1J1PPoVtJt/XqS1dKvVVRUXuhHFYt0nK6XQm7b35s64/q54vo7LZfrLpNTqa2i1mt0VHW&#43;LrUqGn5qjUqQhJpNRbu&#43;h9HBmOHrTptPrKOzNbrtnT2hq51vDxo6hKDUZuMIybd1J/ldk/SjK3QcBere1m9ToXS2dDR6rafjp6qNSTrK1RTSwwScvRisst3B2359NsLaGzK&#43;h1cfD1lptRrKlaOc0&#43;XWqOacbQblJK3o2V35nMbIq6njo73ZmujtLQU9VGDpuV4zpt3cJxbjKN/OzTV&#43;o5Z1fq7pq2n2TfUQdOpqK9bUOm1ZwVSpKai15NKSv13OVoNn0NnUpU6E9TOM5ZN6jVVK7v1OpJtLqW46R12xvWSG1NobS0VXT&#43;GnoasoxbqZKrTUnFz6FbfFprfbdv3mLYvrdpNp7M1m0tYqWzdLptS6UauorxUZwai4TbdlHJTW7rOBrfU3V6ql/b1VKhVnrq8qs4t3npK0rzp3tuk0ovgmjLq/V3asFqvAz0&#43;FbaHiOUq8qDlS5Kp4qpGEpU3ddMVe266ucxs19thO3V22u3ltWnLU6evR2hs57OnpqledR1llJRcbTi74uCTeT8rxOTo9p6DaPN8DrtNquTLCryKsZ4S4Oz3PqZ5Gh6lbRpbJlpHV0ym9DtDT/AO7UmlLUVFOF5SV2klvb334ndOnofV/X/EtfrNDoNLLR0dJGVWrGksoObtd2VrPcup7jrUNdr&#43;sstnbe02yKUdnc3UU1NPW6/wAO5NyxUYLCTnLq3HeVK9GlOnCpVhCdWWNOMpJObs3ZcXZN&#43;5M6La0tR6z7Jq6XY1XZeq2draTo1NZ4pzdO7tJxjGLU2l0elHeXaOzdtV9RptRR8DVez9Wqulp1Kk4c2m6LhJTkoytK85NWTVkiRzjsdRtzZGjoqtqtq6KhTbklOrqIRjeMsZb2/KTSfBuxwNqes2k2LUrarX67QrQKnR5UY1VznOcpK7u0sWldNd2fA4uyPVrW6XWbP1WteknLTPXSmqbcrSr1VOON15Run0dPmcSHqftCjs2tQhU0vMei0dGnHOSjnRqSm03jui7pJ2fnuHby/ldT1NHamz9Rp46mjr9NVoSmqcasK0XFybsopp2u21u6zlHktFp3rfXOq6dSk9Pp1HVaynRnnGnrMHTxysr&#43;hvtZO6i2lc9Hq9nUNbVoVKs9TGVCWUFR1VSkm935lCSUlu6JXXaEdd60bfp7C0enb1ej0tXVaiNGnV1kv7cL/mk1lG6S8rrpW8z7O2pGVGUdftDZ09QnVmvDVfR5UJuOTTd1bcpeSd0b7X2fV2g9DypQj4bWU68821eMb3S3dO885rfU7aWt2dS0XP0tJUNVqdXGopSbqSnVlKNKasv7bjL09&#43;&#43;1reZI417eb08ttbKhqtPpZbT0cdRqoqdCk68VOrF9Dir3knbpR1&#43;2/WjQ7O1NDQ0NfoZbQqauhRlpZ1ouqoznFN4J3vi7nWVfVHVajbeo1WopU6un1talXrf/ANnqaapSjGKcVShaFRXgrSeL3707b9peru2FGGgjDZ70dLai1y1Mqs&#43;dNc7mNOGFlLe1lk726Ffd1G2HM7J7cTstFtzW6mvq61bR6LTbM0lerSqamprWprBtOTg6ailu7&#43;5HaVtoaLTuarayhSdNRc1OrFYqTtFu73XaaXFnnZepemqbO2zGWm0UNo7RlqVDWxop1IwqXsnKye5NXVzDqPVvbG1Z62rtCns&#43;k9THRQVKnWnVjajWc53bhG909yt1dZI2RV1L0UdubIns2W0obV0UtDB2lqlqIOlF3tZzvbpaXSdXqfXHZNWrqdDs3a2zZa2Ojeoo1K2pg6D3Nq7jK9klk7f0u5j13q7rZbTqbS0kdJUqw18NXSoVpOMKlqPKeUlF4yW9ppS6Fx3Y9s7B2ztPxcox0MZa/ZctHVTrTSozvJxx9B5r0rNvHovbfYaCNru622tmaPU0NFrdp6KhrK6jy6E68YzqNuyxi3d3e5G1TbGy6Wujoam0tJDVzlhHTyrxVSUrJ2Ub3bs0/ajotb6v7Uctr6XTUtn19LtlLnVtRUlGpR/tqm0oqDVRJRuryj0tdZlqerFWT2o06EnrNXpa1Oc23LGkqS9J26bwlbp6fK7K5jY5mz9s63aOsqujs6l8Pp16lDn&#43;J/uqUG03KnjZRyi0vSb3p2V3bX1a9ZNLtzZemnLWaN6&#43;WmhW1Gno1VlSuk98btpb10nFWw9oP1mjtGFDRaKKqOVfU6WvNT1kMWowqUsVFtXXpOUmsd1r7uPR9VNdpdibO0umqaOlqtHs2tpXUwyjzJqG&#43;zjvjeLbuvPoZI2Onf6Xbeydbpa2r0m1NHqNPp786tS1EZQp2V3k07Ldv3nA2b60aHaW09px0&#43;v0NfZ&#43;hoUqj1NGtGUYuWeWUk7JJRT8rXOkpeqG1pPaOpqvTRr6haWdOnU11bUxnOjUlNqcpxVoyut0Y2j5Ldvz631Y2ttdbUr6taPTVtYtLKnS0&#43;pqNN0ZuVpVFGMt&#43;70krrg7byPRQ25sirolrqe1dFPSOTiq8dRB020m2sr2ukm/Ycd7eb23otDS0cp6bWU5Tp61VoOE7RUlgk22t/S8fK1/Lq9P6p1MNNUq6ehTqx2jT1deE9bW1d1CDjH06qu5Xaa3JK3Vc7rWbPq6jbWzdbCUFT0iq5pt3eUUlbd1A4nYnB2ztCpszZk9VRoRr1FOEIU51MItymoq8knZelwZk1&#43;go7RoKjXnqIRUsr6fU1KEr/8AdTknbf0XscfbuzJbV2PPQU545zptydSUXjGcZO0lvTsnZrffzA6/6UV6XN0eo2avisa8aFPS0K&#43;cKkpQc4yVRxjaKim5NxusXZPdft9n1toVacltHR0dNVi93I1DrQkupuMXfjePtZ1eq9Wo6ehp6uxsYazS6h6mMtVVnU58nBwcak5Ny3xdlLfjZbmlY5dDV7YjX09PW6DTx59Rxl4atKpGjBRbyc3CN23ZWsum92IJYduescdibR2bpqmm5lHWTlGrWztyEnFKTVndXmr71ZbxrPWOOl9adBsOGldV6qMnVrcxJUfRlKCtbe5YT4Wt1m22Nhx2xtDTSrqnPSR0&#43;oo16cm7yVRRW7d1M6zZnqttHSrZ1fV62lqNbR1VStqtQ7&#43;muVKlCyt5LC6f8RI5yeZ6DS7W2brtRW02k2hpdRX07tWpUq0Zypu9rSSd1vT6RoNq7N2rCc9nbQ0usjTeM3p60aii&#43;DxbsePoepW19TUqvaOooU5VNl1tDKrT1VStlKeFpKk4xhTj6LvCCXlvfSet2Utox0qhtDTaPTSglGFPSVZVI2S6buMbe6263S77uiXVS9bMfWl7Felo4qry2/Ef30uXnzOVj/t/05ZdPkdnW2vQXq/U21pf/YoLSvU0&#43;mPMjjkulXV11Hl9Z6nbUrvUU9PDZun1NSvUqw21lN6tRk28HBRV1ZqH&#43;41ilu3JL0Mtn6rUeqdXZk9PpdJXnpJ6eFOjVlOlD0XGNpOKdrW/p3dZxNcE029u38LFMevZ27fyz1NbXktmTo1NJSjqprmwrzeUounKVqdumV0nv8lIUdv7G1HOdDa&#43;hq&#43;HpqrWw1MJcuFr5Ss9ytvuzrKWzdtaqpsh67T6HTx2bWzfI1U6rqR5M6fnTjZ3kvZf28H6F6iXq7odmczTUqlDZdfR1KkE2s6ijvW5XV4tvoO5pWabEt2RV6irtHQ0KnLrazT053gsZ1Yp3m2obr/1NNLi1uMlPU0KyqOjWhV5UnCphJSxkumLt0PqPLVdg7c2hLaU9ZT2dQe0NLQ0tqWonU5UYSqOU03CN5LNOKst66d2/uvV7Z2p2TseGz686c5UJSjCtFturG91Od0vTd7y6bu7vv3SdkmhwdP61TWx6m3NoaOjpdlch16NeOrjObj/AExnFqKjJ3VkpSV91&#43;i/Ph6ybElptJqJbW0VOGtX/r56mC5r6Go797Tdt1950lP1Y2jUra98rQ7Mp6vS1qVWno68509TVmklVlTcYqElZ3aybys27b&#43;Jtv1X9Yds7OnpJ&#43;ChGroY6dwhr6tONKoslk3CmnWi016MmorfufSI28ivWVNsbLpa6OhqbS0kNXOWEdPKvFVJSsnZRvduzT9qOv2360aHZ2poaGhr9DLaFTV0KMtLOtF1VGc4pvBO98XcwVvVqtVltWf/AK2Wt1mlrwk73UaSpXT3dN4St7/I4svV3bCjDQRhs96OltRa5amVWfOmudzGnDCylvayyd7dCvuRthzOx6KO1tmz2hPZ0NoaWWupxylplWi6sVa93G910rtOBovWbQQ2BszX7Z2hodBV12nhVSrVo0oyk4ptRye&#43;1&#43;s6ql6s7Yn6yaTX6upp50tJq61ZTjq6npQnGoopUFBU4yWavK7k992b6H1f2zsZaapo6OztbV&#43;G0dFWjqK06ag6d98JKEsovJ3i0uhO&#43;/cjY6eg1e2dl6CrClrdpaTTVJ44wrV4wcsr42Te&#43;9nbjZm1ba2zdNr6Wgr7Q0tLV1lelp51oxqTW/oi3d9D6OB56n6nVKGm1OnjPT1Yz2LDZ1OU008lzL3VnaPpR3Jvo6kYp&#43;ptee2a1WrGOo0uqq0q1ST2lqaTpuEYq3Jh6FT8iabatfenbfeNOJ7E6rbG26eztnarUaVUdXX006dOdDnY4ynKKSk0m47pJ9HQczaOgpbT0FXR15VI06qs3Tm4v/7XU7p9DTV0dJX9W9XR9V6ux9FX01VQqQnplUox06SjOM3GXLjj0p74wXSrpu7fKuRHbW06dWpotXsqjT2hKhOtpYUtXnR1GNrx5jhFxkm1e8bWaab3202d60w2xXhHZujnqIQ07q6r01GdCfRGjZ7nUupJptY239KEtFt3UV5bTrUtn09bp6E6Wj00a050lKVrznUwTf5UrKKtZ73fddj7B1WxNcp0dUtRQ1UMtdzpNSlX&#43;1irNel0OO5JKNuizvr27edOdJ7du3HzM2zduajX7O1eq&#43;E141tNqJ0fCwq05VJYtebainv3rJrdubMuyttUtdsPTbT1Sp6JV/RcZ1U1GTlilk0r3e5bvM22Ps&#43;rs9a7myhLxGsqV4YNu0ZWsnu6dxxtBsbVab1Xp7JlXoRq4yhUny&#43;bHGUm3ZOybs7b01fpTW5zX5H8u6B1uw9h6bYGh8JpZ1JwycnljFJ/wwgowguqMVfpd2232RQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABH0H57sidKfq5pdZtLZm1tQ61fTRdbV7TlOlVlKvFRnCPNljZ2lZxje1vMRrmhxVfoYPE0fWWexdKtHptBU1mq1Gu11RRUKzjGEdRJNt0qdSV7yVvRt03a3X9ZszWS2hs3T6yWmraWVaCk6NeDjOD4NOzBOqaOUAeP2BKdXbOv1Wp022JqjrdSlqpa9vTRjFtKPK5vkt3&#43;309pK6x7AHiq21dftXavq5rK2zaNDQaipVq0JrVOdWUXQm4qcMEotxd90pW6DJ6rbT1tbaGh0el0Wn02xnsihXpUfEynOlle3TC8ndY75dCv0ux1QexAOk9bdq0tlbDlzNZDRS1dSOmhXnUVNU3N2csm1a0cpew5kd2Dx2z/W2UPVejW0uG1qmn1MtFV1KruVJYX/vVKkIzai4qLcrNJy3tLec6r60VYa3QUFp9EqGqpU5y1k9ZJaeTm7YUqipuNSW66TcG7q3nbqg9GDylD1z1Ot2pPS6LYlerQ51ShTryhXinON1eUuS6cYZRayU2969G90uLofW3bFD1e2ZqtoaLSyqaqEpVNXV1M6enpxVrOpUjRahJt7k0o7vzX3EjWPagkWpRUk001e6d0SpJwpSmouTim7LpZJmkVkjW2B43S6jDQ7J29q57X1NbXyoynW0&#43;qUaFB1JRjGDouai4&#43;njdQlLc23ezObH1vy9ZaWylo4z09erOjT1NKpOaU4RlJqXoctP0JblUcluvFb7WdW053pQeS0PrdtbaENDydgUYz2jppajSqpr7LGOOebUHj&#43;ZY2Ur33477Y6/r9KUNK9n7G1OslV0dPV1YRp1pOCne0U6dKacvRl&#43;bFdG/psKPYg8xpaP0l2ltKes1WvoU9JVhRoaahqammdNOnCblPCSbk3L&#43;rclHculvq6G0NqVtpbHdOFPaOqoz1&#43;njVqVVShUjCcYqcpRi7O0bPGL9LyS3pzD3YPHz9Z9EtXT2lr9mTp6rRaPWuq6dVzdPlTpxnCKslPJ4tN26FuV3bJpvXTVT0teep2FqKVaLpx08ca0IVZ1JYRi51aVOzu1eykkt&#43;/oBOp6wHmqu0/WOHrHsnSVdHoKNHUQrOvCnrJTuo4703RTuk7pbr3adrXPSgAdT6y6zU6PZKlpKvIq1tRRoc/FS5SnUjBySe66T3X3Xt09Bx69Ol6raCep089frJ1ZQowoajWTq8yrKSjH0qjeG977brX3NpAd8DzWr9aNds2jqYa/ZEPGUORKFLTarmQqwq1FTVpyhG0k77mkujfvdtPpXtGlWrQ1WxqNKGj1dLTaucNZmouq4YOmsE5r&#43;5G98LeWQjWPUA80/WnWxdbUvZFNbO0&#43;uejq1nq/7l&#43;YoZxp4WcbtXvJPpsnZX2XrPq2pa2Oy4PZMdV4bn&#43;J/vN58vJUsLY5/x3tvtfcI1k6noweb0/rTqqurjztlwpaGWtraNV1qcp503P0sMfytQf8AVdPytvODpfX6tqdHqdb8C1UdLDR1NXQqSp1oqUYxySnKdKMIuS6MZTX/AMlpNaPZA8dtf1n27S2fXjR2bp9Lq4eGqwb1ecXSqVMd/wDb3SurNWaSd1J2seupOo6MHWhGFRxWcYSyin5pNpXXXZe4I3BpWp82hUpZShnFxyi2mrrpTXQeFo7W2nL4LKWrqW2UlDaaz3VpOq9PeXTezjOW/qHHQnZV70HhqO16eknPbWo0tTVaiWk2hrtPOeoklCjCcEqcU1ZKUVB3tu38WdpL1q1enjWhrdkxpahwoS01Onqc1V503CClJxWDUl6VlJJdDl0AnU9KDxdLa&#43;v2dt7beq1&#43;zqK1TpaKjQoafUupGrKcqkYenKEcVlLf6O5Jvf0HZS9ZdZo9Q9LtLZdOjWjUoZPT6l1aap1ZuClk4Rd1Jb00tzTu99hpeiB5/ZfrStqa2lpaejxlUqVbt1b40YxjKFTo/qU4bvK737j0AAHRetOt1OhWyqmlp6itKW0IRlR084xlVjhP0fSlGNtye923HU1fWnU6Da219Vq9nbQoxpabSQoaKrKM3KpOpVimlSlOybtdq8rR6HuTRr7enWtHsweQp7a1G2NXseWp2bW0VSjtNxtOnVjCaemrO8XUp05Pg/RW/icrZvrTrdYtm6nU7Ip6bRbSnyqVRavOpGdpNZQwSxeLs1Jverpb7EelAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABpzYd44K2XsxbOobOVH/1dPOE6dPOXouElKLve7s0mfMhy9Hs6trYylTlCEYu2U2&#43;n2ID6K1Gwdj6inCMqdWm6dWpVhUoairSqRlUk5TtOElKzbu1e3Ru3I7GjyNPRhRpJQp04qMYrySPm34BqPt6HbL5R8Crv/8A0aftl8oH0rzYd46zT7D2XpdfPW0JaunUnUlVlBa2vynKXS3Tyw334Hz78A1H29Dtl8pPgVa1/E6ftlx/7QP37S&#43;rOwtHqaWoo0KqlQcnRjLU1Zwo5JpqEHJxgmm9ySXRwVs&#43;m2NsrR19JW01OdKejoLT0sa1RLlrojJXtO3lle3SfPfwKt&#43;J0/bP5R8CrfidP2z&#43;UD6V5sO8cevpdFqdVptTWhnV0kpToybfoNxcW7dDdm1v4nzl8CrfidP2z&#43;UfAq1k/Faftn8oH0HqNi7L1NXUVZRrU6upnGdWpQ1FWjJyjHFO8JJrdudunde9jSXq/saa00eTUjT0sYxp0o16kabUXeOUFLGdnv8ASTPn/wCBVvxOn7Z/KPgVb8Tp&#43;2fygfQlDY2y9NtGeuowqQqznKo4KvU5Wb6ZKnfBSe&#43;7SvvfFnHl6s7Elo1o8NTGgpSapw1teKtLpjun&#43;T&#43;D8vUfgfwKt&#43;J0/bP5R8CrWT8Vp&#43;2fygfSkZ0oRUIWjGKsklZJF5sO8fNXwKt&#43;J0/bP5R8CrfidP2z&#43;UD9&#43;Xq5sWOqVeFKtC1VVuTDU1Y0M08suSpYXy9L8vTv6d5aXq7sWhr4a6nSq86nVnWpp6mrKnTnJSUnGDljG&#43;Ur2S6T8A&#43;BVvxOn7Z/KPgVayfitP2z&#43;UD6H02ytl6PwfIo4eBoyoaf05PCEsbre9/5Y73d7jiv1a2G4aaEaFWnHTUlQgqWpq08qa6ITxks49O6V1vfFn4L9HNXyubzaXLvbO07X9&#43;Jotg120lqdO2&#43;hLP5QPoLXbD2VtDU&#43;JqxrUqzjhKppdTV08pxXQpOnKOSW&#43;172u7dJNTsDY2ppaWk6EqMdHFx0/ha1Sg6SdrqLptNXsv&#43;Nn4BU9XdVRnhVrUYS4SU0/8A9TX4FWsn4rT9s/lA/dNNsCjT2qlLTaSlsvT6SppaNGM5VZV1VlGU5VMoqzvHjJyybbOZT9X9j09DW0Tp1qtGuoqXP1NWrJKO&#43;OMpyco2e9YtWe9bz8CqerespRjKpUpQjNXi5KaUlxXo7zT4FW/E6ftn8oH0HDYmy4PSyS1DqaSbqUqstVVlUu7Xym5ZTTslaTaskrbkdlzYd4&#43;bavq3raMISqTpxVRXhkprJdV4nVThKnOUJq0otprgwPqLVUtJrdLU0uqpwr0KsXGdOpG8ZLg0ddD1d2LHSVtLOnW1FKtFQl4nVVa8kk7pRlOTcbNJ&#43;i1vSfSkfNgA&#43;laWwNj0tPUounVqqrUp1Jzr6mrVqScJKUPTnJysmrpXt07t7M1XZWy6/ieZRy8VWp163pyWU4Y4Pp3WwjuW7d7z5kAH0Rs71X0NHVV9Xrk61WWuqaqnBaiq6SvJuEnTuoOa3b3FtNKz3I5i9X9jLaD1qo1FUdXnOmtRUVF1O/yssMr7743vv6d581gRqH05T2bs2koKFGyp6meqj6Ut1WWWUunzzlu6N5xaPq5sShQ1FCFGpyNRSlRlSlqKsoQhL80YRcrU0&#43;ELdC4I&#43;bQCr6a1Wydl62FWGoouSq0Y0ZNVJxeMW5Rs00003e639ZzKTpUaMKUZycYRUU5ycpWXFu7b63vPlkAfVPNh3jr3sbZLp7Qp&#43;HWO0rvVLOXp3Vt2/wBH2W3tvp3nzMAPpirsXZFahChU096dPST0cY5zVqMlFSj0&#43;eMd/Tu6TbV7I2VroVYaihmqtKFGXpyTxi3KNmnuabumt9/PcfMoA&#43;kqfq3sOnQ1VF6edVayMY15V69WrOeLbi8pScrq&#43;53urKz3K28NgbHhotVo5U6tanrI4V5V9TVq1JxtZLOcnJJXdknubbXSfNQA&#43;nNLs3Zmi1b1em08adZ0IUMlf/bj&#43;WNujd/Lgjm82HePlYAfUWpoaTVyoSrxzenqqrS3tYzSavu6dzfScfV7K2Xrp6mepoKpLVU4Uqrykm4wblC1n6LTk2mrO/nuR8ygD6ZobI2bpoUVCNWboVnWhOtXqVZ5uLhdyk25ejJre3b2I671d9V9DsjTaOpqE6ut00GlJ6irUpQk&#43;mUISeMW15qKe98WfO4HOPqnmw7w5sO8fKwA&#43;qebDvDmw7x8rAD6p5sO8ObDvHysAPqnmw7w5sO8fKwA&#43;qebDvDmw7x8rAD6p5sO8ObDvHysAPqnmw7w5sO8fKwA&#43;qebDvDmw7x8rAD6p5sO8ObDvHysAPqnmw7w5sO8fKwA&#43;qebDvDmw7x8rAD6p5sO8ObDvHysAPqnmw7w5sO8fKwA&#43;qebDvDmw7x8rAD6p5sO8ObDvHysAPqnmw7w5sO8fKwA&#43;qebDvDmw7x8rAD6p5sO8ObDvHysAPqnmw7w5sO8fKwA&#43;qebDvDmw7x8rAD6p5sO8ObDvHysAPqnmw7w5sO8fKwA&#43;qebDvDmw7x8rAD6p5sO8ObDvHysAPqnmw7w5sO8fKwA&#43;qebDvDmw7x8rAD6p5sO8ObDvHysAPqnmw7w5sO8fKwA&#43;qebDvDmw7x8rAD6p5sO8ObDvHysAPqnmw7w5sO8fKwA&#43;qebDvDmw7x8rAD6p5sO8D5WAA9F6vxy0FT/APK/2R509T6rwy2dV/8AzP8AZAd5o9NXo6StqI6ajVjgqlqijKU4RlaaUXvUXf8AOrWcbJ3Znq7S0uorVI16aqad1dVKMZRjGUaeCdCEJ2bilJNJLdv6GY6UI1oR0s2oVYt&#43;HrXxaUk8qTlfolfd5Xcl/UZYbKqwqrxdKWnpxTnU5ixkoJXbUXv6ve0vMDrtXpoUdRjTywlTp1Epb3FThGaTfnbK1917dCOqrTwqSjwb/c72plXqzrTTTm74t3xXkvclZew83tGeGuqR4MDnaXR6nVUalelQnVp0mslDplvW5bnvs79G47XaOgnqp6Slo9lyoSlp1OUrvFOzeEt35t3S2uneeb021NVpaVShS1NWlRrNZ8tvKNmnlHerOyt0717LdvtTbPhp6Krs/a9TUVI6ZQlFXcHuazkm/wA2&#43;9mm1bf1h10pyhNwmnGUXZpqzTNY1fRXvf7s4brylJynKUpN3cpO7b4tkVX0V7f3YHf7I1ezKTqvaUkrSjKknByUmlK6dk929diMq9Zak6rp6zTabUaRtrGlBppcY3/&#43;bew6TZ&#43;vo6TVKpqdNHU0WnGcH0pPzXWdpQ2jsHZ1Txekq62rVt6NG7gl52k911u6/cwODOtBzk6acYNvFSe9Lyuaxq&#43;ive/3Zj2htF7Q1s9VJYyqRhkrWWSik7dV07HGVX0V7f3YHo9Jtbn6KjsdxqRVRqCqwni4ylN3ur&#43;lHGS3dT6mt1pdHo3X1NLaFWu9DUjGtTpQlSlvli0pX9/R2q9zg6bwFDZdLXwrUp66G&#43;NB1oxxlGbeUk3d7klZdPtupDb9XWVHp9TpNFCjqJqVd0VypTs8vzSlbt6b9KvcDbae1pbU1EK86fLkoYuK6F6UmrcdzXDfc4cavor3v92bbXp6PS6mnS0WphqKfLvKpCalduUtztuulZfX5nAVX0V7f3YHpaO09ZpvVmMqFaNPDV8uLwTaWOfnu6eomq2ptrTQlKe06dXl1FCpCNOPoy6Un6K4Po4Mw0NG9R6qxb1enpQlquZerLFJ2ws39ZiraWvqlGlW29syqnJboVo5N9F3ZLJ24gcj1j1FSW2q0KklLlxjGNlbda/7tnVxq&#43;ive/3ZyvWdSpbbqSlOMnVhGbx8t1rfV9Z1Cq&#43;ivb&#43;7A9DptRKtRp4RjqdbUfKpQlZqlCKW&#43;3R7XuVmy1KdbSwhWWnqVFOGeojVoqKTye5cP5b&#43;pcOm&#43;Voo6TWS8LUstRpqzW5qSW6632e73NGCnW0&#43;plCFarDT06MMJyjk3VV77l9fl&#43;yA5Gu1EeYqNKq56eHpUk3fFSSbR5nWvLX6h8asv3Z3m0ZVajhrXQdKhXvGjfzUUl/I6DUPLU1XxnJ/WBjOXsxRe0KeaTSUnZ8VFtfWcQz6OWGqhLqa&#43;pgep0cq&#43;t1UNPDU8tzvaU5SsrK/ld&#43;RzI6ZKOrhU2lPnadSko04uUZpJO&#43;Taa3uz3eR52jrK2nqqrQqzpVI9E4ScWvajnU/WHUw0lfT1KdKvLUOTnWquTqb4qPTffZJWvcLFHJo1JSoc&#43;vq6lOm5YxxTk5Ppe666Lrz8yRlXrVZR09eU4Rt6cp4L630nX0NfSjQen1FF1aeWccZ4yi7We&#43;z6bLy8jLp9sLSzrKjCrSpVcd1Ku4zTX8Vut33BHNp0toVU3Fz3TcLOok3JWurN73vRtOnqo0tPONfN145KKqq63vyve1l0&#43;XR5HXw2u4VqFR03J0dVLUO823K&#43;O67/wC3p6xQ2vyPDTjTlzdOpQUlUsnB5X8rp&#43;k99/YBzXHWqco5SeMM21UTWN0r3va12YJautCri60rptO07rofmukw19rus611VlzaKpJ1aznJWmpXvbqtbccHnelHfx/ZgdtRr6jUV6dGnVnnUkox9J9LdjlaTaOmr0ZRlTneKTcuf6bVr3XpJLc7715PezoaepnSqRqQljKDUovg0cmnW2coxqzjqebC3oRcUm1a3p2yS7feR1GGk1dlONda96WOpbVslUydsMcsvu7zajOlW1VCjT1taaqVYwknHF2btdb2dV8VqvXvWTUZSd04vocWrY&#43;6245MNtwoxoQpUavLo14VsKlfJLG&#43;6O5Wvd8SuWaL1k6DrxlNwSb/AD72l0tK92usy6qGpoQVWFSbpcunJvmJtZRT6OlK7sddT2rGGmjB0b1YU5UoVM9yjK97q29&#43;k/PzLW2rTqUJRhQlCpUpU6U5updNRUehW3XcV5sDsNNDUVa&#43;mVSrLlVqsIOUKqbV352bs7X6TqtpVefs&#43;rzG5uKTi5b7PJL9mzmy9YU5UmqE0qeop1sHVvFY39GKt6Kd&#43;vo8zpdTVvpaiv0pL60B1oAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcjS6/V6HLw1d08ulWTT9jOxbcG4QbjFOySZ2ez9JRrpSq6mLvSrvFue5xpOS6F5Pe/wD5A6N7e2pJWlq7p&#43;Tpw/kaLbG0I9FeKtwow/kdnqoKhOMYajO8It2b3XSfmlxN9RpammU1PVUnUp7p0lJ5RfRberP2Ngdb8f2t&#43;Mf6cP5HFq6zU16jqVK2UpdLxX8jt3S1UVTbpVkqv5G4v0vdxL4fW850eRX5sVdwxeSXu9q7QOk59b7T/Cv5Dn1vtP8ACv5HdRo6udaVGFKtKrH80FFuS96MTnNOzlJP3gdVz632n&#43;FfyIq9ZK3M/wAKO25k&#43;8&#43;0cyfefaB1XPrfaf4V/Ic&#43;t9p/hX8jteZPvPtHMn3n2gdVz632n&#43;FfyIq9ZK3M/wAKN9WktVNJWW5/Umb6LRT11Z0qc4RajleV&#43;PV7wMPOq9//AAr&#43;RefW&#43;0/wr&#43;Rlhopz0NTVqcMKcsWt930dXWTRaOprtSqFOUINptym7RS6wMXOrL&#43;v/Cv5BV6yVuZ/hRkp6PVVpyhS09WpKDxkoQcrPfu3e59hI6arUjHl0qs5ylJYqm7eik3Z&#43;bV96tu3cQNObUvfJX44r&#43;Q51Xvr7q/kZZ6DWU4zlU0leEYfncqbSj7&#43;BI6PVTpQqx01aVOpLGElBtSd7WT83cDGq1VblNL3RX8gq9ZK3M/wo5NfZWu0&#43;sqaR6arKpC7tCEnlFO2S3b1u6Tjw09epBzhRqSilJtqLa3Wb7Lq/vAyVNoa2tThTq6qpOFNWhGTuorqXkY&#43;fW&#43;0/wAK/kYwByK20NdqIwjX1dWrGmrQU3fFcFw6EccAAAANs6n2s/vMcyp9rU&#43;8zUAbcyp9rU&#43;8xzKn2tT7zNQBtzKn2tT7zHMqfa1PvM1AG3Mqfa1PvMZ1PtJ/eZqANuZU&#43;1qfeY5lT7Wp95moA25lT7Wp95jmVPtan3magDbmVPtan3mOZU&#43;1qfeZqANuZU&#43;1qfeZHKUvzSlL3u5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdtOXpy956DZ3rBWso19oa3JUq7bnq3a/KePSuPRwfE8tKfpLrZyNPpa2qydKMbQtlKU4xSv0K7aV93QBz9p7Vra5QhLVaqrTiotxq1nNZYpXs/Pp3&#43;ZdTr9PU0sqSqV67dlDnwjelZ&#43;Uk7vdu8lvOuq6edGhGrPFKVSdK3mnFRv/8AsjDkuoDu1tPTw13jIus5VJuU6coxxheLW67eVr7rpGlbacJ89RnOWenVGD5Uadv7il&#43;WO5KyfE6yrSlRp0aknFqvBzjbyWTjv9sWNPSlqajpwcU1Cc9/CMXJ/UgO3pbXpRnUvlFVKdFZujCo1KEFF7pbt7vv6eg63UVufqatVtvmTcrtK7u&#43;rccXJdQyXUBmyGRhyXUMl1AZshkYcl1DJdQHH1W/VT/8f/1R23qzpdi6lbTe29RKhTpaJzo1Ib5KrnHFRjdZN71bg3vVrrr2qcneUIt8WiYUvs4fdQEjHSPQ1ZTqT8Tl6Ebbmt3V7/M20espaTT14y08a1SrjG03JRUU7v8AK073UewmFL7OH3URxp3j/bh091cAORq9pU61PUulGdOepq0qsktyTUZZed/zSujNU2vQeoqVYRqxyraqpHck0qsFGPn5Nb//AJOCo083/bh0L&#43;lHKns2pDTeIlQp8uyk7Si2k&#43;htJ3Sd10rzA0htKMY6eMuY1S0lWjJcZS5ln09HpR7DI9oaOOy6umpU5RnVowg1yo/mUottzvk72e7yuXVbJraOMpVtPStCWE3CUJ4y4PFuz95w3Gnmv7cOh/0oDmVNoaOrqNVJy1MIaqrGu3CCyhJOTx6d69Lp6luOPrdfHVUHBRcHLU1a0or8tpY2XsszmaPT6adC86FNu/S4o7DSbJ02qqU4xo0vSqKElGnlOKf9WK3tdPRw8rq4eVB6Wrs7TUYx5mnoqUr3hiso23b15ee7p3dav1&#43;uo6enOnhRpxupXtFdQHVA59HTeIrRo0aCqVJu0Yxim2znUNixqSr0qipqrTqSoxUFkuYrtLo6JWaT4oDogcqUaaX&#43;3DpX9K4mfS6SOr1EaFOFNSlezkt25XA64HoF6t1pK6elavbdf&#43;RwNVpI6TUSoVIU3KNruK3b1cDrgc2dKlCco8uHotr8qNFGnm/7cOhf0oDig5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5eFL7OH3UMKX2cPuoDiA5Uo00v9uHSv6VxM1DS&#43;Jq8ujQhKVm&#43;hJJcW30IDrwdlW0LoSaqU6KtHO6nBpq9tzT37&#43;HXwMGFL7OH3UBxAcvCl9nD7qGFL7OH3UBxAcvCl9nD7qI407x/tw6e6uAHFBypRppbqUG3uSsjLT2ZUqwUnUpxlP8sMV6Xu3AcAHMez6icU8ln&#43;W9OKv7txkey3Gs6cq0d0HJSjCLTsm&#43;HVYDrwc2roOVNR5l7xjL8kfNJ8Os08J/H/AII/yA4oOV4T&#43;P8AwR/kPCfx/wCCP8gOKDleE/j/AMEf5Dwn8f8Agj/IDig5XhP4/wDBH&#43;Q8J/H/AII/yA4oOV4T&#43;P8AwR/kPCfx/wCCP8gOKDleE/j/AMEf5Dwn8f8Agj/IDig5XhP4/wDBH&#43;Q8J/H/AII/yA4oOV4T&#43;P8AwR/kAMUp&#43;kvec/Zuuo6bmRrVKkYzs8Y0YVYytfpjJrjuflvP0eHqJ6uSpxk9nu7Sf/UVfmNvoH6t/wCXP/UVfmN8i5jnWvz6ntmjT089PCnUp0ak9RJ0lvjacEqa6d9pK5vHbGihs/R0FRqzlQr06soz3xaV80m5PpbTskuu9j330D9W/wDLn/qKvzD6Cerf&#43;XP/AFFX5hkXGda8PD1g08NfSrylqK&#43;GmdJ1asfTUnUcrpKa8nb8yMNDbenp0tXFurTdaVdqNKCUZqcHGKkstyi99t/Sz3v0E9W/8uf&#43;oq/MPoJ6t/5c/wDUVfmGRcZ1r8pzGZ&#43;rfQT1b/y9/wCoq/MPoJ6uf5c/9RV&#43;YZFxnWvynMZn6t9BPVz/AC9/6ir8w&#43;gnq5/l7/1FX5hkXGda/Kcxmfqv0F9XP8vf&#43;oq/MPoL6uf5e/8AUVfmGRcZ1r8qzGZ&#43;q/QX1c/y9/6ir8w&#43;gvq5/l7/ANRV&#43;YZFxnWvyynWdOpGaUZYu9pK6fsNtVqvEajmqnCmm90IRsluP1H6C&#43;rn&#43;Xv/AFFX5ifQX1c/y9/6ir8wyLjOtflWfpv3I7Cep0MNm8rT1a6rTS5qlRjabut2WW6K6eje1v6v0X6C&#43;rn&#43;Xv8A1FX5h9BfVz/L3/qKnzDw9xnWvAa/aWinU11TSuvOetm3LmwUVBOedlZu7ulv3eZ1Ofpr3M/VfoN6uf5e/wDUVfmJ9BfVz/L3/qKnzDw9xnWvzzRVLUPaz0OwNtPZuroVL0JScnSUZwUEoyavKU0r9NrdO6/R5&#43;mj6mbBhHGOhkl/&#43;ep8xfofsP8ABS/XqfMPD3Gda8dtXaz2jWlqXy4yrTc501TScGlZel0tWt59N93m&#43;j19S86Xul/8H6b9D9h/gpfr1PmNJ&#43;pWwKls9C3bo/v1PmL4e4zrX5hQ1&#43;q0t1p9TUpxbvKEZNRk7W3&#43;xtHa7N2rSoyq6ipVllTr8&#43;Cm774tuEYrrlJt8OnzPb/Qb1d/y9/6ip8w&#43;g3q7/l7/wBRU&#43;YeHuM61&#43;WSnu9q/c5Gk1DpV81VVKWE1GbTtGTi0nuT82j9L&#43;g3q7/l7/1FT5h9B/V3/L3/AKip8w8PcZ1r800FfaGzqU6dDamkcZu/pxqSs&#43;K9EazUOrXzdVVZYQUppO0pKKTe/rufpX0H9Xf8vf8AqKnzD6D&#43;rv8Al7/XqfMPD3Gda/OI7Rr0XqI0ajjCs3kl7ziZ&#43;m/cj9S&#43;g/q9/l7/ANRU&#43;Yn0H9Xf8vf69T5h4e4zrX5fmMz9Q&#43;g/q9&#43;Af69T5h9CPV78A/16nzDw9xnWvy/MZn6h9CPV78A/16nzD6Eer34B/r1PmHh7jOtfl&#43;YzP0/6Eer34B/r1PmH0I9XvwD/AF6nzDw9xnWvzDMZn6f9CPV78A/16nzD6E&#43;r34B/r1PmHh7jOtfmGYzP076E&#43;r/4B/r1PmH0J9X/AMA/16nzDw9xnWvzHMZn6d9CfV/8A/16nzE&#43;hPq/&#43;Af69T5h4e4zrX5lmMz9N&#43;hPq/8AgH&#43;vU&#43;YfQr1f/AP9ep8w8PcZ1r8yzGZ&#43;m/Qr1f8AwD/XqfMT6Fer/wCAf69T5h4e4zrX5nmMz9M&#43;hWwPwD/XqfMPoVsD8C/16nzDw9xnWvzPMZn6Z9CtgfgX&#43;vU&#43;Yn0K2B&#43;Bf69T5h4e4zrX5pmMz9L&#43;hewPwL/XqfMPoXsD8C/16nzDw9xnWvzTMZn6X9C9gfgX&#43;vU&#43;Y1n6lbCcWo6KSfk&#43;fU&#43;YeHuM61&#43;bZjM/QqfqPsmKlnQlJ&#43;X92at9Zjn6obLUqTloYwipRg1CtU9PfvbvL9jmdzdCxvbZeBzGZ&#43;l7Y9Sdh6bbdSjpdBanThCXLlXqtO/Tvyv9Zxn6lbJqU5PwvLm3dKNapaPVvkc2bq6&#43;ImFu3lts0l&#43;e5jM/RaHqVsWMLVdLKb486a//AOjJ9DNg/gX&#43;vU&#43;Y7yLnOda/NsxmfpP0M2D&#43;Bf69T5h9DNg/gX&#43;vU&#43;Yvh7jOtfm2YzP0n6GbB/Av9ep8xPoZsH8C/wBep8w8PcZ1r83zGZ&#43;kfQzYP4F/r1PmH0N2D&#43;Bf69T5h4e4zrX5vmMz9I&#43;huwfwL/XqfMPobsH8C/16nzE8PcZ1r83zGZ&#43;kfQ3YP4F/r1PmJ9Ddg/gX&#43;vU&#43;YZFxnWvzjMZn6P8AQ3YP4F/r1PmH0N2D&#43;Bf69T5hkXGda/OMxmfo/wBDdhfgX&#43;vU&#43;YfQ3YX4F/r1PmGRcZ1r84zGZ&#43;j/AEN2F&#43;Bf69T5h9Ddg/gn&#43;vU&#43;YZFxnWvzjMZn6P8AQ3YP4J/r1PmH0N2D&#43;Cf69T5hkXGda/OMxmfo/wBDdg/gn&#43;vU&#43;YfQ3YP4F/r1PmGRcZ1r84zGZ&#43;j/AEN2D&#43;Bf69T5h9Ddg/gX&#43;vU&#43;YZFxnWvzjMZn6P8AQ3YP4J/r1PmH0N2D&#43;Bf69T5hkXGda/N5T3e1fucvRaunQlWhWU3Sr0&#43;XJwtlHemmuO&#43;KPe/Q3YP4F/r1PmH0N2D&#43;Bf69T5hkXLnWvG6namlnGtGlB3qaVUc1RhSzlzVO7jHcvRVvPoRkr7dx1FerQ1erqSlpo0aVSqrTg1UjLe8n5J7&#43;L6Ej130N2D&#43;Bf69T5h9Ddg/gX&#43;vU&#43;YZFxm2vJ1du0KuuhXcatoV67g8VlTpySUEt/TF3dujrFDbmnp63U1nPURhVjBehG05uKs25KSxbe9/mV30Ox6z6G7B/Av8AXqfMPobsH8C/16nzDIuM21&#43;dU6zp1IzSjLF3tJXT9htqtV4jUc1U4U03uhCNktx&#43;h/Q3YP4F/r1PmH0N2D&#43;Bf69T5hkXGba/OY1LSTfkzn0dcoRj/tyx/K5dMT2/0N2D&#43;Bf69T5h9Ddg/gX&#43;vU&#43;YZFxm2vER1UKdZTjK6gngpSXo/wDGbeOi1HLltxjKKcbR3NW6F77ntfobsH8C/wBep8xfobsH8C/16nzDIuM214SrXhVmpZRVoxj&#43;bgkv/g0zh349p776G7B/Av8AXqfMPobsH8C/16nzDIuM214HOHfj2jOHfj2nvvobsH8C/wBep8w&#43;huwfwL/XqfMMi4zbXgc4d&#43;PaM4d&#43;Pae&#43;&#43;huwfwL/AF6nzD6G7B/Av9ep8wyLjNteBzh349ozh349p776G7B/Av8AXqfMPobsH8C/16nzDIuM214HOHfj2jOHfj2nvvobsH8C/wBep8w&#43;huwfwL/XqfMMi4zbXgc4d&#43;PaM4d&#43;Pae&#43;&#43;huwfwL/AF6nzD6G7B/Av9ep8wyLjNteBzh349ozh349p776G7B/Av8AXqfMPobsH8C/16nzDIuM214HOHfj2g999Ddg/gX&#43;vU&#43;YDIuM217GlH&#43;zD/tRvibUY/2Yf9q/Y3xP1VfkYcRiZsSYlqMWJMTNiMRUYcRiZsSYioxYkxM2IwFRhxGJmxJiKjFiTEzYDEtRhxGJlxGIqMOIxM2IxFRhxJiZsRiBhxGJmwJiBixJiZsBgBhxGJlwGAGLEmJmwJiBixGJlwGIGHEYmXEYlGLEmJmxJiBixGJlxGIGHEYmXEYgYsSYmbEYgYcRiZcRiBhxGJmxJiBixJiZsRiBhxGJlxGIGHEYmbEmIGLEmJmxGIGHEYmXEYgYcRiZsSYgYsTFXoOrTtF4yTTTfFHKxGJJ1jjzdfUaupqtTKDqTSXoKySRtiZcRiS2ItikLMzM1lhxGJmxJidIxYjEy4jEgw4jEzYkxAxYjEy4jEKxYjEy4jEDDiMTLiMQMWIxMuIxAxYjEyYjEDFiMTLiMQMWIxMuJMSDHiMTJiMQMeIxMmIxAx4kxMuIxAxYjEy4jEDHiMTJiMQMeIxN8RiBpiMTJiTEDSwsb4jEg0sLG&#43;IxCtLCxkxGIGOwsZMRgBjsLGTEYgY7DEyYlxFRixGJlxGIqMWJcTJiMRUY8RiZcRiSoxYgy4gVHb0Y/wBin/2r9jfE2ox/sU/&#43;1fsb4kqjFiMTLiMS1RixJiZsSYioxYjEy4jEVGLEYmXEYiow4DEzYjEVGHEYGbEmIqMWBMTNiMRUYcBgZsRiKjBiMDNiMS1GHAmBnxGIqMGAwM&#43;AwFRx8BgZ8BgKjBgMDPgTAVGDAYGfAYCowYEwORgTAVGDAYGfAYCo4&#43;AwM&#43;AwLUYMCYHIwJgKjBgMDPgMBUcfAYGfAYCo4&#43;IwORgTAVGDEmJyMCYCowYDEz4DAVHHwGJnwGAqMGJMTkYEwFRgxGJnwJgKjBiMTPgMBUYMSYmfAYCowYjEz4EwFRgxGJnwGAqMGJMTPgMBUYMRiZ8BgKq4&#43;IxM&#43;AwFRgxGJnwJgKjBiMTPgMBUYMRiZ8CYEqMGAxM&#43;AwFRgxGJnwGAqMGBMDPgMBUYMBgZ8BgKjBgMDPgMCVGDAYGfAYiowYDAzYDEVGHAYGbEYiqsOAwM2IxFRhxGJmxGIqMOIxM2IxJUYcRiZsRiKjDiMTNiMRUYcRiZsRiKjDiMTNiMRUYcS4mXEmIqMeIxMmJcRUYsRiZMS2FRixGJlxGJKjFiDLiBUdxRh/Yp/wDav2N8DLQh/wCvT/7F&#43;xvgZ4hx8BgcjAYDEjj4DA5GBMBiGDAYGfAYDEOPiMTkYDAYhx8RgcjAYFxDj4DEz4DAYhgxJicjljljEOPiMDkcsnLGIYMBiZ&#43;WOWMQwYkwORyxyxiHHwGBn5Y5ZcQwYDAz8scsYhgxGJn5ZOWMQwYDEz8scsYhgxGJn5Y5bLiHHwGJnwY5YxDBiMDPyxgMQ4&#43;Ix6jPg&#43;AwGIYMBgZ8CYdRcQwYDAz4dQwGIYMBgZ8CYDEMGAwM&#43;AwGIYMCYGfAYCowYDAz4DAtRx8BgZ8BgKjBgTA5GBMBUYMCYHIwGAqOPgMDPgMBUcfAYHIwJgKjBgTA5GBMBUYMCYHIwGAqOPgMDPgMBUcfAYHIwJgKjBgTA5GAwFRx8BgZ8BgKjBgTAz4DAVGDAmByMBgSo4&#43;AwM&#43;AwFRgxJicjAmAqrBgMTPgMBUYMRiZsBgKjDgTEz4DAVGDAYmbAYEqMOIxM2AwFRgxGJnwJgKjDiMTNgMBUYcRiZsBgKjBiMTPyxgKjBiMTPgMBUYMRiZ8BgKjBiMTPgMBUYMRiZ8BgSqsGIxM&#43;AwFRgxGJnw6hgKjBiY3VoqrGk6sFUk7Rg5K73X3L3JnLwO1raPZ1SGFWFNq3Q95zdfR3bZidHiDm&#43;B2JT9COplTjFWUI1nFRS8kl0A5zYdZUu0oL/16f/Yv2MliUF/69P8A7F&#43;xksZ1c4WlhY3sLCqYWlhY3sLCphaYjE3sLCphaYjE3sLCphaYkxMlhYVMLHiMTJYWFTCx4jEyWFhUwseIxMlhYVMLHiMUZLCwqYWPFDFGSwsKmFjwQxRksLCphY8UTBGSwsKmFjwQwRksLCphY8EMEZLCwqYWPBDAyWFhUwsWCGBlsLCqYWLljlmWwsWphYuWTlmawsMRhYeWOWZrCwxGFh5ZOWZ7CwxGFg5Y5fUZ7ExGIwsPLJy&#43;oz2Fi4jCwcscsz2GIxJhcfljlnIxGIxGFx&#43;WTlnJxGIxGFxuUOUcjEYlxlHG5Y5ZycRiMZRxuX1E5fUcrEmIxlHG5fUTl9RysEMC4yji8scvqOVgiYDGlHF5Y5ZysEMBjKOLyycs5fLJyy4yji8snLOXyycsYyji8snLOXyycsYyji8scs5XLHLGIo4nLHLOXyycvqGIcXlk5Zy&#43;WOWMQ4nLJyzl8scsuJXE5Y5ZyuWOWKji8snLOVyxyxUcXljlnJ5Y5ZKjjcsnLOVyxyxUcXljlnJ5Y5YqONy&#43;ocs5PLJyxUcbAYHJ5ZOWKjj4DA5HLHLFRxsBgcjAYCo4&#43;AwORgMBUcfAYGfAYCo4&#43;AwORgMCVHHwGByMBgKjj4DAz4DAVGDDqGBnwGAqrBgMDPgMBUYMDhVdk069ac62o1M4STXK5mMVv6U42f1nZ4DAk0lYmY2OulsbZs5OU9naWUn0t0Ytv6gdjgBqSsuyoL/16f8A2L9jJYwUJrw9Pf8A0L9jJmuJlRrihvYWNOYuI5i4ihihvYWNOYuI5i4ihihvYWNOYuI5i4ii4ob2FjTmLiOYuIpJihvYWNOYuI5i4ikpihvYWNOYuJOYuIpJihksLGPmriOauIpK4oZLCxj5q4jmriKSYoZLCxj5seI5seIoYoZLCxj5q4jnLiKSYoZbCxi5y4jnLiKSYoZbEsY&#43;cuJOcuIpJihlsLGLnLiOdHiKSYoZbCxi50eI50eIpJihlsLGLnx4jnx4ikmKGWwsYufHiOfHiKSYoZbCxi58eJOfHiKSYoZrCxh58eI58eIomKGawsYfER4k8THiKSYoZ7Cxg8THiPEx4ihihnsLGDxMeI8THiKGKGewsYPEx4jxMeJaGKGexLGDxMeI8THiKGKGewsYPEx4jxMeIomKGewsYPFR4jxURQrDPYWMHiojxMeIoVhnsLHH8VHiPFRFCsORYYnH8VEeKiKFYZ7Cxg8VEniohKw5FhY4/iojxUQVhyLCxx/FRHiogrDkWJYweKiPFIJqZ7Cxg8UieKQNTkWFjj&#43;KQ8UimpyLCxx/FIeKQGewsYPEoeJQRnsLGDxK4jxKAz4kxMHiUPEoFGfEYoweI6x4nrBRnwJgjD4jrJ4jrBRnwJgYfEdY8R1lqlGbAYGHn9Zef1ipRlwJgY&#43;d1jnCoyYEwMfOHOFRkwGBj5w5wqN8Bgac0nNFRkwJgac0c0VG&#43;BMDXmjmio2wGBpzBzBUb4EwJzCcwVG2AwNeYOYKjbAmBOYMxUXAYEzGYVcCYDMmYqLgMCZjMVFwBMwKjiUdZ/Yp7/6V&#43;xv4xcToKeqXKhv/AKUbeLXE5q7wu98Z1jxnWdD4tcR4tcRUwu98YuI8auJ0Xi1xJ4tcRUwu&#43;8YuP1k8YuJ0XjCeM6xUwu&#43;8auI8auJ0PjOsnjOsVMLv/GriTxq4nQeM6x4zrFTC7/xq4jxvWef8YuI8YuIquF3/AI3rHjVxPP8AjFxHjFxFTC9B43rJ43rPP&#43;MXEnjVxFTC9D43rHjlxPPeNXEnjVxFTC9D45cR47rPO&#43;OXEeOXElTC9D45cR45cTzvjlxJ4/rLUwvReO62PHdZ5zx/WTx/WSphek8d1k8d1/Web8f1jx/8QqYXpPHdY8d1nmvH/wARPiHWKmF6bx/WTx/WeVntnT05OM9RTjJdKc0ma/G9L&#43;KpfqImO3S2j229mKxZPJPU9Z4/rJ49cTynxvS/iaX30Pjem/E0vvomO3SeG3vAnknqer8euI8euJ5P43pvxNL76HxrT/iKf30Mduk8NveDPJPU9X49cR8Q6zyfxrT/AIin99E&#43;NUPxFP76GZbpPD73gzyT1PVvaHWT4h1nk3tmh9vD7yNXtmj9tD7yGZbpTw&#43;84M8k9T1vxDrHxDrPI/GaX20fvE&#43;M0vtY/eGZbpgyN5wZ5J6nr/iHWPiPWeQ&#43;M0/tY/eJ8Zp/ax7RmW6Y5TI3nBnknqev&#43;IriPiK4nkPjFP7WPaPjFP7SPaTMt0xymRfwZ5J6nr/iK4j4iuJ4/wCMQ&#43;0XaPjEPtF2jMs0xymTfwZ5J6nr/iK4j4j1nj/i8e&#43;u0fF499dozLNMcsJk36J5Hr/iPWPiK7x4/wCLx767SfF13vrGZZpjlgybtD2PxFd4fEl3jx3xdd4nxdcRmWaY5YMq7Q9j8SXeHxJd48d8W6x8W6xm2aY5YMq7Q9j8SXEfElxPHfFutj4t1sZtmmOWOtMudD2PxJcR8SXE8d8WfFj4s&#43;sZtmmOWOsy5ex&#43;JLiPiS7x434q&#43;svxV/xdgzbNMcsdZgl7H4kuI&#43;JLieO&#43;Kv8Ai7C/FJdfYM2zTHLHWmB7D4kuI&#43;JLvHj/AIpL&#43;IfFJfxdgzbOFHLHWYXsfiS7w&#43;JLvHj/AInLg&#43;wfE5cJdgzbOFHLHWYXsPiS4j4iuJ4/4nLhLsL8Tlwl2DNs4UcsdaYYev8AiK7w&#43;I9Z5D4nLhLsKtpS4S7Bm2cKOWOspGl6/wCIriPiK4nkfiUuEuwvxKX8XYM2zhRyx1pS3S9d8RXEfEVxPJfEpcJdhfiMv4uwZtnCjljrP8dL1nxBcS/EFxPJfEZfxdhfiMuvsGbZwo5Y60/x0w9Z8QXEfEFxPKfEZdfYPiMuD7Bm2cKOWOsrZpjlh6v4guJfiC4nlPiEuvsL8QlwfYM2zhRyx1pWzTHLHW9V8QXEvxBcTyq2hLr7DZa99Yzd3wo5Y6zFZwo5Y63qVr1xL49cTy62g&#43;svj3xYzd3wo5Y60xbvhRyx1vUePXEePjxPMePfFl8e&#43;LGdu&#43;FHLHWY93wo5Y63pvHLiXxy4nmfH9bL47rYzt3wo5Y60x7vhRyx1vS&#43;OXEeNXE814/rY8eu8dRfF2uJq7tw3a7Zq9N41cR41HmvHrvF8eu8Wq4XpPGoeNR5vx/8RfHriKmF6TxsR42J5zx64jx64lqYXo/GR4l8ZHiec8cuJfHLiKmF6LxkeI8ZHiee8cu8Xxy4ipheh8XHiPFx4nn/ABq4jxq4ipheg8XHiXxceJ5/xq4l8YuIqYXf&#43;KjxHio8ToPGLvfWXxi7wqYXfeKjxZfFR4nQ&#43;MXeHjP4hVMLvvFR4jxUeJ0XjP4jJRrSrzwjKKdr75WFTC7nxUeIOqdSCdnUu1/HFf8AyBVcLz8NZanHf5IvjOs6COpnivcPET4nFW2F33jesnjes6Lnz4k50&#43;IqYXe&#43;NXeJ47&#43;I6Lmz4scyfeYqYXeeOXEnjus6POXFjN8WKmF3fjlxNfHridLk&#43;LGT4sVXC7nx64k8euJ09yXFTC7h7QXEj2gu8dR7B7BUww7b4gu8avaK7x1d0BUww7N7RXeJ8R6zrfYLiphh2L2j1k&#43;I9bOvuPYKlIc/4i&#43;LJ8QfWcH2ALSHN&#43;IS6zXx8us4nsAKQ5XjpkeuqHGAKOR42p/xjxlQ44IUZ/F1OJPF1OJhHsYKODrJOeqnJ9Lt&#43;xhMupf/ALEty8v2MVzxN7/vd6v6d7L7TdfjHkqLZk39ZfYZNrl7Ck9pd3WRlKgewvtIxkKTd1l9hGVylJ7S7usjGQo9hSMbgo3dYIylUUhdxGNylJcqOWUqBuKRjIUhsRjcFIUjKVKQpGNylRCojG5QCkljIUIEY3KUhSMrlKQpGMqUhSMZUpCkYyoAIylSkKRjKlIUjG5SkKRlKlIUjGQoKGNwUhSVZTKlIUjG5SkL7SMpYdZJw0s5LpVv3Or8XU4nZa//AKKp7P3R059L3R&#43;xPr&#43;kPre4ftrvy/SGfxdTiXxlT/jOOD13u0cjxtT/AIy&#43;OqHG3ApRylrpl8fPrOIAUhzPiEuDKtoS6zhAFIc/4g&#43;svxHrZ19xfrFSkOxW0esvxHrOtuLiqUh2fxFd42&#43;IrvHVXFxUww7b4gu8VbQXeOouLiphh3HxBcTbx67x0t0Liphd349cSrXrvHSX6xk&#43;L7RUwvQLa9VL/db9&#43;8Hn8n3n2gVMLWP5V7i3NYv0Vv8AIt&#43;tkdL/AM6AS/vAC4F&#43;sX62A/50AX947QAFxfrYAEuuLHaBewAf&#43;QAE3cWLrrAvYBfghd8QA9hL/wATF1xYF7BdcSXQu&#43;sC3Q7CX6xdcWBb9aF&#43;sl11i5Bbi/uJd8WN3EC360S6F11kuBwdS14iW5eX7Gm/qXsMmobdeVm/L9jF75M8Te/73er&#43;n&#43;y&#43;03X4x5LdeckW6Jdd5lyXlcybTEqmuou/iiZdbKrviRldC7uKLdE/8vqLkusjGYVP3F97Rrk&#43;L7C362SrKYld3Et11EV&#43;Ni3XFsjG5b9ZbEy6y362TUxmJXdxLci97L75EY3BsS/Bi/WTUymrbcLkv1lXvOWNylF1xF&#43;sMblTKT2lv1nLGVKiL3lv1hjcpSe0q95yxuUq6Ce0vtDG5QQvtOWNylIVBlcpSFOWMqikRSVY3KUhSMblKQqJVjKgAjG5SkKSrG5SkKGUqUhTmsMbpUpCkqxulSkKSrG6QosBVlMr7Ck9hURjKl3kt1FsSrGZcfX/APRVPLo/dHTbzudof9DU8uj90dL7UfTd0fsT6/pD6/uH7a78v0guW/WS74i56z3lv1jsJdcR7Si3Qv1ku&#43;Iv/wAsBfah7CXQuuIFuL9Yu&#43;8Lvq7AF/cP&#43;dJLou7iAv7xcf8AkN/FAP8AnSP&#43;dI3kuuIFAv1j2oB/zpL/AM6Sdg3AAS64gAr4reugu/vGqxxW99HAt49ZA/8AIe0ZLgL8L&#43;xAXf5Cz4pE97ZLLiBt/wCS7Sbu8T0eLF48GBbrj9Zb&#43;41uhe/EDa8uJLvvLtJb3i0eIF/8hfrJ6PWLx4AW/Wh6XEl0OniBd/mx/wCRLLrFo8QLfrJl7h6PWLrgAvLiPS4i/WybusC/&#43;SHt&#43;sWXWLR4sBd9QvLiPR6xf/lgFpcRv7yJu4sbusC&#43;0XfFCwtHi&#43;wDg6ly58vS4efUY1k&#43;h/WZNQ48&#43;Xs6V1GO6f8AU&#43;w8Te/7z6v6h7L7Tdavlji5m1peckvaXo/qv7TS0e99RbR4/UZVbXRp8m95eTS9ovJ/1fWRQXm7e9FSgv6m/YTWwnDxeS7&#43;8u0uMvNpe9kuvJ29g3d76iMpr2htu43Ld&#43;TSNbLj9RbLj9RKspiO0Lv4ou/iiKK83b2F9Fed/YSjG6dHkqT4o2tbzTNdz8/qFlx&#43;ojG5td8UXfxRrZcfqLZcfqIymG2/ii7&#43;KIkum9vYXd5MjC5ejpaLd8Ua7uJd3ElWUwu/qLv6ibuJd3E5Yyqv1FVyJLiXdxDG5bsu8m7iN3E5ljc23l3mpURjc2Vy7yLoAnYxltvG8hTllcpUQpGNylIUSxlSkRTljcpSFDGVKiFRzNWNygAmtjcpQCbWVylIUkwwuUpCkqxlVYpPYXeSjK6FAuX2E1wxmsBU0PYX2EqxulRuJ7C7&#43;BPRjdzLZcWX2kv1GyfUSZnjY3TPG420P&#43;hqez90dJv4Hd7R/wCgqez90dH7T6buj9ifX9IfX9wfbXflPlC3fAXfBDd1Cy4nrvfPYLPqGPWiW60BbS4C8uBLdZfagF33UX2E3dQsu8gLZ9XYLS4Ex60S3WBteXAb&#43;6ib&#43;I7AL7Bb/liWXEYrvIC&#43;l5C8uH1ExfFCzXmBbvuoewm/ihu6gLb/AJYtn5WNbLiLfxIDa0uANcXxQAiwxW6XQW8eDJGKxXpLoLaP/GAuusXX8Q&#43;6N/eQCy4MWjx&#43;slutFx60A9HixePBjB8UMV3kAuhdcWLLiOwCbusuK87ob&#43;8iW60BbQ4vsHodZLdaLi&#43;KAXj19guuLGK85IWjxuA9HrFl1j3WJvfmBbR82x6HFkt1oW60Bbx4MXXFktcuPWl7QHo9Y9HrFlxv7R7rBSy6xaPFks&#43;K7RbrXaBfQ6xdcWS3Wu0W612gX0esej1jB8UvaLJed/aBwdRhz5b5eXl1GihDzcl7zJqL8&#43;VnFdHn1GLFvpku08Te/wC8&#43;r&#43;ney&#43;03Wun&#43;MeXo2/tLzk/YXKHldew0x612lx612mVZ0Nptt45nt9F9HvPsLaPF9hMetdpsqbfQ12kpOhndNscfbkLR4vsLaPF9hVBLpkn7mN/k4r3MlGF10TsntyLjFdMn2FWHk2vejXHrXaXHrXaT6Mbqcc9uRbR7z7C2j3n2Ex612jHrXaT6Mppp7cja0e99RbR731GuL6u02UbdNvdcn0Y3TEcaqMX/V9RtaC/qv7DXe&#43;FveLPq7SfRjMV4225/wBT7C2j3vqNcX/xlxZNehlNNLa0e99RbR731GuLLiyfRjd6raPH6jay4/URRfn0FabJTmYXTzm7j9RbLj9REmWzJr0Mp9VsuP1FsuP1Esy2Zzr0MbvVbLj9RUlx&#43;olmVRbYpOhjcu6yVy7uJGrsWZLtuxjLbdxG7iSzLY516GNylJYtiUnQyuVFJYthSabGMqikKcfRhcpSFH0ZXKVEKh9GM&#43;igAkxMcTG6OZSkKc/Rjd6KUhRr0ebKa6FL7CFuSldkMZiuyF9hd/Al0W6OaTo82N0ToX2DfwF0W6GvQxmugu&#43;BU3wF0N3En/582U/j5rd8C3fAl/aVSXEk2zo82N1s8HzW74F38PrF1xLdcTnXHF5sZrHy&#43;bjbQv4GonuW7f7UdJj1pnd7Rd9DUS6v3R0dnwZ9N3R&#43;xOrj/SH1/cH212qn&#43;U&#43;UFutCy4ou/gLdTPXe&#43;lutF/8AJDF&#43;SuSz4MC2XFDFd5Es&#43;DFnwYFw60Mf4kSz4Mu/zV/YAx/iQt/EhbqaGL8ghZcUMV3kTFryYs&#43;DAuHCSGFvNEs&#43;DHpLiBcf4kN/eQ3&#43;av7BbqYD2xFlxQx4DGXABiu8hh1olnwYs&#43;DAuPWgSz6wBIq6XuLi/cFN4rcugX6kFLLiN3Bi/UhfqQC/Uhd8Srf0RQ96igNQbXjwuMl5RQEGL9xcnwJfqQCy4i64C/UhfqQC79wF1wL0/wBIGoNvR87ewXj5R7WBBZ&#43;4uXVYl1wAbuPYL8ELrui67oBtvzIW67ouu6QQG1uMUvexeC8rgalxfu95c15RSJkuADcusX4bhdd0XXdAgLdd0XXADgan/qJez9jGZdRZ6iSxv0fsa4xX5lbqvvPE3sf/ACXer&#43;o&#43;yvp7TdfjHk1NlF9L3LrLnGP5Ye1smSb3q/tM6Q2m66eKjb0V0el1sOTfSLx7r7S3j3X2klhPohRePdfaW8e6&#43;05ozuunQAt4919psrN2UX2koxuu5mpso3V3uXE2vCP9N379xHJPpT7RSI4357rpnZC3t&#43;XtIW8e79Zbx7v1nM&#43;rKdXEhS3j3frLePd&#43;slGUzzIUt4936y3jw&#43;s5pzsbp5kNkvN9AWPS1u95ck/L6y0jjYXTJe4F1w&#43;su7g&#43;05n1ZSIoVuD7S7uD7TmjGQo3cH2lVuslGNwbR82Td1m25RS38SxHGwuQo3dZd3WcUZXBRu6xuJRjcpSbi7iUY3KXyJuKhEa2MqikKc0YXKUhSU52VylRColOdhMKACczKWxTUpJhhdDYpqU5oxmFKQu8lGN0KVE3l3l9WU86lNd/kVNkmzRLG6zRLYqJv6iq/UcYWF1vOpSb&#43;ob&#43;olOdjMc62a6GVPjuJv6i7&#43;ou3aznXto4&#43;0f&#43;gqez90dEd5tBW0NS/Ru6PejpbQfQ37T6XuiKbiaaf0h9h3BER7a6nCnyhqDZpLpuT0es9d76Fu/ePR6xu4vsAt0&#43;oWfk7k3cX2DdxfYA3i5brj9Q9F&#43;bXsAlxcuK8pX9gsuL7CiXa8y5cSWXH6hZcfqAu7i0LPydyWXH6hZcfqAbxct7f1PsHo&#43;f7AS4u&#43;JbRf8AVb3oYrjf2AMnxF&#43;KJZcfqFlx&#43;oC3XFgllx&#43;oAIxeK3eQsvNoJrFbn0cS3jw&#43;sCej1sZcEkW8eH1i8eH1gRtvpZDa8eH1jd3X2kGoNrLzVvex6HWwNSpN9CLlHyj9Ycr8e0BjxaRPRXFi8eDF49YDLhZBu/Sx6PWPR6wIC&#43;j1j0eDAlxc2xXmmvex/bXeYGpcX57veXJeSa9xLx6&#43;0IeiuLGT8tw9HrHo9YEBfR6x6PWBAX0esm7rAAuK6ej3l9BcWBqk30Itkul39wbT6bj0esDg6ib50kty3dHuMRm1GHPldy8vLqMf9vjLsPE3v&#43;8&#43;r&#43;pexmI9puqR8scXMhS/2&#43;Muwv8Ab4y7DKjeb&#43;aUKX&#43;3xl2F9DjLsJRjddzShTaMYNXvJLizbKnH8uXvsMOl&#43;e7ecURKYpfm7PMOV9y3LgPQ4y7B6HGXYSeZjM8coUvocZdhfQ4yOaMrruZCl9DjLsL6PF9hKMrruZCl9Hi&#43;wejxfYc0YzIbJeb6AlHi&#43;wrxfnbqsKMLpG7&#43;4FtHvfUW0e99RJiWMzCFFo976i2jx&#43;olGUyIoSjx&#43;otlx&#43;olGEyFFlx&#43;otlx&#43;olGV0i3s2fSI2Tvfo6gkuP1Cn&#43;LCZ1hRu4l3cTjCyuCjdxLu4kwsbgpPaVEoxuUpCkowlSkRS3WztZXKUhTjDLG6FKiFRMMsJhSkBMMsbobAhRETxsphsU1KSbJhjdbKlJ7C&#43;w5wywutlsCL3F9hzhljdEqW1yewvsJSYYzEwu9dZVvJfqY9jLhrtZzbXa2Ka5W6Uyp9TOZsuhjfu7obFNb9TLfqZzhlhdZc4&#43;0v&#43;gq&#43;z90dEd7tF30NRWt0dPvR0eP8SPp&#43;54mNxPr&#43;kPsP6/Ex7a6vCnyhE2i7n1DH&#43;JDH&#43;JHrvfMX5byFtb&#43;pF3Ppa94GoNsE&#43;iSJjbzQEBcf4kS3WgBVJolutC3WgLdPpVvcLX6GmLdaGPWu0Kj3dKBsrrzXaLJ9Nl7mBqDbDhKL9pHBrpa7QIC49a7Ri&#43;K7QGT94un5dgxfFdot1rtAbuIGPWu0Aar8q9xbhYqK6WXJroSQBJvfYWS6ZdhG2&#43;lgIt4roV/eMn7vcQAAAAAAAFwfnu949FcWBC4Pz3e8ZPysvcQC&#43;iuLGT8t3uIAAACgAAABJvoQAFsl0u/uGT8t3uAY26Xbq8xkl&#43;Ve1kAC9&#43;kAAAABwdR/vy9n7GMyaj/AH5ez9jGeHvf3LvV/VPY/abr8Y8lKQ3UMd83bq8zOlWt90RtSMXJ2SubrGH8T&#43;ojndWSsuCITVD890Tdt1K5OXSykKcy4mKbFAQIxlSkKRhcpSFIxuU2Sv7iRjfqS6WbN33LckKaqywunXSBvsBCo5llKlIU5Y3KUhSMblRSIpGFylIUjG5t0R94Ql024BFu20YSpSFOGVylIUjG5SkKRjcpSFIwlUUhRthjcpSA4Y3NiohURjcpSAjG5sUhSMbgqIUVYzKlJ0FJMUY3xRsCFOWFylIUjG5SohSMLlFuAKImYZzMwJ8dxsTpG9dG9CkTsZTEXbNTj7S/6Cr7P3R0R3m0WnoKvs/dHRn0vc8TG4mun9IfYf1&#43;Jj210Twp8oAAew&#43;gAAAKpPz3rrIALaL87EcWgE2uhgAW8X0q3Whi/LeBAAAAAAKTQARbxfSuwYp9DTIADTXSgVSa8xdPpXYBAWy4/UAInHFei&#43;jiW8e6&#43;01X5V7igW8e6&#43;0ejwfaQAX0eD7R6PB9owfnu949FcZfUA9DhI2xXmmvezXN&#43;Vl7idIG/wDbXeYzj5Jr3GgAt4vvdo9Dg&#43;0gCr6HB9o9Dg&#43;0gAvocH2j0OD7SAC&#43;hwfaPQ4PtJ0lxt&#43;Z2Aej1lUU1felxZMkvyr2sjbbuwNvQXFhyT6W/dY1AF9Di&#43;wehxfYQAX0OL7B6HF9hABfQ4vsHocX2EAF9Di&#43;wehxfYQJNuyA4eo5fPldy8vLqJGFOSveSS6W0jbUYRryb9J7t3ktxhlJy6X7lwPF3sxF810v6b7K2672m6pMx/jHlxMqlSjuhnfvWVzV4N3yl7V/9mhTKbqv0ZUW66z2&#43;je0O9L7v/2W0O9Ls/8As0Kc1cXW8/bkbpQ77X/iXGHff3TQpK8zC62dM9vo3tDvv7pcYd9/dNCkrzMZtnT25G9od99hbQ777DQErzMbrZ0slod99htGEX/XuXS7GkY5Pgl0srlfct0UXVtmH574mtIlu8GrKTSXUS0O8&#43;w0KczdXiZTbTjb2j3n2FtHvPsNQjmsaGV0Tpb2j3vqFl3vqNSkrzMpjnbWXH6i2XH6jUpK8zG6G9l3vqFl3vqNUUlY0MJidLay731G0Ur3y6DQ2W6PvLExXYxuhbLvFSXeNSo4rGhjMNrLiWy4mpSVjQxltZcS2XE1KSsaGVzay4lsuJqUlY0Mblt1l9pCnNY0MZX2lRCoW3RE64YypSFJNImlGNylIUlY0MZooBTmsaGN0xoCkKSsaGN0xoUt&#43;ohSVjQxmY0L7BewKIuiOJlN0aFuW/URbikmkbGF9Fv1MX6mCnNbdDGZt0F&#43;p9hb9T7AUlbdDG6bdHSZdT7C5dT7AUlbdHSxum3R0mXU&#43;wuXU&#43;wFJW3R0sZm3R0uNtB30VTdw6fejpcE&#43;hpPhc7raX/QVfZ&#43;6OiPpu6JruJ9f0h9j3BNfa3U4U&#43;UK4NdLXaMetdoUvJ70Mb747z13vmPWu0Yvq7SAC4vq7Ri&#43;rtIALhLq7RhLq7SAC4S6u0YS/4yADe0n&#43;ZJ&#43;0cu/Q/Y2aADZ05LpX1kwl1doUmt3kPRfUAwl1dowl1docWt/SuogFwl1dowl1dpABcXwGL4EAFxfAEAEj0I2wfnu94U3irWW7yIwL6K4y&#43;oZvysvcQAAAAAAAAAAAABVFtX6FxY9FeV2BEm&#43;hFtFdLv1IOTfnu4EAuT8t3uIAAAAAAAAAAAAAFUW9/QuIyUfy9oDG2&#43;W7q8w5brLciEA4Wo/wB&#43;Xs/YxmTUf78vZ&#43;xjPD3v7l3q/qnsftN1&#43;MeSlIUybSpSFIxuUpCkY3KUhSMZVG0Y5dSXSzWKu&#43;my82bSlfct0UOeX5r5nZCuV9y3RQIU5maspiI1KACMpUoBGNylIUjG5SkKcsZVFIUjC5TZ7rLgSO9ord3cvEwu2hUQqOGVylIUjG5SkKRjcpSFIxuUpCkYXKUhSMbl8ikRS3a4iWVylRCnDC5QAcsbmxSFIxuEUAjCVKQpGNyl6CFETRlM0VFNeg2QujjjYyvjjjYpSFRw/PcpSFIxuUpCkYy420v&#43;gqez90dEd7tL/oKvs/dHQn0/c/7E&#43;v6Q&#43;y/r32t35T5Qo6CA9h9A2un&#43;btDi1v6VxIE2ugAC7pdT&#43;ojTXSAAAAAAAAAAABNroZck&#43;le1EAFxv&#43;V3J0AuT6Hv94EBbRfQ7dTI4tdKAAACRTxW59BbPgIylivSfRxLlLvPtAlnwYs&#43;DLlLvPtGUu8&#43;0CWfAWfAuUu8&#43;0ZS7z7QJZ8BZ8C5S7z7QnN9DfaBB0m17dM2&#43;pMOpLydvaBMbfmdhkl&#43;Ve1jKXeYzl3mBG297YLnLixnLiwIC5y7zGcuLAgLnLvDOXeAgLnLvDOXeAhDbKXmyZPiBAXJ8TZOS3yaS928DVb3ZFso9Lu&#43;BXUl0KyRM5cV2ARtvpZDbOXFdgzlxXYBqDbOXFdgzlxXYBwNR/vy9n7GMzairNV5K68vJcDTmz4rsR4m9pjn1f1H2U3&#43;E3Wr5Y4&#43;b0alNuZJ9NuxDN8I/dRlqbTN2jp/hCoub4R&#43;6jbmPux&#43;6TUxum7R0tSl5j7sewvMfdj2CkaWN03aOlCpXZtGTk7KMewrqLojGNvd0kpG2r89111aRHSl/JdALm&#43;7HsLm&#43;7HsJNNLKZmOLpQpc33Y9hc33Y9hzSNLK6btCAuf8MewuXUiUhjMzoQpcupFy/hiSkaWN0zoQpcv4Yly/hiSkaWN0zoQpcv4UXL&#43;FEpGljMzoRFKpfwouX8KJSNLG6Z0Kt0W/YQ2bsksVxJf&#43;FFuiNlWE1CoX6kVPqRxMRpZSFF&#43;pFTXAlI0srgouuBbrgSkaWNwUXXAt1wJSNLGQpLrgX2EpGljKlIvcX2EpGljcqKQoiIpMVYypSFRxSNLGVKQDDGljdHO2BCkwxpY3RztgQvtOcMaWMxGlSk3l38SYY0sbojSpSb&#43;Jd5JiNLG6OdRa3QN5d/UI1cbLZxqU19LysVXfATZqrWGV1mqsTDYpr6XUX0uo4w88Pz3W88NimvpdRfS6iYeeGM2c8dvo4&#43;0v&#43;gq&#43;z90dCd7tG/gamXRu6PejpPQ4SPpu6IpuJ9f0h9j/X4p7a78p8oag29DhLtJ6PWeu99AX0esej1gQ2Umt3Sh6HGXYPQ4y7AFk/y9hC&#43;hxkXKD3SyfWBqDZxja6cmvcT0OMuwCAvofxdg9Di&#43;wCAvocWPR4vsAgL6PF9gtHi&#43;wCAto959gtHvPsAgTa6C2j3n2C0e8&#43;wBdd1AWj3n2ADWP5V7ikj&#43;Ve4oAAuNvzOwEKotq/QuLGSXQvayNt9LuBfRX8Qcm93lwIAABAKCACkAAAAAAAABbN7kBCqLfu4lso/md3wI230gW6j&#43;VXfFmvTvYAAAAAAAAAHC1H&#43;/L2fsY0ZNR/vy9n7GM8Pe/uXer&#43;qex&#43;03X4x5KUhTJtKopCojG5TaMXJ2RIxcnZG0pJLGPR5viKccvzXzNaRtVySWMejzfEhCkmasqRClIU5ZXKUhURjcoBSMZUApGNwUAjG5SkKRhKo2irtI1N49DfBCIrLC7YN3bYIU5nXNWUqUhUcsblKQpGNylIUjG5SkKRjcpSFIwlUUiKRjcpUQoiaTVjKlRCol0UljcoAOWNzYAHLG5SkKRjKlIUjC5SkKRjcpSFIxuUdG9AqETRlWip3RUa2tvRshMRthlfEbYUpCnD89zjbS/wCgq&#43;z90dCd9tL/AKCr7P3R0J9P3P8AsT6/pD7L&#43;vfa3flPlAAD2H0AAAAAAAACptO6ZbqXTufE1AFaa6SFTt7i2Uujc&#43;DA1BXu3MgAAAUEAFBABQQAWCbSSXkWyXS79SJk3FLy4EA2y7u4lyAALgAAAAAAAAAAAAAAAFSb93Et1H8u98QCjuvJ2Qct1oqyNbt72AAAAAAAAAAAAAADhaj/AH5ez9jGZNR/vy9n7GM8Pe/uXer&#43;qex&#43;03X4x5KUhTJtKm0YuTsv/wCCRi5Oy/8A4NnJJYx6PN8RTjl&#43;a&#43;6a0jarkksY9Hm&#43;JCIpJmrKlIUqIinLKVKQpGNylIUjG5QAiMZbAhsRjcoRCkY3KUhSMLlRv0RS47zVb3YsvzbvLcI2TLC7aFIinDK5SohURjcpSFIxuUpCkY3KUhSMblKQpGFyopEUjG5SkKRjcpUQpZ1xVldsUpCnDC4KARjcpSFOWMqUhSMLlKiFIxuUpCkY3KUhURjcot5oFQrRlM0E7o2NWvNdJsncTGqsMr41Vhxtpf8AQVfZ&#43;6OhO&#43;2l/wBBV9n7o6E&#43;l7n/AGJ9f0h9h/XvtbvynygAB7D6AAAAAAAAAAAAAAbKXlJXQx847zUb/JgAbXUvzdPFEcWt/SuIEAAAAAAAAX5V7hvIvyr3FADeAAG8AAAAAAAAAAAVRdrvcgJvfQbWUfzb3wQcrboqy&#43;s1Ark3/IgAAAAAAAAAAAAAAAAAHC1H&#43;/L2fsYzsLJvoQxjwXYfgv8AaTddM1fW7j&#43;xWbrc2bvLmcMRG2OL6OAVJt2RzlBN2UV2FaityS62c&#43;CnhOp/slk/855f4cK9liujzfEI5mK4IWXBEn2U8Jx/6Gz/AOueWOpxCnKxXBCy4IngZ4Tie/7J/wCc8v8ADjFRyLLghZcEPAzwnE9&#43;2z/z6WAqM1lwRbLgTwE8JxPfVs/J0sJTLZcAPATwmc98Wz8nSxlNwT4fPCcT3rbPydLQ2KB8PnhdDie87Z&#43;XpRFAJ8OnhdDie8In5elUU1BPh08LoZz76J&#43;Vkj034A1vaHvZrdlnu6aUxdDOfdxPEylMN2Lvic/DZ4XQ5n3MTxM5Uce74i74j4bPC6HE76J4nJKca74i74k&#43;GXcLoZzvKuUU4mT4sZPiyfDLuF0OJmrmFOFk&#43;LGT4vtHwu7hdDiYq5xTgZPi&#43;0ZS4vtJ8Lu4XQ4nd1dginXZS4vtGUuL7R8Ku4fQznc143ZFOsyl3n2jOXefaT4Vdw&#43;hxPtpnjdoVHVZy7z7TaM5NNZPf1ljuq7h9DifaTpdoU6jOXefaM5d59pz8Ju4fQzn2Mz8zuAdPnPvPtLnLvPtJ8Ju4fQ4nu&#43;Z&#43;bodwU6bOfel2jOfel2j4Rdw&#43;hxPdkz83Q7op0nMn35do5k&#43;/LtJ8Iu4fQ4nuq6fn6HeFOi5k&#43;/LtHMn35do&#43;D3cPoZz3PdPz9DvinQcyffl2jmT78u0nwe7h9Die5bp&#43;foegKjz3Mn35do5k&#43;/LtHwa7h9Die47p&#43;eOT&#43;XoinnObU78u0c2p35dpPg13D6HE9wXT/0jk/l6QNPpXSeb5tTvy7Rzan2ku0R3PdGy&#43;ORz/wCfviaxvI5J63d7Rd9n1fZ&#43;6OiNuZNpqUpNPpTZGrb&#43;lPzPV9n7Xw1k2Vrrq9ru72Xg91O7rWs18kAB&#43;x6AAAAAAAAAAAAAAAAAVNx6GQAbejLqf1Eaa6SFUrbnvXBgQG2Kf5X7DUAAAKoSxXovoLhLgzRflXuKBthLusYS4M1AG2Eu6xhLgzUAbYS7rJjLuvsIALjLuvsGMu6&#43;wnQW74sBjLuvsKoSb/Kx&#43;X8zd&#43;CZHOT893ADbFx6ItvjY1cZt3afYLviyXfFgXGXdfYMZd19gu&#43;LJd8WBbPgyWfBlu&#43;LGT4sBZ8GSz4MuUu8&#43;0ZS7z7QFnwZLPgy5S7z7RlLvPtAWfBiz4MZS7z7RlLvPtAWfBkLlLvPtGUu8&#43;0CAucu8y5y7zA1BtnLvMZy7zA1CTbsjZTm3ZNldRpWUr8WBG8VZP3s1Ns5d5jOXEDUFyfEZteYEBtnLq7BnLq7ANQbZy6uwZy6uwDUG2cursGcursA1Bc31dgyfV2AQFyfBdhcupdgGoLl1LsLl1LsA1BcupdhcupdgGoLl1LsNoyu&#43;hbt/QBJ9NuCsalyv5IKX8KAgLl/Chl/CgIC5fwoZfwoCA2y/hRMv4UBAXJd1C67qAgLdd1C8e6u0CA2vHurtJePdXaBAbXj3V2kvHurtAgNrx7q7SXXd&#43;sCBOzuW64fWLx7v1gJfmdughveLhfF7t3Sa3j3X2gQG14919pLx7r7QIDa8e6&#43;0l4919oEBbx7r7R6PB9oEBfR4PtHocH2gQG3ocJdo9DhLtA1Bt6HCXaPQ4S7QNQbehwkT0esCAvo9Y9DrAhVK2570y&#43;hxl2D0OMuwCNW3ren5kN04Ld6TT8g4wW&#43;8mn1AaA29DjLsHocZdgGoL6PF9gtHi&#43;wCAto959hbR7z7ANQbWj3n2C0e8&#43;wDUG1o959gtHvPsA1BtaPefYS0e99QEBbLvfUW0e99QGoNsY99dgxj312Aam2Sf5t/X5jGPfXYLR767AJivKSBcY9/wCoAaL8q9xSL8q9xQAAAAAACpN9CLeMeje/qAijuu3ZFytuju6/Mjbbu95AAuAAAAAAAAAAAAAAAAAAAAAAAAk27IJXdkbNqKsvawDairL2s1AAAAAAAAAAAAAAAAAAAAAAAAAAGy3QfXuNTaW6y4IDUAAAAAAAAAAAAAAAAAAAAAAAAAAWPTbjuICy6b8QIAAAAAAAAAAAAAAAAAAAAAAAAVO3u4EAFa3XXQQqbTDj5ro/YCAAAAAAAAAAAAAAAAAAAAAAAAi/KvcUi/KvcWwAAqjfe9y4gTpNrKP5ungMrflVuvzNbAVyvu6FwIAAAAAAAAAAAAAAAAAAAAAAAAAAAL0bl0gL2Vl59LIAAAAAAAAAAAAAAAAAAAAAAAAAAAAFiryRG7ts2jui37DUAAAAAAAAAAAAAAAAAAAAAAAAAAABemFuG8hYu0t/QBAGrOwAAAAAAAAAAAAAAAAAAAAAAAAAFTsyACtbrro/YhU2ugWvvQEAAAAAAAAAAAAAAAAAAAAAI/lQAAsN80Ju837wAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2h/V/2s1AAB9IAAeQAAqAAgAApAAKQACgACFAAhQAIAAAAAv9C97IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWf5iAAAAAAAAAAAAAAAAAAAAAAAAAAAAALD86AAj6WAAAAAAAAAAAAAAAAAAKAAP/2Q==" alt="Untitled"  />
+</p>
+<p>💡 回到unity中编译通过我们我们发现，左边变成了红色，右边成了绿色，中间是一个过渡区域。这是因为在摄像机的剪裁空间cvv中坐标范围是（-1，1），而物体的模型坐标处于（-0.5，0.5）之间（左下角（-0.5,-0.5），右上角（0.5,0.5）），所以物体的左边就变成了红色，右边就成了绿色。而中间的部分我们发现是一个<strong>缓慢的融合过程区域</strong>！这是由于顶点的颜色处理过后，还有大量的像素没有处理这时在光栅化阶段就是<strong>片元函数</strong>处理的过程中做了一个<strong>差值的运算</strong>。</p>
+<h1 id="while循环语句">while循环语句<a hidden class="anchor" aria-hidden="true" href="#while循环语句">#</a></h1>
+<h2 id="while语句的语法格式">while语句的语法格式<a hidden class="anchor" aria-hidden="true" href="#while语句的语法格式">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>while(条件语句)//满足条件执行，否则退出循坏（先判断，再执行)）
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>语句块；
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>下面是一个示例，代码和效果如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Shader &#34;lxt610/NewSurfaceShaderTest2&#34; {
+</span></span><span style="display:flex;"><span>SubShader
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>Pass
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>CGPROGRAM
+</span></span><span style="display:flex;"><span>#pragma fragment frag
+</span></span><span style="display:flex;"><span>#pragma vertex vert
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> void vert(in float2 objPos:POSITION,out float4 col:COLOR0,out float4 pos:POSITION)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> pos = float4(objPos,0,1);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> if(pos.x &lt; 0 &amp;&amp; pos.y &lt; 0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(1,0,0,1);//红色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> else if(pos.x &lt; 0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(0,1,0,1);//绿色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> else if(pos.y &gt; 0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(1,1,0,1);//黄色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> else
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(0,0,1,1);//蓝色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> //col = pos;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> void frag(inout float4 col:COLOR0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> int i = 0;
+</span></span><span style="display:flex;"><span> while(i &lt; 10)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> i++;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> if(i == 10)
+</span></span><span style="display:flex;"><span> col = float4(0,0,0,1);
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> ENDCG
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这里为了方便演示我们只是循环了十次，由于没有控制台输出这里为了方便观察，结束循环后颜色设为黑色（float4(0,0,0,1)）！这说明循环执行了10次！</p>
+<h1 id="dowhile循环语句">do…while循环语句<a hidden class="anchor" aria-hidden="true" href="#dowhile循环语句">#</a></h1>
+<h2 id="dowhile语句的语法格式">do…while语句的语法格式<a hidden class="anchor" aria-hidden="true" href="#dowhile语句的语法格式">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>语句块；
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>while(条件语句);//满足条件执行，否则退出循坏(先执行一次，再判断)
+</span></span><span style="display:flex;"><span>下面是一个示例，代码和效果如下：
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Shader &#34;lxt610/NewSurfaceShaderTest2&#34; {
+</span></span><span style="display:flex;"><span>SubShader
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>Pass
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>CGPROGRAM
+</span></span><span style="display:flex;"><span>#pragma fragment frag
+</span></span><span style="display:flex;"><span>#pragma vertex vert
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> void vert(in float2 objPos:POSITION,out float4 col:COLOR0,out float4 pos:POSITION)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> pos = float4(objPos,0,1);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> if(pos.x &lt; 0 &amp;&amp; pos.y &lt; 0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(1,0,0,1);//红色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> else if(pos.x &lt; 0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(0,1,0,1);//绿色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> else if(pos.y &gt; 0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(1,1,0,1);//黄色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> else
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(0,0,1,1);//蓝色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> //col = pos;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> void frag(inout float4 col:COLOR0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> int i = 0;
+</span></span><span style="display:flex;"><span> while(i &lt; 10)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> i++;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> if(i == 10)
+</span></span><span style="display:flex;"><span> col = float4(0,0,0,1);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> i = 0;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> do{
+</span></span><span style="display:flex;"><span> i++;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> while(i &lt; 10);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> if(i == 10)
+</span></span><span style="display:flex;"><span> col = float4(1,1,1,1);
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> ENDCG
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这里为了方便演示我们只是循环了十次，由于没有控制台输出这里为了方便观察，结束循环后颜色设为白色（float4(1,1,1,1)）！这说明循环执行了10次退出，然后设为了白色！</p>
+<h1 id="for循环">for循环<a hidden class="anchor" aria-hidden="true" href="#for循环">#</a></h1>
+<h2 id="for循环的语法">for循环的语法<a hidden class="anchor" aria-hidden="true" href="#for循环的语法">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>for(int i = 0; i &lt; 10; i++)（初始值，条件1，语句2）
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span> 语句块；
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>下面是一个示例，代码和效果如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Shader &#34;lxt610/NewSurfaceShaderTest2&#34; {
+</span></span><span style="display:flex;"><span>SubShader
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>Pass
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>CGPROGRAM
+</span></span><span style="display:flex;"><span>#pragma fragment frag
+</span></span><span style="display:flex;"><span>#pragma vertex vert
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> void vert(in float2 objPos:POSITION,out float4 col:COLOR0,out float4 pos:POSITION)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> pos = float4(objPos,0,1);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> if(pos.x &lt; 0 &amp;&amp; pos.y &lt; 0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(1,0,0,1);//红色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> else if(pos.x &lt; 0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(0,1,0,1);//绿色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> else if(pos.y &gt; 0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(1,1,0,1);//黄色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> else
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> col = float4(0,0,1,1);//蓝色
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> //col = pos;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> void frag(inout float4 col:COLOR0)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> for(int i = 0; i &lt; 10; i++)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> if(i == 10)
+</span></span><span style="display:flex;"><span> col = float4(0.5,0.5,0,1);
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> ENDCG
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><img loading="lazy" src="data:image/webp;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4&#43;JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAILAYsDASIAAhEBAxEB/8QAGwABAQADAQEBAAAAAAAAAAAAAAEEAgMFBgf/xABAEAEAAQIDBAcFBwMDBAIDAAAAARECAxIEUQVSYRMUkhUhUxYxYqGRBkHR4dKBcTIzoiJCY8GTI0NUgrFEcrL/xAAbAQEBAAMBAQEAAAAAAAAAAAAAAQQFBgIDB//EACkRAQACAAMHBAMBAQAAAAAAAAARAQMTAhVSFBIxBFEFYaGBMzIhNCP/2gAMAwEAAhEDEQA/AP0Dqei/9PT/APRt&#43;46nov8A09P/ANG37nTLh&#43;Zf84&#43;4y4fmX/OPuVXk780&#43;nwtJh34OBh4d3SRbWyyLaxSdn7PErO19Vq9Fp9ZhW4eJi4kRbdm/xmPbSY2c2J3DovPx&#43;1b9yjwKztKztexO7N2zN9uFqcW&#43;/DvtsvjNb/jWY93ZJfuzQYeHi4mJiajLh3ZaWRF0z7PZEW1n2g8es7Ss7Xo4WHuXHx7MLD1OqmcSIpdOHS2s&#43;MRXLSvL2srD3LpcXFsw4xMb/LEusrF1v2RM7OQPDHuarc&#43;g0mNZhYmNqa3&#43;z&#43;Pj4fZFPH7I/wDlDri/T2mwrMO/pcel90R4zb4eH7A&#43;eHq4&#43;l3XgYnR9Lj33RXNlut/x8K7OTfT7s0Wo0&#43;Hi2349uact1s3W&#43;E1pP2bYB449XE0Ogs1nVLeuYmLMViLLsKK/tmpsdMPdWhxLM2fVWTF02TbdNlYmJp9kSDxh7OFuzduPbbdg6nGxLZvm2Zi63wmK1/08nbuPRedj9q38oPAHv8Acei87H7Vv5TuPRedj9q38oPAHv8Acei87H7Vv5TuPRedj9q38oPAHv8Acei87H7Vv5TuPRedj9q38oPAHv8Acei87H7Vv5TuPRedj9q38oPAHv8Acei87H7Vv5TuPRedj9q38oPAHv8Acei87H7Vv5TuPRedj9q38oPAHv8Acei87H7Vv5TuPRedj9q38oPAHv8Acei87H7Vv5TuPRedj9q38oPAHv8Acei87H7Vv5TuPRedj9q38oPAHv8Acei87H7Vv5TuPRedj9q38oPAHv8Acei87H7Vv5TuPRedj9q38oPAHt4259HhYGJiRi48zbbM0zW/lc9Rod1aXGw8LF1Gqz4nststzUitKzS3wjnIPIHrdT3JETN&#43;8pspETMX4tlsxE&#43;ysTHg3jd&#43;57otmN4zMXWzfbTFs8bY9s&#43;z2QDxh7M7u3TGDh43XcScPFmLbL4utmLpn2UmLW1&#43;6dFZg34k4momLa&#43;Fs2&#43;PwB4gyJ02W6YxMXDwqTSl0zPL20pK3aK&#43;3Fuw&#43;ksm6y6y2fb7bpiNnOAYwz8DdWNj6fDxrb7YjEsi6InnFW/cuP5liDzR6XcuP5lh3Lj&#43;ZYDD9ZaDhx&#43;zH3nrLQcOP2Y&#43;98RUrKSsPt/WWg4cfsx956y0Ef6Mfsx974ioSQ&#43;1xPq/QX20izHrmif4x9kxO3k5Y31RoMfBxcK6dTZGJNZmyIiaeH215Pjwkh9Vh793Th41mJXVzkpMWeEW1iKRNInZ&#43;jO0f1lu3A1eFiYluPNlmLdfdEWxWk23Rt5w&#43;HIJIfour&#43;s/prV6izHvwNbF9k&#43;E22WxPzi7x8cs0msf4x4Gt&#43;u9zY2lwsHT4Wpt6O6KVw7YiIiKfZL878U8dhJD6rVb63HqtTGpuwMa3FiJibrLIibqx9u13wPqrd2n09mFb085ZrMzZHjNazPt5vjayEkPd3rq9zb23jZr8TH3hgY2HbFts4F1ttPb4/v4vQ3d9Rbt3dorNJZfq8a226bs&#43;LS66Zma&#43;Mvk/EJIfbT9YaCtsxbjxlmv8I2TzX1poODH7Mfe&#43;Jg8CSH23rTQ8OP2Y&#43;89aaHhx&#43;zH3viP1KcySH2/rTQ8OP2Y&#43;89aaDhx&#43;zH3viFJIfbes9Dwajsx95600PBqOzH3viCpJD7b1poeDUdmPvPWmh4NR2Y&#43;98SEkPtvWmh4NR2Y&#43;89aaHg1HZj73xISQ&#43;29aaHg1HZj7z1poeDUdmPvfEhJD7b1poeDUdmPvPWmh4NR2Y&#43;98SEkPt/Weh4cfsx956z0PDj9mPvfEBJD7f1nouDUdmPvPWei4NR2Y&#43;98QEkPt/Wei4Mfsx96&#43;stDw4/Zj73w5Qkh9x6y0PDj9mPvPWWh4cfsx974cJIfa431focTBvsi3GrdbMfxj72NrN/bn1&#43;LZiY&#43;FqK27IikxWvjFdsfu&#43;TPEkh9Rfvnc2JZOHfbqrrJti3LMR4RETHh485a96bh6eMbodTmiLopMRMf5Z6&#43;EzT/AMl/zfNUlKSSQ&#43;z0/wBVbt02BZg2W6ibbPZmiJn/AO20/V&#43;gmybJtx6TM&#43;y2PvfFBJD7G36q3ZZjRjRg4s3xy8J&#43;32Vp7fFZ&#43;q91Tfn6riZs0XZos8ZmsXbdsQ&#43;OKRtJIfa4f1lu/CwrMKzAxYtsti22MvsiP1bettD5OL2fxfD0jaEkPuPW2h8rF7P4nrbQ&#43;Ti9n8Xw9Ss7SSCvKFQRVqVlACZ5R8gKAJRQEWoRSQAAIkqAAVkAAAKgC0nYZZQApQJlKgq&#43;DWq1A8Np4cwAAAAAP0gAK8iolQWtQASnNQACkgAAAHhzAAAAAAAAABAUAACsbQA8Ke1JkFEqVSRUqVjYVjYSFSpUqSKJUrO2SRSk7ErO2fmnzJG0wlCpUkT9YWnOECVWhRAkWkHhslAkXw2FUCRZkqgSLWdpVAkWpVAkWParUJRsJVSQAJoAFAAAACvI8BJkFEqlRVqtWoCzJVFgD7SgVA&#43;11twJvtzOLN081wf1YfeYurCw&#43;bT5HGNLO1eqzxMkaq&#43;9xvJDG6rPEdVniZInG43khjdVniOqzxMkONxvJDG6rPEdVniZIcbjeSGN1WeI6rPEyQ43G8kMbqs8R1WeJkhxuN5IY3VZ4jqs8TJDjcbyQxuqzxHVZ4mSHG43khjdVniOqzxMkONxvJDG6rPEdVniZIcbjeSGN1WeI6rPEyQ43G8kMbqs8R1WeJkhxuN5IY3VZ4jqs8TJDjcbyQxuqzxHVZ4mSHG43khjdVniXqs8TIDjcbyQx&#43;rTxE6aYiuZkJP8Z/Za7zGnqQwZnxJu5Ejoa6IJUlBVqVQBaotOZQCIKIv6gUKFYKwBQhQBP1KrXmCUZem/pfqxczK039KWv9Q/D9jqH2QNEoAAAAAAAAAAAAAAAAAAAAAAAAAAAAl38Z/ZUn&#43;MrXVGD9qVVq6uulItKkwRJPiqoFBBaq1FFlAQAAWPYSgoAIDM039KWGzNN/SYHqH4fsdfsgPsGiUAAAAAAAAAAAAAAAAAAAAAAAAAAAASfZP7Kk&#43;yRLYM&#43;1rRtPtHWV0pGvjslYJRVbe37YSnNAABAWPaQKEwi1QABAAAZem/pfqxGXpv6X6sD1D8P2tO32B9g0QAAAAAAAAAAAAAAAAAAAAAAAAAAAAJPslSfZP7FdRgT7UqrV1ldC6ABAAAbJ4KEQqfqCFEbVonhsFSgtSoItCslQKMrTf0v1YjM039L9Wv9Q/D9rTr9gfYNEAAAAAAAAAAAAAAAAAAAAAAAAAAAABP8Z/YJ9k/sV1GA1bNXWV0LABAAGySIoAIAAAALVAAZmn/AKX6sNmaeP8AtfqwPUPw/a06/YBRogChQAKFAAoUAChQAKFAAoUAChQAKFAAoUAChQAKFAAoUAChQAKFACfZP7FCf4z&#43;xQwGrZq6yuhYAIAAAAAAAAAAAAO2Hjzh20iIlxHjXh6cSo1VIyOtXcMHWrtjHWPa&#43;PCYG6su/WZ4TrU8PxcWq8JgbqSyOtTw/E61PD8WOHCYG6ssjrU8PxOtTw/FjhwmBuksjrU8PxOtTw/FjhwmBuksjrU8PxOtTw/FjhwmBuksjrU8PxOtTw/FjhwmBuksjrU8PxOtTw/FjhwmBuksjrU8PxOtTw/FjhwmBuksjrU8PxOtTw/FjhwmBuksjrU8PxOtTw/FjhwmBuksjrU8PxOtTw/FjhwmBuksjrU7DrU7GOJwmBuksjrU7DrU7GOHCYG6SyOtTsOtTsY4cJgbpLI61dsOs3TFKQxw4TB3UbVa0UZKoKggAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD0d0bi3hvrVRp9Jg&#43;22bs9/&#43;NsRHP95B5w76vSY2h1eLpdRbFuLg3TbfETWkuAAAAAAAAAAAKgAoiwKFYEAAEAAAAAAAAAABYgoogtCgILQoCC0PAEFoUgEFoUBBfAoCC0RAFoUUPB&#43;g/TH17oNFufC0e8sO7Cu08RZZOFZN0X27Z2S/PvBYoI&#43;i&#43;rN7bk3tqrsbduixLMa&#43;&#43;Lr8ef8AGL4pNYy7a08XzlFqVBKHgqUApBRUAmEX2lBUF8CgILTmU5ggtOZTmCLElOZTmBVFpzKcwfWei8fyL&#43;3b956Nx4//AB7&#43;3b977fpreOPmdLbxR81hHweP9LzpbYux8O&#43;y26aROaJ8f0lw7j03Fc&#43;v39iWzo8L/KP60fb7tzwpvt2x8yCXm9x6fiuO49PxXPRz28UfMz28UfNIJed3Fp9tx3Fp9tz0ekjbHzOkjij5kDzu4tPtuO4tPtuejnjbBnjbBA87uLT7bjuLT7bno542wZ42wQPO7j0/Fcvcen4rnoZ42wZ42wQPP7j0/Fcdx6fiuehnjbBnjbBA8/uPT8Vx3Hp&#43;K56GeNsGeNsEDzu49PxXHcWm4rno542wZ42wQPP7j0/FcncWm4rno542wZ42wQPO7i0/Fcdx6fiuejnjbBnjbBA87uLTcVy9x6fiuehnjbBnjbBA8/uPT7bjuTT8V3zehnjbBnjbBA87uPT8Vy9x6biuehnjbBnjbBA87uLTcVx3FpuK56OeNsGeNsEDzu4tNxXL3HpuK56GeNsGeNsEDzu4tNxXL3Hp&#43;K56GeNsGeNsEDzu4tNxXLG4tNxXPQzxtgzxtggef3HpuK5O4tPxXPRzxtg6SNsEDz&#43;4tNxXHcWm4rnoZ42x8zPG2PmQPP7i03FcdxabiuehnjbHzM8bY&#43;ZA8/uLTcVx3FpuK56GeNsfMzxtj5kDz&#43;4tNxXHcWm4rnoZ42x8zpI2x8yB53cWm4rjuLTcVz0c8bY&#43;ZnjbHzIHvaHf2PqtZODiYGFZhzgW4tuJZjTdmmbrom2P8Y9lIrsrD0euc3596i3l51vYgn6j3n9mPb2IZOTqfHMp&#43;g9c5nXOb899R7z8&#43;3/pwepN5&#43;fb/wBODJ1GZT9C65zOuc/g/PfUm8/Pt7EHqPefn29iDJ1GZT9B65z&#43;DH1Osxpw8eKWdD0M0ui7/KZpPhSn/L4b1JvPzrexDW76i3ldbNt2NbSYpMZIMnUZlP0WNVFPGTrcbX536k3p59vYg9Sb0863sQZOozKfonW42nW42vzr1LvPzrexB6l3p51vYgydRmU/RetxtOtxtfnXqXennW9iD1LvTzrexBk6jMp&#43;i9bjadbja/OvUu9POt7EHqXefn29iEydRmU/RetxtOtxtfnXqXefn29iD1LvPz7exBk6jMp&#43;i9bjadbja/OvUu8/Pt7EJ6m3n51vYhcnUZlP0brcbTrcbX5z6m3p58diD1NvTz47EGTqMyn6N1uNp1uNr859T70863sQep96edb2IMnUZlP0brcbTrcbX5z6n3p51vYhPVG9fOs7EGTqMyn6P1uNp1uNr849Ub186zsQeqN6&#43;dZ2IMnUvPT9H63G063G1&#43;ceqN6&#43;dZ2IPVG9fOs7EGTqOen6P1uNp1uNr849Ub186zsQeqN6&#43;dZ2IMnUc9P0frcbTrcbX5x6o3r51nYg9Ub186zsQZOo56fo/W42nW42vzj1RvXzrOxB6o3r51nYgydRz0/R&#43;txtOtxtfnHqjevnWdiD1RvXzrOxBk6jnp&#43;j9bja5ajVx0cUn/yWf/1D899Ub186zsQXfUu87opdi2TFYn&#43;Ee2JqZOo56fW636g3pp94XYOFprcTAnUYOHGJlu/xtm6yL5nx9&#43;KftOxth/Vl2Pg334elxImLr7bZur9lKTMU&#43;2vzrD5D1PvXzrOxB6n3r51nYgydRmU&#43;r1P1XqsKzGiNBiZrcO&#43;cO&#43;Jm6Jui3EmK2&#43;HhPRz9v227WR6mvnV4Wn6rN0YmovwuktxImLYtp4zWIpPj7NkT7XxnqfevnWdiD1NvTzbOxBk6jnp9nqvqbE0&#43;NqcO3R4mL0Ex4xdTNGWbp&#43;zlT9XLeO/N64W8sbC0uHbdp8PSRizM4czOaek/1Zvsm23wpPt9sPkvU&#43;9PNt7EHqbennW9iDJ1GZT7D1TdGo1GB1TFunAustm&#43;JpF03VpFJ962n2&#43;2JZO8d542m0Gu1Onti/GwtPdfh2zWYm6LZmI8Pb4vhZ&#43;pN5XUzYlk0msVw48JWPqXedZnpbaz7kGTqOen1eD9S6y3FujWaO6yLrrLcO22JrEzWJr&#43;tvhymGXpN&#43;Y2PpcPFxcHCwr7ordZ00zlnZ/GHxXqbennW9iD1LvTzrOxBk6jnp56Ub0KM1jtCjekJSEGg2ypQEFJgGtCiiiUgoog1mCkNphKA1pBRtRKA1G1CYBqUhSgNaLRaANZgooCUKclBUpyKclAlKI2KBLUbUKBLUbUKBLUbUKBLUbUKBLVaLTxAlKFFAlKEQ2iCgSlIKLQopKUjYsUKLEBIi0EJZFEo6USkKjShRvMJQGtEo3okwDShRvRKA0ojehQGhLeiTCDQbUKA1KNqJQGo2SgJQotCgJRKNqFAa0KNqANcpRsKNaFFEEoUUBKFFASiUbANFo2AaLDYBKCgIKAkQqwAgoCUKNgGtFoqqMmYSjrMNcoktKEw3ymUWXOhR0y8km1CWmVJhvQoo50KN5hKA0oUb0JgHOhRvQpyBolHSiUhBpRMrpSCijnlMrehQHOhTk3oUBzG&#43;UywDShRvlSgNaFG1CgNaFGwDShRtRaA0oUb0SgNRtQoDWhRvFplBpQo3ylAa0KNqLEINKFG9OS0jYDTKUb0KKNKFG9CgNaFG1CgMyiUdZhMqwjnRHXKk2kDnQdaNcpA0ywmWHTKk2oOcxCZXTKZQc8plb0KA508SjehQHOhlb05JQGk2pR0pJMA50KOlEyiuZR0oUBzoUdKJNoNKFG2Uyg1okw3yylJBpQpDeklJBpSCkN6SUkGlIKQ3pJSQaUgpDcBrQiGwCUSjYBrlWigJQoq0BrQo2oUBrRaLRYgGtDK2otAZ0wmV2m1Mr0jllSbXXKmUHLKZXXKZQcaFHWhQHGhR1oZYBxywmWHXIZQcspldciTaDjlkyy65ZMsg5USbXbLKTbIOWVKO2XkmVIHKhR1yyk2yQOdBvlnYZZIHLKZXXJKZZ2EDnQo6ZZ2GWdgOdEpLpllcs7CByoUdcs7EpJA50KOlDKQOdCjfKZUhXOhR1i0ykDllWjplMojnQo6ZTKQOdFo3ymUVpQo3ymUGlFo3yyZZBpQo6ZTKI9CbUyu02plenmXLKZeTrRKBLlQo65Uyiy5TaZXWbUyhLnl5JkdcqZQlyy7WPjY/RX5ctft9rNyvN10U1FOUNb6nj4mBgc2HcXL6YVVquLXrk&#43;X/d&#43;Cdbny/7vwYy1c7tTu9/4pkZenwyet/7c9r8E63/tz2vwY6VNqd3v/FFYenwyetzwf3fgTq6/6P7vwYwbU7vf&#43;KXL0sjrXuf3fgda9z&#43;78GOG1O73/ijL0&#43;GR1r3P7vwSdT7n934OAbU7vf8AijL0u/WfcntfgdZ9ye1&#43;DgG1O73/AIoy9Lv1n3J7R1j3P7vwcA2p3e/8UZel36x7v934J1j3f7vwcQ2p3e/8UZel26xPD/d&#43;B1ieH&#43;78HENqd3v/ABRlaXbrE8P934HT&#43;78fwcQ2p3e/8UZWl26f3fj&#43;B0/u/H8HENqd3v8AxRl6Xbp/d&#43;P4HT&#43;78fwcRNqd3v8AxRl6Xbp/d&#43;P4HT&#43;78fwcQ2p3e/8AFGXpdunjh&#43;P4HT&#43;78fwcQ2p3e/8AFGXpdun934/gdP7vx/BxDand7/xRl6Xbp/d&#43;P4HT&#43;78fwcT7YWvU&#43;7u/3&#43;KS8PSzotjYuWNjaLSjsq/tUxGtEyt6LlnYo0i0y8m&#43;WdhSQl6mXkk2&#43;LvlMj08MfIZeTvNnJMkbEHHLyMvJ2yplBwyGR3yk2wDHyGX9nfLCZAcMryt4xTVR/8ArD28rxt5xTVxHuw1HrH&#43;b7p9sH9mELI5BmCKCIKCygoEoKBKCgSgoEoKBKCgSgoEoKAACAAAAAACx7Y/dCPbC11Hqxb4GV0yrl5P0PT&#43;tMC3KLVyuuUyqjllXK3ymUHr5DIyOjnYdHOx6eWNNiZGVOHya5OQMfJJkZGTkZOQMbKTZVkdHyOj5AxsiZJZPRnRgxckvB3vFNf/APGH082Pm9&#43;RTeM&#43;H&#43;iGn9Z/zfdPtg/s88RXIMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAI9oR7YWuo9/L40XI7TZ4&#43;wycqv0PT&#43;tMC3HIZHfJyMnJZRwySZHfJyMnIke30cGRl9EdES8sScOrXo2ZOEnRrIxOjTo&#43;TM6JOiJGJ0fJOj5MvojouRIxOjOjZfRck6LkSMPony31DGXedPch9r0XJ8d9Txl3tMf7dv/LT&#43;sf5vun2wP2eOqK5FmAAAAAAAAAAAAAAAAAAAAAAAAAAAABWki2xW6I2rXUfWZIkixk9F4L0dH6FX60wLY3RrkZPRnRiMbIZGT0Z0aI&#43;g6I6PkzegOgfDMSGDOHyTo&#43;TO6A6Bcwhg9EdGzug5HQ8jMRg9GdHLO6HknQ8jMGD0R0XJndDyOh5GYMDonw31bGXfcx/tW/8v0boeT89&#43;tLcu/5j/at/5az1XVPb/dPvgfs&#43;fUHLMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAW3&#43;cfui2xW&#43;I5ldR&#43;gdH4r0bL6Hx8YXoeTv6v&#43;U17D6Pkk4c7Gb0PInB5EjB6OTo2b0PI6EkfQ5TK3GFL68lNMplbngSclNMplb1jaEnJTTKZW/geBJyU0ymVv4FY2wSclOeR&#43;a/XkU&#43;o6f7Nv/L9O8H5l9fU9S&#43;HkWf8ALX&#43;o3/w&#43;30wtNVb5oBzrJhRAIUQCFEAhRAIUQCFEAhRAIUQCFEAhRAIUQCFEAhRAIUQCFWyK32xzatrP52/vC11SH63GF9lFjB5M3wr7D/Da7atf8pr7phdDyOh5Mylm2Clm2F50hh9DGxOhjYzKWbSlqc5DA7094nenvPh&#43;&#43;442s77jjfJ9602&#43;5nevvJ3rzfCTvuOP4pO/Pf8AiLyPvO9veTvaOJ8F3573xTv330s5H33e3vJO9vefA9&#43;&#43;98Unfs8RJyW&#43;&#43;7295O9Y4nwE7&#43;niTv73pJOS36D3tHE&#43;G&#43;rcbrG&#43;ukrX/tWx/wDbF7/nilh6nVTrMbpZn7KNf6jf/H7fTD0xbiA599wAAAAAAAAAAAAAAAAAAAAAAAAAAABba5optRYnLNa0oV1LfqMb0tp/IjelvE/Po39dtXv6drsKv&#43;MS8O5foHelvEd52z/qfAd/820b/wCaymXb73vK3iO87eJ8JG/42r3/AG7Vky7fOZp2yZp2pUq8SyIWslZSpUmwKyVKkgFSqAUKlQGRgxS1jVZOF/Fgeo/h&#43;3qnQBoFAAAAAAAAAAAAAAAAAAAAAAAAAAAAEn2Kk&#43;xa6jFmfGUSZ8ZKutro8qJUqC1EiVBqIEigKAAAAAADKwP4MRl4H8Gu9Q/D9rToA0KgAAAAAAAAAAAAAAAAAAAAAAAAAAACT7FSfYV1GFd7ZRZ/lKOtrpTyKgKqtQQAAAAAAAAAAZWn/pfqxWVp/wCl&#43;rA9Q/D9rTqA0KgAAAAAAAAAAAAAAAAAAAAAAAAAAABIFdRgCz7UdZp6PIAoAAAAAAAAAAAAMrT/ANL9WKytN/S/Vgeofh&#43;1p1AaFQAAAAAAAAAAAAAAAAAAAAAAAAAAAAD7CuowJ9sizHjKOs09HkAUAAAAAAAAAAAAHbBxbbLKTtcR8sbB04unl1KyusWczrFnNijE2dg&#43;5LL6fD5p09nP5MUNnYPuSy&#43;ns5nT2c2IGzsH3JZfT2c/kdPh82IGzsH3JZXT2c/kvT2c2IGz8H3JZfT2czp7OfyYgbPwfcll9Ph806ezn8mKGzsH3JZfT2czp7ObEDZ2D7ksvp7OfyOnw&#43;bEDZ2D7ksrp7OfyXp7ObEDZ&#43;D7ksvp7OZ09nP5MQNn4PuSy&#43;nw&#43;adPZz&#43;TFDZ2D7ksvp7OZ09nNiBs7B9yWX09nP5HT4fNiBs7B9yWV09nP5L09nP5MQNn4PuSyusWc/kdPZO1ihs/B9yVqgNhVQgAAAAAAAAAAJ9qgAAAAAANWzUValUAWpVAFqVQBalUAWpVAFqVQBalUAWpVAFqVQBalUAWpVAFqVQBaq1AbDUBsAIAAAA//9k=" alt="Untitled"  />
+</p>
+<p>💡 观察发现变为暗黄色，说明执行了条件语句中的内容，说明了能够正常跳出循环！ 💡 值得注意的是for循环的次数有些版本是有限制的，超过了<strong>1024</strong>就会报运行异常，有的则不会根据实际情况测试！</p>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://EitanWong.github.io/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://EitanWong.github.io/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://EitanWong.github.io/posts/shader/cg%E8%AF%AD%E8%A8%80-%E5%87%BD%E6%95%B0/">
+    <span class="title">« 👈 Prev Page</span>
+    <br>
+    <span>CG语言-函数</span>
+  </a>
+  <a class="next" href="https://EitanWong.github.io/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8Cswizzle%E6%93%8D%E4%BD%9C/">
+    <span class="title">Next Page 👉 »</span>
+    <br>
+    <span>CG语言-数据类型和swizzle操作</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share CG语言-流程控制 on twitter"
+       href="https://twitter.com/intent/tweet/?text=CG%e8%af%ad%e8%a8%80-%e6%b5%81%e7%a8%8b%e6%8e%a7%e5%88%b6&amp;url=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fcg%25E8%25AF%25AD%25E8%25A8%2580-%25E6%25B5%2581%25E7%25A8%258B%25E6%258E%25A7%25E5%2588%25B6%2f&amp;hashtags=">
+    <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share CG语言-流程控制 on linkedin"
+       href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fcg%25E8%25AF%25AD%25E8%25A8%2580-%25E6%25B5%2581%25E7%25A8%258B%25E6%258E%25A7%25E5%2588%25B6%2f&amp;title=CG%e8%af%ad%e8%a8%80-%e6%b5%81%e7%a8%8b%e6%8e%a7%e5%88%b6&amp;summary=CG%e8%af%ad%e8%a8%80-%e6%b5%81%e7%a8%8b%e6%8e%a7%e5%88%b6&amp;source=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fcg%25E8%25AF%25AD%25E8%25A8%2580-%25E6%25B5%2581%25E7%25A8%258B%25E6%258E%25A7%25E5%2588%25B6%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share CG语言-流程控制 on reddit"
+       href="https://reddit.com/submit?url=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fcg%25E8%25AF%25AD%25E8%25A8%2580-%25E6%25B5%2581%25E7%25A8%258B%25E6%258E%25A7%25E5%2588%25B6%2f&title=CG%e8%af%ad%e8%a8%80-%e6%b5%81%e7%a8%8b%e6%8e%a7%e5%88%b6">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share CG语言-流程控制 on facebook"
+       href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fcg%25E8%25AF%25AD%25E8%25A8%2580-%25E6%25B5%2581%25E7%25A8%258B%25E6%258E%25A7%25E5%2588%25B6%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share CG语言-流程控制 on whatsapp"
+       href="https://api.whatsapp.com/send?text=CG%e8%af%ad%e8%a8%80-%e6%b5%81%e7%a8%8b%e6%8e%a7%e5%88%b6%20-%20https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fcg%25E8%25AF%25AD%25E8%25A8%2580-%25E6%25B5%2581%25E7%25A8%258B%25E6%258E%25A7%25E5%2588%25B6%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share CG语言-流程控制 on telegram"
+       href="https://telegram.me/share/url?text=CG%e8%af%ad%e8%a8%80-%e6%b5%81%e7%a8%8b%e6%8e%a7%e5%88%b6&amp;url=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fcg%25E8%25AF%25AD%25E8%25A8%2580-%25E6%25B5%2581%25E7%25A8%258B%25E6%258E%25A7%25E5%2588%25B6%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28">
+            <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2023-2023
+        <a href="https://EitanWong.github.io/" style="color:#939393;">Eitan&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄copy';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻copied!';
+            setTimeout(() => {
+                copybutton.innerText = '📄copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+
+<script>
+    $("code[class^=language] ").on("mouseover", function () {
+        if (this.clientWidth < this.scrollWidth) {
+            $(this).css("width", "135%")
+            $(this).css("border-top-right-radius", "var(--radius)")
+        }
+    }).on("mouseout", function () {
+        $(this).css("width", "100%")
+        $(this).css("border-top-right-radius", "unset")
+    })
+</script>
+</body>
+
+</html>

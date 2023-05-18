@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>MVP矩阵 | Eitan&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="MVP矩阵是图形学中常用的一种矩阵变换方式，用于将三维世界坐标系中的物体转换到二维屏幕坐标系中进行显示。 MVP矩阵是由三个矩阵相乘得到的，它们分别是模型矩阵（Model Matrix）、视图矩阵（View Matrix）和投影矩阵（Projection Matrix）。 模型矩阵用于将物">
+<meta name="author" content="Sulv">
+<link rel="canonical" href="https://EitanWong.github.io/posts/shader/mvp%E7%9F%A9%E9%98%B5/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.0dcd30655f684635e8d387636982f36d45e2607d9dde19da5180cecacb25b773.css" integrity="sha256-Dc0wZV9oRjXo04djaYLzbUXiYH2d3hnaUYDOysslt3M=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="apple-touch-icon" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="mask-icon" href="https://EitanWong.github.io/img/Avatar.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="MVP矩阵" />
+<meta property="og:description" content="MVP矩阵是图形学中常用的一种矩阵变换方式，用于将三维世界坐标系中的物体转换到二维屏幕坐标系中进行显示。 MVP矩阵是由三个矩阵相乘得到的，它们分别是模型矩阵（Model Matrix）、视图矩阵（View Matrix）和投影矩阵（Projection Matrix）。 模型矩阵用于将物" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://EitanWong.github.io/posts/shader/mvp%E7%9F%A9%E9%98%B5/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-05T22:51:14+00:00" />
+<meta property="article:modified_time" content="2023-04-05T22:51:14+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MVP矩阵"/>
+<meta name="twitter:description" content="MVP矩阵是图形学中常用的一种矩阵变换方式，用于将三维世界坐标系中的物体转换到二维屏幕坐标系中进行显示。 MVP矩阵是由三个矩阵相乘得到的，它们分别是模型矩阵（Model Matrix）、视图矩阵（View Matrix）和投影矩阵（Projection Matrix）。 模型矩阵用于将物"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "Posts",
+          "item": "https://EitanWong.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "🖼️ Shader",
+          "item": "https://EitanWong.github.io/posts/shader/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "MVP矩阵",
+      "item": "https://EitanWong.github.io/posts/shader/mvp%E7%9F%A9%E9%98%B5/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "MVP矩阵",
+  "name": "MVP矩阵",
+  "description": "MVP矩阵是图形学中常用的一种矩阵变换方式，用于将三维世界坐标系中的物体转换到二维屏幕坐标系中进行显示。 MVP矩阵是由三个矩阵相乘得到的，它们分别是模型矩阵（Model Matrix）、视图矩阵（View Matrix）和投影矩阵（Projection Matrix）。 模型矩阵用于将物",
+  "keywords": [
+    
+  ],
+  "articleBody": "MVP矩阵是图形学中常用的一种矩阵变换方式，用于将三维世界坐标系中的物体转换到二维屏幕坐标系中进行显示。 MVP矩阵是由三个矩阵相乘得到的，它们分别是模型矩阵（Model Matrix）、视图矩阵（View Matrix）和投影矩阵（Projection Matrix）。\n模型矩阵用于将物体从自身坐标系转换到世界坐标系。 视图矩阵用于将世界坐标系中的物体转换到相机坐标系中。 投影矩阵用于将相机坐标系中的物体投影到二维屏幕坐标系中。 MVP矩阵的计算方式为：MVP = ProjectionMatrix x ViewMatrix x ModelMatrix。 使用MVP矩阵的好处是可以将多个物体同时进行变换和投影，从而提高渲染速度和效率。 需要注意的是，不同的图形库和引擎可能对MVP矩阵的计算方式和顺序有所不同，因此在使用MVP矩阵时需要了解具体的实现方式和参数设置。\n首先是MVP中的M 由模型空间经过M(模型变换)矩阵转为世界空间 将顶点坐标从模型转为世界的顺序为:先缩放,然后旋转,最后进行平移(顶点坐标变换顺序) 但书写顺序是从右向左 所以 矩阵平移矩阵旋转矩阵缩放矩阵�矩阵=平移矩阵⋅旋转矩阵⋅缩放矩阵\n将模型空间下顶点坐标×M矩阵 即可得到世界空间下顶点坐标 然后是MVP中的V 由世界空间经过V(视图变换)矩阵转为观察空间(此步在右手坐标系进行) 将顶点坐标从世界转为观察的顺序为: 1.平移整个观察空间,将相机原点和世界坐标原点重合,坐标轴重合 2.相机在世界空间先旋转,后平移 3.进行逆变换,先平移,再旋转,最后取反 矩阵旋转矩阵平移矩阵M矩阵=旋转矩阵⋅平移矩阵\n最后是MVP中的P 由观察空间经过P(投影变换)矩阵转为裁剪空间 目的:判断顶点是否在可见范围内 矩阵对进行缩放作为范围值如果在范围内则该点位于裁剪空间P矩阵:对X,Y,Z进行缩放,W作为范围值,如果XYZ在W范围内,则该点位于裁剪空间 这一步分为透视投影和正交投影两种 在Unity内置的ShaderLab中，提供了许多内置的变换矩阵\n变量名\n描述\nUNITY_MATRIX_MVP\n当前的模型观察投影矩阵，用于将顶点/方向矢量从模型空间转换到裁剪空间\nUNITY_MATRIX_MV\n当前的模型观察矩阵，用于将顶点/方向矢量从模型空间转换到观察空间\nUNITY_MATRIX_V\n当前的观察矩阵，用于将顶点/方向矢量从世界空间转换到观察空间\nUNITY_MATRIX_P\n当前的投影矩阵，用于将顶点/方向矢量从观察空间转换到裁剪空间\nUNITY_MATRIX_VP\n当前的观察投影矩阵，用于将顶点/方向矢量从世界空间转换到裁剪空间\nUNITY_MATRIX_T_MV\nUNITY_MATRIX_MV 的转置\nUNITY_MATRIX_IT_MV\nUNITY_MATRIX_MV 的逆转置矩阵，常用于将法线从模型空间转换到观察空间\n_Object2World\n当前的模型矩阵，用于将顶点/方向矢量从模型空间转换到世界空间\n_World2Object\n_Object2World 的逆矩阵，用于将顶点/方向矢量从世界空间转换到模型空间\n有了这些内置矩阵，在顶点变换时候，就有很多的方式\nv2f vert (appdata v) { v2f o; // 方式一 o.vertex = mul(UNITY_MATRIX_P, mul(UNITY_MATRIX_MV, v.vertex)); // 方式二 o.vertex = mul(UNITY_MATRIX_P, mul(UNITY_MATRIX_V, mul(_Object2World, v.vertex))); // 方式三 o.vertex = mul(UNITY_MATRIX_VP, mul(_Object2World, v.vertex)); // 方式四，通过构造一个模型观察投影矩阵，然后变换顶点坐标 float4x4 m = mul(UNITY_MATRIX_P, UNITY_MATRIX_MV); o.vertex = mul(m, v.vertex); // 方式五，最常见也是最高效的做法 o.vertex = mul(UNITY_MATRIX_MVP, v.vertex); o.uv = v.uv; return o; } 💡 在新版本的Unity当中 mul(UNITY_MATRIX_MVP, v.vertex);被替换为用函数UnityObjectToClipPos进行几何变换 UnityObjectToClipPos(v.vertex);\n完整代码 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)' Shader \"Learning/GeomertricTransformation/vf1\" { SubShader { pass{ CGPROGRAM #pragma vertex vert #pragma fragment frag #include \"UnityCG.cginc\" struct v2f{ float4 pos:POSITION; }; v2f vert(appdata_base v) { v2f o; o.pos=UnityObjectToClipPos(v.vertex); return o; } fixed4 frag(v2f IN):COLOR { return fixed4(1,1,1,1); } ENDCG } } } 采用C#实现物体自身的几何变换(理解Unity矩阵变换的过程) 1.先尝试使用模型变换到世界的矩阵✖️世界变换到摄像机✖️透视矩阵\nMatrix4x4 mvp=transform.localToWorldMatrix*Camera.main.worldToCameraMatrix* Camera.main.projectionMatrix; 2.将矩阵传入着色器，记得一定要在Update中不断更新mvp和更新数据\nGetComponent().sharedMaterial.SetMatrix(\"_MVP\",mvp); 3.在着色器的顶点程序当中用传入的矩阵与模型的顶点相乘\nuniform float4x4 _MVP; struct v2f{ float4 pos:POSITION; }; v2f vert(appdata_base v) { v2f o; o.pos=mul(_MVP,v.vertex); return o; } 💡 运行时候会发现，模型并没有被正确渲染\n💡 原因是，在Unity中矩阵乘法的顺序定义有一些区别 mvp矩阵改成下方相乘顺序即可\nMatrix4x4 mvp=Camera.main.projectionMatrix*Camera.main.worldToCameraMatrix*transform.localToWorldMatrix; 最终在Game视图中可以被正确渲染， 但是在Editor中由于Scene存在另外的PreviewCamera，上面的矩阵只与游戏当中的MainCamera的矩阵相乘进行变换， 所以在Scene中的PreviewCamera并没有显示其在Scene场景中的视图变换 💡 所以，通常来说在编写Shader时，采用内置的UNITY_MATRIX_MVP即可，Unity内部已经对编辑器的PreviewCamera和运行时的Camera都做了对应的矩阵的相乘， （Unity新版本中，直接使用UnityObjectToClipPos就可以了）\n完整代码 Shader：\n// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)' Shader \"Learning/GeomertricTransformation/vf1\" { SubShader { pass{ CGPROGRAM #pragma vertex vert #pragma fragment frag #include \"UnityCG.cginc\" uniform float4x4 _MVP; struct v2f{ float4 pos:POSITION; }; v2f vert(appdata_base v) { v2f o; o.pos=mul(_MVP,v.vertex); return o; } fixed4 frag(v2f IN):COLOR { return fixed4(1,1,1,1); } ENDCG } } } C#：\nusing UnityEngine; public class MVP : MonoBehaviour { void Update() { Matrix4x4 mvp=Camera.main.projectionMatrix*Camera.main.worldToCameraMatrix*transform.localToWorldMatrix; GetComponent().sharedMaterial.SetMatrix(\"_MVP\",mvp); } } 在C#中构建旋转矩阵使模型旋转 using UnityEngine; public class MVP : MonoBehaviour { void Update() { //构建绕Y轴旋转的矩阵 Matrix4x4 rm=new Matrix4x4(); rm[0,0]=Mathf.Cos(Time.realtimeSinceStartup); rm[0,2]=Mathf.Sin(Time.realtimeSinceStartup); rm[1,1]=1; rm[2,0]=-Mathf.Sin(Time.realtimeSinceStartup); rm[2,2]=Mathf.Cos(Time.realtimeSinceStartup); rm[3,3]=1; Matrix4x4 mvp=Camera.main.projectionMatrix*Camera.main.worldToCameraMatrix*transform.localToWorldMatrix; GetComponent().sharedMaterial.SetMatrix(\"_MVP\",mvp); GetComponent().sharedMaterial.SetMatrix(\"_RM\",rm);//传入着色器 } } // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)' Shader \"Learning/GeomertricTransformation/vf1\" { SubShader { pass{ CGPROGRAM #pragma vertex vert #pragma fragment frag #include \"UnityCG.cginc\" uniform float4x4 _MVP; uniform float4x4 _RM; struct v2f{ float4 pos:POSITION; }; v2f vert(appdata_base v) { v2f o; //将传入的旋转矩阵与顶点相乘 float4 p=mul(_RM,v.vertex); //将顶点变换到裁剪空间 o.pos=UnityObjectToClipPos(p); return o; } fixed4 frag(v2f IN):COLOR { return fixed4(1,1,1,1); } ENDCG } } } 在C#中构建缩放矩阵使模型缩放 Matrix4x4 sm=new Matrix4x4(); sm[0,0]=Mathf.Sin(Time.realtimeSinceStartup)/4+0.5f; sm[1,1]=Mathf.Cos(Time.realtimeSinceStartup)/8+0.5f; sm[2,2]=Mathf.Sin(Time.realtimeSinceStartup)/6+0.5f; sm[3,3]=1; GetComponent().sharedMaterial.SetMatrix(\"_SM\",sm);//传入着色器 v2f vert(appdata_base v) { v2f o; float4 p=mul(_RM,v.vertex); //将缩放矩阵与顶点相乘 p=mul(_SM,p); o.pos=UnityObjectToClipPos(p); return o; } 在Shader内部实现模型旋转 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)' Shader \"Learning/GeomertricTransformation/vf1\" { SubShader { pass{ CGPROGRAM #pragma vertex vert #pragma fragment frag #include \"UnityCG.cginc\" struct v2f{ float4 pos:POSITION; }; //构建绕Y轴旋转的矩阵 float4x4 RotateY(float _Angle) { float4x4 R_M={ cos(_Angle),0,sin(_Angle),0, 0,1,0,0, -sin(_Angle),0,cos(_Angle),0, 0,0,0,1 }; return R_M; } v2f vert(appdata_base v) { v2f o; float4 p=mul(RotateY(_Time*10),v.vertex); o.pos=UnityObjectToClipPos(p); return o; } fixed4 frag(v2f IN):COLOR { return fixed4(1,1,1,1); } ENDCG } } } ",
+  "wordCount" : "2253",
+  "inLanguage": "en",
+  "datePublished": "2023-04-05T22:51:14Z",
+  "dateModified": "2023-04-05T22:51:14Z",
+  "author":{
+    "@type": "Person",
+    "name": "Sulv"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://EitanWong.github.io/posts/shader/mvp%E7%9F%A9%E9%98%B5/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Eitan's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://EitanWong.github.io/img/Avatar.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://EitanWong.github.io/" accesskey="h" title="Eitan&#39;s Blog (Alt + H)">
+            <img src="https://EitanWong.github.io/img/Avatar.png" alt="logo" aria-label="logo"
+                 height="35">Eitan&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://EitanWong.github.io/" title="🏠 Home">
+                <span>🏠 Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/search" title="🔍 Search (Alt &#43; /)" accesskey=/>
+                <span>🔍 Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/posts" title="📚 Posts">
+                <span>📚 Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/tags" title="🧩 Tags">
+                <span>🧩 Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/archives/" title="⏱️ Archives">
+                <span>⏱️ Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/about" title="🙋🏻‍♂️ About">
+                <span>🙋🏻‍♂️ About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://EitanWong.github.io/">🏠 Home</a>&nbsp;»&nbsp;<a href="https://EitanWong.github.io/posts/">Posts</a>&nbsp;»&nbsp;<a href="https://EitanWong.github.io/posts/shader/">🖼️ Shader</a></div>
+            <h1 class="post-title">
+                MVP矩阵
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-04-05
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>2253字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>5分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Sulv
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://EitanWong.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">📖 Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul><ul>
+                <li>
+                    <a href="#%e9%a6%96%e5%85%88%e6%98%afmvp%e4%b8%ad%e7%9a%84m" aria-label="首先是MVP中的M">首先是MVP中的M</a></li>
+                <li>
+                    <a href="#%e5%b0%86%e6%a8%a1%e5%9e%8b%e7%a9%ba%e9%97%b4%e4%b8%8b%e9%a1%b6%e7%82%b9%e5%9d%90%e6%a0%87m%e7%9f%a9%e9%98%b5-%e5%8d%b3%e5%8f%af%e5%be%97%e5%88%b0%e4%b8%96%e7%95%8c%e7%a9%ba%e9%97%b4%e4%b8%8b%e9%a1%b6%e7%82%b9%e5%9d%90%e6%a0%87" aria-label="将模型空间下顶点坐标×M矩阵 即可得到世界空间下顶点坐标">将模型空间下顶点坐标×M矩阵 即可得到世界空间下顶点坐标</a></li>
+                <li>
+                    <a href="#%e7%84%b6%e5%90%8e%e6%98%afmvp%e4%b8%ad%e7%9a%84v" aria-label="然后是MVP中的V">然后是MVP中的V</a></li></ul>
+                    
+                <li>
+                    <a href="#%e6%9c%80%e5%90%8e%e6%98%afmvp%e4%b8%ad%e7%9a%84p" aria-label="最后是MVP中的P">最后是MVP中的P</a><ul>
+                        
+                <li>
+                    <a href="#%e5%ae%8c%e6%95%b4%e4%bb%a3%e7%a0%81" aria-label="完整代码">完整代码</a></li>
+                <li>
+                    <a href="#%e9%87%87%e7%94%a8c%e5%ae%9e%e7%8e%b0%e7%89%a9%e4%bd%93%e8%87%aa%e8%ba%ab%e7%9a%84%e5%87%a0%e4%bd%95%e5%8f%98%e6%8d%a2%e7%90%86%e8%a7%a3unity%e7%9f%a9%e9%98%b5%e5%8f%98%e6%8d%a2%e7%9a%84%e8%bf%87%e7%a8%8b" aria-label="采用C#实现物体自身的几何变换(理解Unity矩阵变换的过程)">采用C#实现物体自身的几何变换(理解Unity矩阵变换的过程)</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%ae%8c%e6%95%b4%e4%bb%a3%e7%a0%81-1" aria-label="完整代码">完整代码</a></li>
+                <li>
+                    <a href="#%e5%9c%a8c%e4%b8%ad%e6%9e%84%e5%bb%ba%e6%97%8b%e8%bd%ac%e7%9f%a9%e9%98%b5%e4%bd%bf%e6%a8%a1%e5%9e%8b%e6%97%8b%e8%bd%ac" aria-label="在C#中构建旋转矩阵使模型旋转">在C#中构建旋转矩阵使模型旋转</a></li>
+                <li>
+                    <a href="#%e5%9c%a8c%e4%b8%ad%e6%9e%84%e5%bb%ba%e7%bc%a9%e6%94%be%e7%9f%a9%e9%98%b5%e4%bd%bf%e6%a8%a1%e5%9e%8b%e7%bc%a9%e6%94%be" aria-label="在C#中构建缩放矩阵使模型缩放">在C#中构建缩放矩阵使模型缩放</a></li>
+                <li>
+                    <a href="#%e5%9c%a8shader%e5%86%85%e9%83%a8%e5%ae%9e%e7%8e%b0%e6%a8%a1%e5%9e%8b%e6%97%8b%e8%bd%ac" aria-label="在Shader内部实现模型旋转">在Shader内部实现模型旋转</a>
+                </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><p>MVP矩阵是图形学中常用的一种矩阵变换方式，用于将三维世界坐标系中的物体转换到二维屏幕坐标系中进行显示。 MVP矩阵是由三个矩阵相乘得到的，它们分别是模型矩阵（Model Matrix）、视图矩阵（View Matrix）和投影矩阵（Projection Matrix）。</p>
+<ul>
+<li>模型矩阵用于将物体从自身坐标系转换到世界坐标系。</li>
+<li>视图矩阵用于将世界坐标系中的物体转换到相机坐标系中。</li>
+<li>投影矩阵用于将相机坐标系中的物体投影到二维屏幕坐标系中。</li>
+</ul>
+<p>MVP矩阵的计算方式为：MVP = ProjectionMatrix x ViewMatrix x ModelMatrix。 使用MVP矩阵的好处是可以将多个物体同时进行变换和投影，从而提高渲染速度和效率。 需要注意的是，不同的图形库和引擎可能对MVP矩阵的计算方式和顺序有所不同，因此在使用MVP矩阵时需要了解具体的实现方式和参数设置。</p>
+<h3 id="首先是mvp中的m">首先是MVP中的M<a hidden class="anchor" aria-hidden="true" href="#首先是mvp中的m">#</a></h3>
+<p>由模型空间经过M(模型变换)矩阵转为世界空间 将顶点坐标从模型转为世界的顺序为:先缩放,然后旋转,最后进行平移(顶点坐标变换顺序) 但书写顺序是从右向左 所以 矩阵平移矩阵旋转矩阵缩放矩阵�矩阵=平移矩阵⋅旋转矩阵⋅缩放矩阵</p>
+<h3 id="将模型空间下顶点坐标m矩阵-即可得到世界空间下顶点坐标">将模型空间下顶点坐标×M矩阵 即可得到世界空间下顶点坐标<a hidden class="anchor" aria-hidden="true" href="#将模型空间下顶点坐标m矩阵-即可得到世界空间下顶点坐标">#</a></h3>
+<h3 id="然后是mvp中的v">然后是MVP中的V<a hidden class="anchor" aria-hidden="true" href="#然后是mvp中的v">#</a></h3>
+<p>由世界空间经过V(视图变换)矩阵转为观察空间(此步在右手坐标系进行) 将顶点坐标从世界转为观察的顺序为: 1.平移整个观察空间,将相机原点和世界坐标原点重合,坐标轴重合 2.相机在世界空间先旋转,后平移 3.进行逆变换,先平移,再旋转,最后取反 矩阵旋转矩阵平移矩阵M矩阵=旋转矩阵⋅平移矩阵</p>
+<h2 id="最后是mvp中的p">最后是MVP中的P<a hidden class="anchor" aria-hidden="true" href="#最后是mvp中的p">#</a></h2>
+<p>由观察空间经过P(投影变换)矩阵转为裁剪空间 目的:判断顶点是否在可见范围内 矩阵对进行缩放作为范围值如果在范围内则该点位于裁剪空间P矩阵:对X,Y,Z进行缩放,W作为范围值,如果XYZ在W范围内,则该点位于裁剪空间 这一步分为透视投影和正交投影两种 在Unity内置的ShaderLab中，提供了许多内置的变换矩阵</p>
+<p>变量名</p>
+<p>描述</p>
+<p>UNITY_MATRIX_MVP</p>
+<p>当前的模型观察投影矩阵，用于将顶点/方向矢量从模型空间转换到裁剪空间</p>
+<p>UNITY_MATRIX_MV</p>
+<p>当前的模型观察矩阵，用于将顶点/方向矢量从模型空间转换到观察空间</p>
+<p>UNITY_MATRIX_V</p>
+<p>当前的观察矩阵，用于将顶点/方向矢量从世界空间转换到观察空间</p>
+<p>UNITY_MATRIX_P</p>
+<p>当前的投影矩阵，用于将顶点/方向矢量从观察空间转换到裁剪空间</p>
+<p>UNITY_MATRIX_VP</p>
+<p>当前的观察投影矩阵，用于将顶点/方向矢量从世界空间转换到裁剪空间</p>
+<p>UNITY_MATRIX_T_MV</p>
+<p>UNITY_MATRIX_MV 的转置</p>
+<p>UNITY_MATRIX_IT_MV</p>
+<p>UNITY_MATRIX_MV 的逆转置矩阵，常用于将法线从模型空间转换到观察空间</p>
+<p>_Object2World</p>
+<p>当前的模型矩阵，用于将顶点/方向矢量从模型空间转换到世界空间</p>
+<p>_World2Object</p>
+<p>_Object2World 的逆矩阵，用于将顶点/方向矢量从世界空间转换到模型空间</p>
+<p>有了这些内置矩阵，在顶点变换时候，就有很多的方式</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>v2f vert (appdata v)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span> v2f o;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> // 方式一 
+</span></span><span style="display:flex;"><span> o.vertex = mul(UNITY_MATRIX_P, mul(UNITY_MATRIX_MV, v.vertex));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> // 方式二
+</span></span><span style="display:flex;"><span> o.vertex = mul(UNITY_MATRIX_P, mul(UNITY_MATRIX_V, mul(_Object2World, v.vertex)));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> // 方式三 
+</span></span><span style="display:flex;"><span> o.vertex = mul(UNITY_MATRIX_VP, mul(_Object2World, v.vertex));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> // 方式四，通过构造一个模型观察投影矩阵，然后变换顶点坐标 
+</span></span><span style="display:flex;"><span> float4x4 m = mul(UNITY_MATRIX_P, UNITY_MATRIX_MV);
+</span></span><span style="display:flex;"><span> o.vertex = mul(m, v.vertex);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> // 方式五，最常见也是最高效的做法 
+</span></span><span style="display:flex;"><span> o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> o.uv = v.uv;
+</span></span><span style="display:flex;"><span> return o;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>💡 在新版本的Unity当中 mul(UNITY_MATRIX_MVP, v.vertex);被替换为用函数UnityObjectToClipPos进行几何变换 UnityObjectToClipPos(v.vertex);</p>
+<h3 id="完整代码">完整代码<a hidden class="anchor" aria-hidden="true" href="#完整代码">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>// Upgrade NOTE: replaced &#39;mul(UNITY_MATRIX_MVP,*)&#39; with &#39;UnityObjectToClipPos(*)&#39;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Shader &#34;Learning/GeomertricTransformation/vf1&#34;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span> SubShader
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> pass{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> CGPROGRAM
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #pragma vertex vert
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #pragma fragment frag
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #include &#34;UnityCG.cginc&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> struct v2f{
+</span></span><span style="display:flex;"><span> float4 pos:POSITION;
+</span></span><span style="display:flex;"><span> };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> v2f vert(appdata_base v)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> v2f o;
+</span></span><span style="display:flex;"><span> o.pos=UnityObjectToClipPos(v.vertex);
+</span></span><span style="display:flex;"><span> return o;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> fixed4 frag(v2f IN):COLOR
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> return fixed4(1,1,1,1);
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> ENDCG 
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="采用c实现物体自身的几何变换理解unity矩阵变换的过程">采用C#实现物体自身的几何变换(理解Unity矩阵变换的过程)<a hidden class="anchor" aria-hidden="true" href="#采用c实现物体自身的几何变换理解unity矩阵变换的过程">#</a></h3>
+<p>1.先尝试使用模型变换到世界的矩阵✖️世界变换到摄像机✖️透视矩阵</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Matrix4x4 mvp=transform.localToWorldMatrix*Camera.main.worldToCameraMatrix* Camera.main.projectionMatrix;
+</span></span></code></pre></div><p>2.将矩阵传入着色器，记得一定要在Update中不断更新mvp和更新数据</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>GetComponent().sharedMaterial.SetMatrix(&#34;_MVP&#34;,mvp);
+</span></span></code></pre></div><p>3.在着色器的顶点程序当中用传入的矩阵与模型的顶点相乘</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>uniform float4x4 _MVP;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> struct v2f{
+</span></span><span style="display:flex;"><span> float4 pos:POSITION;
+</span></span><span style="display:flex;"><span> };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> v2f vert(appdata_base v)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> v2f o;
+</span></span><span style="display:flex;"><span> o.pos=mul(_MVP,v.vertex);
+</span></span><span style="display:flex;"><span> return o;
+</span></span><span style="display:flex;"><span> }
+</span></span></code></pre></div><p>💡 运行时候会发现，模型并没有被正确渲染</p>
+<p><img loading="lazy" src="data:image/webp;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4&#43;JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAHNA1kDASIAAhEBAxEB/8QAHAABAAMBAQEBAQAAAAAAAAAAAAECAwQGBQcI/8QAJBABAQEAAQQDAQEBAQEBAAAAABESExQBYVFSFQIDYgUE8JH/xAAZAQEBAQEBAQAAAAAAAAAAAAAAAQQDAgX/xAAdEQEBAQEBAQEBAQEAAAAAAAAAERIBQQMEAiEx/9oADAMBAAIRAxEAPwDGEXiI&#43;qyKxEXiICsItCApCLQiCsImEBWEWhAVhEwgKwi0ICsImEBWEWhAVhEwgKwi0IKrCJhAVhFoQFYRMICsItCArCLREQVhFoQFYRaIgIiItCArCLQgKwi0RAVhFoQFYRaEBWETCArCLQgKwWiICIRMICIRMAQRKYCsItCArCLQgKwi0ICsItCArCLQgKwi0ICsTEwgIhEkBAmAIEwgITEwgIgmEBAkBAmAIImJgIIkgIgmAIglIIEwBEEwgISmEBEImJgKxMTEwFY/OH6TH5szfo8dfn6/UoRaEa3FSEWhAUhF4iApCLxEBSEXiICsRF4QFIRaEBSEWhAVhFoiArCLQiCsImEBWEWhAVhFoiArCLQgKwi0RARERaEBWEWhAViItCCqwi0ICsItEQEREWhAVhFoQFYRaIgKwi0ICsItCIKwiYQFYRaEBWEWhAVhFoQFYRaEBWEWhAVhFoQFYRaEBWEWhAVhFoiAiETCAiETCAiETEwFYRaEBEIkgIImEBEEwBBEpgKxMTCAgiYQEETEwFYLQgIhExMBWEWhARCLQgIhExMBWEWhARCLQgKx&#43;av0yPzNm/R46/P1&#43;rQi8RGtwViIvERRWIi8ICkItCApCLxEBSEXhAUiIvCIqkItCApCLxEBSEXhAZwi8ICkRF4QFIReIgKxEXhAUhFoQFYRaIiCsItCArCLREBERFoQFYRaEBWEWiICIiLQgKwi0ICsItEQEREWhBVYRaEBWEWhAVhEwgKwi0ICsItCAqLQgKi0ICpFoQFYRaEBWETCAiETCAiETCAiETCAiETEwFYRaEBVMTCAiEWhAVhFoQFYmJiYCsItCArExMTEFYRaEBWJiYmArCLQgKxMTCAiEWhARCJiYCsItCAiPzF&#43;nx&#43;YM36PHX5&#43;v1uIi8RGxnVhFoQFIRaEFViIvEQFYRaEBSEXiICsRF4QFIRaEBSEXiICkIvCApEReEBSEXiICkIvCApEReERVIReIgKQi8ICkRF4QFIiNIiApCLwgKREXhAUhF4iArCLQgKwi0REFYRaEBWEWhAVhFoiAiIi0ICsItCArCLQgKwiYQEQiYQEREWhAVhFoQVWEWhAVhFomApCLwgKRMWhAVhFoQFYRaEBWEWhAViYtCArCLQgKwi0ICIRaEBWEWhARCLQgKwi0ICsItCAiEWhBFYRaEFViYmEERCLQgIhEwgIj8ufqcfljL&#43;jx2&#43;fr9fiIvCNjOpCLQgKxEXiICsItCApCLxEBWEWhAUhF4iArEReEBSEXiICkIvCApEReEFUhF4iArEReEQUhF4iApCLwgKQi0ICkIvCApEReEBSEXiICkIvCApERpEQFIReEFZwi8ICkIvEQFIReEBSEXhAZwjSIgKQi8ICkIvCApCLwiCkIvCApCLQgKwi8ICkIvCApCLwgKRMWhAVhFoQFYRaEBWEWhAVhFoQFYRaEBWEWhAViYmJgKwi0ICsItCAiEWhAVhFoQFYRaEBWEWhARCJiYCsItCArExMICIRMTAVj8rfq0flLL&#43;jx1&#43;Xr9jhF4RscGcI0iICkIvCAzhF4QFIRaEBSEXiICsItCApCLxEBWEWhAUhF4iArEReEBSEXiICsRF4QFIReIgKxEXhAUhF4QFIiLwgKQi8IgpEReEFUhF4iApCLwgKREaREBSEXhAUhF4iApCLwgKQi8IDOEXhAUhF4QFIReEBSEXiICkIvCApCLwgKQi8IKpCLwgKQi8ICsItCCKwi0ICsItCCqwi0ICkIvCIKQi8ICkTEwiiIRaEQVhFoQFYRaEBWJiYQEQi0ICsItCArCLQgisItEwVSJi0IIrCLQgKxMWhAVj8nfrUfkrL&#43;jx2&#43;Xr9qiI0hGxnZwyvCAzhGkIDOIjSEFZxEa5RkGcI0yjIM4RpkyDOIjTJkGcIvCAzhGkRAUiI0yZBnCL5MgpERplEBSEXhAUhFoQFIReEBSEWhAUhF4QFIReIgKQi8ICkIvEQFIReEBSEXiICkIvCApCLwgKREXhEFIReEBSEXhAUhFoQVSEXhAUhF4QFIRaEBSEXhAUhF4QFIReEBSEXhAUhF4iIKwi0ICsItCArCLQgKwi0ICsItCArCLQgKwi8ICkIvCArCLRMBSEXhAUiYtCArCLRMBSEXhAUiYtCArCLRMBSEXhAVj8ifr8fkDL&#43;jx2&#43;Xr9whGmTLazsoRpkyDOEXyZBnCNMoyCkIvCAzhF4QFIiNIiApki8IgzyZaQgM8oy0hAZ5MtIiAzyZaQyDLJlpkyDPKMtcoyDPJlpkyKyyZaZMgzyjLXKMgzyRpkyDKEaZMgziI1yjIM4RpkyDOEXyZBnCNMmQZwi&#43;TIKREaZRkFIRfJkFIiNMmQZwi&#43;TIKQi&#43;TIKQi&#43;TIM4RplGQUhF8mUFIRfJkGcI0yZBnCNMmQZwi8ICkIvCApCLwgKQyvEwVnExeEBSEXhAUhF4QFIReEBSEXhEFIReEBSEXhAUiYtCArCLQgKwi8ICkIvCArCLQgKwi0ICsIvkyCkfjz9ky/G2X9Hjt8vX7xky0yZbGZnlGWuUZBnky0yZBlky1yjIrPKMtcmQZZRlrkyDLJlrlGQZZMtcmQY5MtcmQZZRltlGQZQjXJkGMI1yZBlCNMmVGUI1yjIM4RplGUGcI0yZBnDLTKMgzyZaQgM8oy0yZBnlGWsRkGeTLTJkGeUZa5RkGeTLTJkGeUZa5RkGeTLTJkGWTLXKMgzyZaZMissmWmTIM8mWmTIM8oy1yjKDPJlpkyDPJlpkyDPJlplEBTKMtIZBnky0hAZ5MtMkBnky0hAZ5Mr5ICkIvDIKQi&#43;TIKQi&#43;TKCkIvkyCkIvlOQZwjTJkGcI0yZBnDLTJkGeTLTJkFMmWmSAzyZaZIgzyZaZICkIvDIKQjSGQUhF4QFI/F37XH4ozfo8d/l6/oHJlpky1szLJlrkyDLKMtcmQZZMtcmQZZRlrkyDLJlrlGVGWTLXJkGWUZbZRkGWTLXJkGOTLXJkGWUZbZRkGWTLXJkGOTLbKMgyyjLbJkGOTLXJkVjky2yjIMsoy2yZBjky1yZBjky2yjIMsoy2yZBjlGW2TIMcmW2UZBllGW2TIMcmW2UZQY5MtsmQY5RltkyDHJltkyDDJltkyDHJltlGQZZRltkyDHJltlGAZZMtcmQZZRltlGQZZMtcmQZZMtcmRWWTLXJlBlky1yZBlky0ynIMsmWmTIM8mWmTIMspy0yZBnky0yZBnky0yZQZ5MtMmQZ5MtMmQZ5MtMmQZ5MtIQGcI0hAUyZXyQFMmV4QFIReEBSEaQiDOJi8ICkfiD9yj8NZv0eO/wAvX9F4MNsGGqszDBhvhGFoxwjDfBgowwYb4RgowwZb4MFGGUZdGEYKMMmW&#43;Ed/wUY5RlvgwUYZMtsGAYZMt8IwoxyZbYRgoxyZbYMAxyjLbBgGOTLbCMAxyZbYMAxyZa5MgxyZbZRkGWUZbZMgxyZa5MgxyZbZMgxyjLbJkVjky2yjAMcmW2TIjHJlrnwZFY5MtsoyDLKMNsmUGOTLXJkGODLbJkGODLXJkGOTLbKMgyyZa5MgyyjLbJkGOTLXJkGWUZbZMgxz4MtcmQZZRltkygxyZbZRkGWTLXJkGWTLXJkGWUZbYMAxyZa4MAyyZa4MAyyZa4MAyyZa4MIMsmWuE5KMcmW2UZKMsmWuTJVZZMtsoyDLJlrkyUZZMtcpylGWTLXJkoyyZa5MlGWTLXJkoyy/CX73l&#43;CM338dvl6/pfBhtky01nY4RhtkyUY4MNsmSjHJltkyUY4RltkyUY5M&#43;G2TJRjlGW&#43;UZWjHHgx4bZMlGGDDfBkowwjDfJgowwYb4MFHPgw3wYKMMIw6MGCjnwYb4MFHPgw6MIwUYYRh0YMLRz4Rh0YMFHPgw6MIwUc&#43;DDowYKOfCMOjBgo58HG6MIwUc&#43;DjdGEYKOfBh0YMFHPhGHRgwUc&#43;DDowjBRz4MOjBgo58Iw6MGEo58Iw6cIwUc&#43;DDowYKOfCMOjHgwVXPgw6MIwUYYRh0YMFHPgw6ONGCjDBhvgwUYYRhvgwUYYMN8GEowwYb4RgowwYb4RgoxwYbYMFGODDbBkoxwYbZMpRjlGW&#43;UZKMcmG2TJVY4MNsmSjHBhtkyUY5MNsoyUZYMNcmSjLBhrkyUZZMtcmUoyyZa5MlGWTLXJkGWTLXJkGWTLXJkoyy/n9/QuX89M/28dvl6/qPBh0YMPemdz4RxunHg4zQ5sGHTxnGaHNgw6eNHGaHNgw6eM4zQ5sGHTxnH4XQ5sIw6eM4zQ5sGHTxnGaHNgw6eNHGaHNgw6eM4zQ5sGXTxo410ObHgx4dPGcZoc2PBl08aOM0OfBh0cZxroc&#43;EYdHGcZoc&#43;DDo40cZoc&#43;DDo4zjNDnwjDo4zjXQ58GHRxo4zQwwjDo4zjNDnwYdHGjjXQ58eDDo4zHc0OfCMOjjMGhz4MN&#43;M4&#43;5Rz4MOjjRxlGGEYdGDjKOfCMOjBjwUc&#43;DDo4&#43;6MFHPgw6MGCjnwjDowYKrnwYb4MFHPgw6ONHGUYYRh0caOMowwYb8Zx9yjnwYb8Zx9yjDCMOjjRxlGGDDfBxlHPgw6MIwlGGEYdGDBRz4MOjjRxlGGDDfjOMo58mXRxnGUc&#43;DLo4zBRzZMujBgqufPgy6MGCjnyZdGDCUc2TPh0YMFHPnwZdGDBRz5MujjOMo58mHRxmCjnwYdGDCUc&#43;DDfBgowwYb4MFGGH86v6Rw/m5x&#43;vf&#43;O/y9f1jCLwjxXPKkIvCFMqQi8IUypCLwi0ypCLwhTKkIvCFTKkMrwhTKmTK8IUypkyvCFMs8mfDSEKZZ5M9mkIUyzz2M9l4QplTPZGOzSEKZZ47GOzSEKmWeOxjs0hCmWWOxxtYQpllxmOzWEWmWXGjjbQhoyx4zjbRENGWXGjjbQhoyx4zjbQhpMseLwjjbwi6M9YcRxeG8IaJ1z8ZxuiGTROubjOJ0QyaI5uM43TkyuiObiRxeHVlGexsjm4jidOexnsaSOXiON1Y7Ix2XZHLxnE6sdjBscnGcbqwcZscvGjjdfGjjXY5eM4/Dq4zjNDk4zjdXGcZocvGjjdfH4Rxmhy8ZxurjRxmhy8ZxurjONdK5OM43VxnGUcvGjjdXH4OPwUcvH4ON08fg40o5uM4/Dp4zjKOXjON08ZxlHNxnG6eNHGUc3Gcbp4zjKOXjON08ZxlHNxmHRxmCjnwjHh04Rgo58GHRgwUc&#43;DDowjCUYYMN8GCjDBhvgwVXPgx4dGEYKMMGG&#43;DHgoww/mZ/UGPD&#43;X3P&#43;&#43;u3y9f1tCKb7ezk7e3mGuLwinJ29nJ29kNcXiYz5O3s5O3snTXGkIz5O3s5O3shrjSEZ8nb2cnb2Q1xpERTk7ezk7eyGuLwjPl7ezl7eyGuNIRny9vZy9vZDXGkIz5e3s5e3snTX8tIRny9vZy9vZOpr&#43;WkIz5e3s5e3snV1xpCM&#43;bt7Rzfn2RNfy1hGXN&#43;fZzfn2Tpr&#43;WsIy5/wA&#43;zn/PshrjWEZc/wCfZz/n2Q1xrCMuf8&#43;0c/59kNcbQjHn/Ps5/wA&#43;yGuNoRjz/n2c/wCfaw1xtERl1H59o6j8&#43;yJrjaEY9R&#43;fZ1H59kNcbQjHqPz7Oo/PshrjaEY9R&#43;fZ1H59kNcbQjHqPz7R1H59kNcbwjDqPz7Oo/PsiXjeIjHqPz7Op/PsheNoRj1P59o6n8&#43;wvG8Iw6n8&#43;zqfz7C8bwjDqfz7Op/Il43iIx6n8nU/kLxtCMOp/J1P5C8bwjDqfydT&#43;VP8bwjDqfydT2E/xvCOfqex1PYP8dERGHU9k9T2BtCMOp7HU9gbwjDqOx1HYG&#43;UZY9R2R1Pb2I3yZ7emHUnUeQbZ7GOzHqPJ1HkG2Oxhh1Hk6jytG2DHZj1Hk5/JRtjsjDPn8nOUaYONlzeTmKNMHGz5jlKL48GGfN5OYo0wjCnL5OXyUXwjCnKcvkovgwpy&#43;Tl8lFsGFeXyjkKL4MKcieTyUTgwjkOQonBhXZsonBhGzfkonD&#43;WH9Tb8v5ZeP6dvl6/p/q/KOr8vidZ5R1nla8Zfc6vydX5fD6zyjrPJTL7vV&#43;UdX5fD6zyjrfJVy&#43;71flHV&#43;Xwut8nW&#43;SmX3er8o6zy&#43;F1vlHW&#43;SmX3us8nWeXwOt8nXeSmX3&#43;s8o6zy&#43;B13k67yUy&#43;/1nk6zy8/13k67yUy&#43;/wBZ5Os8vP8AXeTrvJTL0HW&#43;TrPLz3XeTr/JTL0HWeTrfLz3X&#43;Tr/JTL0PW&#43;Udb5ee6/yjr/APRTL0XW&#43;Ve//t8vPd//AH&#43;Ud/8Aof6KuXoeu8nXeXm&#43;/wD0PKO//R/0Uy9L13lHXeXmvsf9H2Pb5JTL0vXeTrvLzP2Pb5H2Pb5LTL03XeUdd29vM/Y9vkfY9vklMvTdd5Ou8vMfZf6Psu3yKZen6/ydd5eX&#43;y7fI&#43;y7fIpl6frvJ1/l5f7Lt8j7Lt8imXp&#43;v8nX9vby/wBl2&#43;SPsu3yKZep6/t7Ov8ALyv2f&#43;j7P/RVy9T1/b2df29vLfZ/6Ps&#43;3yKZep6/t7Ov7e3lvs/9I&#43;z/ANFMvVdf29nX9vbyv2f&#43;j7Pt8imXquv7ezr&#43;3t5X7P8A0faf6KZeq6/t7Ov8vKfZ9vkfZ/6KZer6/t7Ov7e3lfs/9H2n&#43;imXquv7ezr&#43;3t5X7Pt8j7Pt8imXquv7ezr&#43;3t5X7P8A0n7P/RTL1PX9vZ1/b28t9n/o&#43;z/0Uy9T13b2nru3t5X7P/R9n/opl6rru3s67t7eW&#43;z7fI&#43;y7fIqZep67t7T13b28t9l2&#43;Sfsu3yKZeo67t7Ot7e3mPsu3yPsu3yKZen63t7T1vb28x9l2&#43;R9l/opl6fre3s63t7eZ&#43;y7fI&#43;x7fIpl6bre3s63t7ea&#43;x7fI&#43;x7fJaZem6zt7Os7e3mfse3yT9j29lMvS9Z29nWdvbzX2P&#43;k9v&#43;h/opl6Xt/6&#43;3tPb/19vbzfb/oeVu3/AEP9FMvR9X29nV/n2891/wDpPX&#43;Spl6Hqu3s6r8&#43;3nuv8p6/yUy9B1X59nVfn28/1/lPXeSmXoOp/Ps6n8&#43;3n&#43;u8p67yUy&#43;/1P59nU/n2&#43;D13k67yUy&#43;91P59nUfn2&#43;F13k67yUy&#43;91H59nUfn2&#43;F13k63yUy&#43;71H59nUfn2&#43;H1vk63yGX3eft7Oft7fD63ynrfJSPt8/wCfaef8&#43;3xOt8nW&#43;Qy&#43;3zdvZzdvb4vW&#43;U9Z5Ej7PN29nN29vjdZ5T1nkI&#43;zzdvb&#43;Y39B9Z5fz4nXX58j9j67yjrvLznV/0R1f8AR5r1l6Pr/KOv8vO9V/T2jqf6eyrl6Lr/ACjv/wC/y871H9PZz/0&#43;RTL0PX&#43;UfYeXnub&#43;nyRy/v5dymXoPsP9I&#43;w/0&#43;Byfv5d0b/Xy7lMvv8A2HlH2P8Ap8HX699zXf33KZfd&#43;x/0j7Ht8nwtd/ff/wDS9/ZVy&#43;59j2&#43;R9j2&#43;T4d8hTL7f2X&#43;kfZdvk&#43;KFM8fZ&#43;y7fJH2fb5PjhTPH1vs&#43;3yR9n2&#43;T5SCmePq/Z9vkj7Py&#43;WFJx9Pv/0/PdXv/wBLv77vnBScd/f/AKP68q9/&#43;h&#43;/LiCrOOvr/wCh1/8ARyFCcdXXf0Ou/q5aUJx1dd/VHW/1/wDu7mpQnHT1v9TrP6&#43;3NShHR1n9fZ1f9fbnohG/V/19nVf1&#43;TACNup/r8jqf6/JiA16j&#43;nyOo/p8mQDXn/p8u5z/wBPl3ZANef&#43;ny7nP/T5d2QDXn/p8u6Ob&#43;ny7swGnN/T5dzm/p8u7MBpzf0&#43;Xc5v6fLuzAac39Pl3Ob&#43;ny7swGnN/T5dzn/p8u7MBrz/ANPl3Of&#43;ny7sgGvP/T5dzn/p8u7IBrz/ANPkdR/T5MgG3Uf0&#43;R1P9fkxAbdV/X5J6r&#43;vyYARv1f9faer/r7c4EdHWf19p6z&#43;vtzUqkdPW/1Ot/r/APd3NShHV139f/u5139HLShOOrr/AOiev/o5KBOOzt/7/wBrdv8Ao/ry4QJx9Dt/0u/lbt/0/Pd80Kk4&#43;p2/6flP2fl8oKTj632fb5J&#43;z7fJ8gKZ4&#43;x9n2&#43;Sfsu3yfHCmePs/Zdvkn7Lt8nxQpnj7f2X&#43;k/Y9vk&#43;GUpl937Ht8k/Y9vk&#43;De/svf2Uy&#43;/9j/o&#43;x8vga7&#43;&#43;/8A&#43;p1&#43;vfcqZeg7f9D/AEn7D/Tz2/18u6eT9/LuUy9D9h/pP2Hl53k/fy7p5f38u5TL0XX&#43;U9f5ec5v6fJPP/T2Uy9J1/lPX&#43;Xm&#43;o/p7Op/p7KZel6/ydd5eb6r&#43;ier/otTL0nXeX44/QOs/b8/Recj24FR7ApQBACRACRACRACRACRACRACRACRACRACRACRACSoKCaVFKCaVAAAAAAAAAACASIASIASIEEiAEiAEiAEiAEiAEiBRIhIAAAAAAAAJKgBNKgoJoilBIgBIgBIgBIgBIgBIgBIgBIgBIgBIgBIgBIgBIUoAUAeIe3eIVOvbCB5VIgBIgBJUAJogBIilBIigAAAAAAAAAAAAAAAAAAAAAAAABQApQApQApQApQApQApQAoAFKAFKAFKAFKAFKAFKAFKAAAAAAAAAAAAAAAAAAAAAAAAAJEAJEUoJKigJpUAJEAJEAJEAJeJe1eKXide1ARQAAAAAAAAAAAAAAAAAAAAAAAAQAkQAkQAkRSgkQAkQAkQAkQAkQAkQAkQAkQAkQAkQAkQAkQAkQAkQAkQAkQAkQAkQAkQAkRSgkRQEiAEiAEiEgAAAAAAAAAAAAAAAAAAAAAAAAPFPavFLxOvaiBFSIKCRFASIASIASIAAAAAKUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgBQAAAEoASIASIASIKCRFASIAS8U9o8WvE69oAigAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADxb2jxa8Tr2gCKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgEiCgkRQEiAEiAEiAEiAEiAEiAEiAEiAEiAEiAEiAEiAEiAEiAEiKUEiAEgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPFvaPFrxOvaAIoAAAAAAAACKCRFASIASIASgAKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUAKlACRACRACRACRFASAAAAAAAAAA8W9o8WvE69oIEUKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQBIgBLxb2bxi8Tr2YCKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8Y9m8YvE69mAigAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAAAPGPZvGLxOvZgIoAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAAAADxj2bxi8Tr2YDyoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8Y9m8Y9cTr//Z" alt="Screenshot 2023-02-23 at 11.11.55 PM.png"  />
+</p>
+<p>💡 原因是，在Unity中矩阵乘法的顺序定义有一些区别 mvp矩阵改成下方相乘顺序即可</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Matrix4x4 mvp=Camera.main.projectionMatrix*Camera.main.worldToCameraMatrix*transform.localToWorldMatrix;
+</span></span></code></pre></div><p>最终在Game视图中可以被正确渲染， 但是在Editor中由于Scene存在另外的PreviewCamera，上面的矩阵只与游戏当中的MainCamera的矩阵相乘进行变换， 所以在Scene中的PreviewCamera并没有显示其在Scene场景中的视图变换 💡 所以，通常来说在编写Shader时，采用内置的UNITY_MATRIX_MVP即可，Unity内部已经对编辑器的PreviewCamera和运行时的Camera都做了对应的矩阵的相乘， （Unity新版本中，直接使用UnityObjectToClipPos就可以了）</p>
+<p><img loading="lazy" src="data:image/webp;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4&#43;JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAN&#43;A18DASIAAhEBAxEB/8QAHAABAQADAQEBAQAAAAAAAAAAAAECAwQGBQcI/8QAWRAAAQMCAQcHBgoHBQUGBgMBAAECEQMSBAUhE1ExFWHRUkGRVBRxgQaioSKxVZOSYgczcjUycyOyQsEkdPBTY4Kj4bMWNNI2Q5TCRHXxF2SDJUVlhKSl4v/EABkBAQEBAQEBAAAAAAAAAAAAAAABAgMEBf/EADIRAQACAgEDAgQFAwMFAAAAAAABERICUQMxITJBBJEiE7HRYXGh8IHBFOFSJDNCQ/H/2gAMAwEAAhEDEQA/APF4K91bGsor/EPYqUo2r7SSicVSfWdKYR6rg6VVXuqNbUdoK9OXNRERcyIsrKzCLq4nLWyNlLT1P4VfxL&#43;2zX4mG58pTPdXfLZymsNuEyjl3YjD0cPpavd0uTCNqW1KdsO0qNm2VjN0GSYfB1sU&#43;lUoU6VJr6LpbmX2ouSZ2Z/IfP3PlLsjvls5RufKPZHfLZyjDbgyjltyrRp0qVJe71KNRXORbqOjRW5ozXLsz5z5p27oyl2V3y2cpNz5R7I75bOUYbcGUcuMHZujKPZF&#43;WzlG6Mo9kd8tnKMNuDKOXGZ0qi0qraiNa61Zte2UXxQ6d0ZR7Kvy2co3RlHsq/LbyjDbgyjl0ZVynhMZSpU8JgKOHhEWo5tNqKrtSKnQfKbtd4/uQ7d0ZR7Kvy28pEyRlFFX&#43;FXOvPbyjDbgyhsyXTq1aeOZQY99RcPmaxFVV/SM1HVo3K2jRxaKuIZQrqrXL7TWoxVai8UVFWOKHFunKHZXfLbyjdOUOyr8tvKMNuDKH0sPgqVVcEq4ZGUnVaLXJUYqXzttdMORdsdHkMaVFWU1qVsK3DVdHXa1qIqXM0Ts/GF6emTioZPynh69OtTwyo&#43;m5HNl7Vzpn1mG6sodld8tvKMNuDKHdWwTKeS6lR1FLqdOm9j20lRrlVWz7Sr7W3OkQc&#43;UaFDD0UdSa3&#43;KfpafzKcZk61VP8ACad1ZQ7K75beU2V8DlPEPR78LEIjWo1zEREToRJGG3BlCJVqVMhVWOeqtZiKSNRVzJ7NQ4Dr3VlDsrvlt5RurH9lX5beUYbcGUGTMXSweLbUr4eniKS5nsexHZtaT0jKeLpYzFuqUMPTw9JMzGMYjc2tY6RurH9ld8tvKN14/srvlt5RhtwZQzyQ5jcPjHVEerEwqSjHWr9YzphTOmuH7liKyUpRa1Om11Vb3MRWvnVq1GhuSsejUTuy5k57eUu68f2V3y28ow24MofVxGCwSV6dOpQfToriGsZUWmjGuZn/AGrlunNn5ThyrRp0qVJe71KNRXORbqOjRW5ozXLsz5zRuzH9md8tvKN2Y/szvlt5RhtwXD6KUqXcd2aZNKtHS6O1frfxbddvs&#43;Jlh8FSqrglXDIyk6rRa5KjFS&#43;dtrphyLtjo8h8vdeP7M75beU2UMFlLD16danh1R9NyObLm7Uz6xhtwXDuoYOk9aa4zCJQqXPSnTa1f0iI2UzSk54jPnmJI/C0tK5aeEcuJShclGpStuW6JRkr&#43;z0eWD527Mf2Z3y28pd2Y&#43;Z7s6ftt5RhtwXDrRKrcJlCl3VjHpo3Opo25WJGdeH7pPknVuzH9md8tvKN2Y7sy/LbyjDbguHKDq3ZjuzL8tvKN2Y7sy/LbyjDbguHKDq3ZjuzL8tvKN2Y7sy/LbyjDbguHKDq3bjuzO&#43;W3lG7cd2Zflt5RhtwXDlB1btx3Zl&#43;W3lG7cd2Z3y28ow24LhcmYulg8W2pXw9PEUlzPY9iOza0npGU8XSxmLdUoYenh6SZmMYxG5tax0mO7cd2Zflt5Ru3HdmX5beUYbcFw5af4G&#43;CH3MbSrVKWIr4hlbCq5zVqS66lVz/se9InMfMbkzHI1E7suZOe3lMt3Y7szvlt5RhtwXDur4N64xlHuVKlRXEIylUdKI9vjPtIqQsp&#43;83vwzKK06iUnU3voYlrkdS0eZKax7MrrPk7ux3Z3fLbyjd2O7M75beUYbcGUPo4rC4ank9zmUKisSixzKqUoS5Yn27s/SkRm8hzZD0W8W6SJtWyed/UnPu7Hdnd8tvKEydjkWUw7vlt5RhtwXD0mU9Du&#43;rpvw25tc9EHl/wCH/vPUb6mEynVREqU6j42XVEWPWYbuxvZl&#43;W3lGG3BcNf8P/eeofw/956jZu7G9mX5beUbuxvZnfKbyjDbguGv&#43;H/vPUP4f&#43;89Rs3djezO&#43;U3lG7sb2Zflt5RhtwXDX/D/AN56h/D/AN56jZu7G9mX5beUbuxvZl&#43;W3lGG3BcNf8P/AHnqH8P/AHnqNm7sb2Zflt5Ru7G9mX5beUYbcFw1/wAP/eeofw/956jZu7G9mX5beUbuxvZl&#43;W3lGG3BcNf8P/eeofw/956jZu7G9mX5beUbuxvZl&#43;W3lGG3BcNf8P8A3nqH8P8A3nqNm7sb2Z3ym8o3djezO&#43;W3lGG3BcNf8P8A3nqH8P8A3nqNm7sb2Zflt5Ru7G9mX5beUYbcFw0Psn2Lo&#43;cdratSpkOqxzlc1mIpIxq7E9mp0Gnd2N7M75beUbtxvZl&#43;W3lGG3BcOrKuHpUKTFo0mtVzl00LOjfCSzwTlToPmHTu3G9mX5beUbtxvZl&#43;W3lGG3BcOYHTu3G9mX5beUbtxvZl&#43;W3lGG3BlDmI7a3x/cp1btx3Zl&#43;W3lIuTMcqp/DLmXnt5RhtwXD6DMTRwmHybXe6stRlJypTaiWu/SPzKs7NeYtChpqeFVKaVLMGq26NajvrXJmbKT5cx8/duO7Mvy28pd247szvlt5RhtwXD6L8BhqmPxGERqU7NHWu2KjLUV6bV50x805cnVGPys&#43;po7Ka06zrGLEJo3ZkUwpYTKNGnUYzDRpEtc6WTGpFnMa9247sy/LbyjDbguG/DNo1313Yeg&#43;rUZSmnSqu0iqtySsIiTCdHlOl&#43;ERukdh8G2riU0d9C1XaOUW72fGPCYPn7tx3ZnfLbyjduO7M75beUYbcFw78Hk9MTWwtuFRWtxzmV0atyNbLIRV1fihekwp4VlTJaP0GjRGKr6r6aqi&#43;1tR6LmWM1qp7zj3ZjuzO&#43;W3lG7cd2Z3y28ow24Lh9bEYLBJXYx9B9Ol3hrGPWnY1zM&#43;a65bpzZzkx7KrMlU9PhUwz&#43;8O9lGq2UtTo/ecm7Mf2Z3y28o3Zj&#43;zO&#43;W3lGG3BcOUqLCourWdO7Md2Zflt5RuzHdmX5beUYbcFw7MblbC4jJ1OjRyfh6Nd31tRtJqfJ8T5CfWL4J&#43;8692Y7sy/Lbyk3Xj7lXuy7Oe3lGG3BcPUebXnJk7BJk/D4lX0tBRrU31FbLZfUa5NmfY1T5WVso4WrWymymjVWpUc1qszpU/TOffPBPZTbtPm7rx/Zl&#43;W3lG68f2Zflt5RhtwXDkdtb4/uU9FkJrnYKkrWPe1leqr2twzatzbGy2V/Dckpm2yfIXJWPVU/hlzLz28pd14/sq/LbyjDbguHoWpVrYeo12GxKK2k2b8mM9pyOREVEnOqNWI1Sp5zK&#43;fKeO/OqfrKZbrx/ZV&#43;W3lI7JOUFaqJhVzpz28ow24MobcnpVfQrU24epXpuc1XJRdD0VJhUzLKZ16NR0PbURmPoIqVnTTVzntlyJGefCYU4915QTZhnfLbyjdWUOyu&#43;W3lGG3BlD6VXDU8M6jVdRax1PFMZOitarc&#43;yVVXJm2qYJhVq94R&#43;FRlTSPuc&#43;ktiJCQiqi&#43;xrnpk4N1ZQ7K75beUu6sodld8tvKMNuDKHE/Z5U959TDUq2IydTp4ZtV9tdy12UUl8Q21Y1fi/pTmdkjKCp/wq7U/bbymW6codld8tvKMNuDKHdiaDqj62jXvOI7xQYiuRJVysdLVjMudIVeBa2HSnj2062ARjadCqsupKxKrkYqynBFiP9Tg3TlDsq/LbyjdOUOyr8tvKMNuDKHYrMPVYjXYelTSphdK5zW50cjolNWZNhsq4Sm2q5KuBa2kzEMbQtW1azJWURf2pSFnlPn7pyh2Vflt5RunKPZXfLbyjDbgyhnlWhoX0naNKd7V9laS03bf2myseQ4qFRaVRtRGtda6bXtlFz9KHVunKPZXfLbyjdGUOyL8tnKMNuDKHRlXKeExlKlTwmAo4eERajm02oqu1IqdB8f8A81/g/efQ3RlHsq/LZynJWwuIw&#43;NSnVoq1605i5FzT4iddo7wXEve1k/TP&#43;0prg21k/TP&#43;0phB9J5mMEgygQBjAgygkAYwIMoEAYwSDKBAGMEgygQQYwSDOCQBjBIM4JAGMCDKCQBjAgygkAYwIMoEAYQIMoEAYQIMoEAYwILAggxgQZQSAICwICsQWABCQZEAgLAAggoAxBYAEgFAEIZQAMRBRAEgFgASBBYEEGMCDIAYwIMiASBBQBIEFAEgQUAQFAAFAEEFgQBAUFEBQAALAEBQAAKBAUAAILAEEFgQBIKUQBCgsBEgQWCwBIEFgsASBBYEAIEFgFELBQBAUsAQFgAQpYEAQoKBDzuWvvxn8sn6ynozzPnBUSllpjnIqzhkTN9pTj1/Q3p6nr6yfpn/aUwg3VU/TP&#43;0phB3c2EEgzgQBrgQZwIAwgkGcEgDGBBlBIAxgQZQSAMYEGUCArGCQZQIAxgkGcEgDGCQZwSCDGCQZwSAMYJBnBIAxgQZQSAMYEGUEgDGBBlBIAxgQZQIAxgkGUCAMYEGUEggxgQZQIAxgFgQFYiDKBAGILAgCAoAxgQZQAMQUAQQUQBIBYAEBRAEgQUQBjAgyIBIBYEAQFEAIAKBAUAQFAEBRAEgFgsAQFgQBBBYLAEgQWBAEgsFgQESCwWBAEgsFgQBIEFgsASBBQUIBQBCiCwBAWCwBIEFgQBILBYEASClgQBIEGUCAJAgygQBIPKedH3vT/l0/WU9bB5Lzp&#43;&#43;Kf8un6zjj1/Q30/U9xVT9K/7SmEG2qn6V/2lMIPQ5sIEGcEgDCBBnBIAwgkGyCQBhBINkEgDXAg2QSCDXAgzgkAYQIM4JAGECDKBAGMEgzgkAYwSDOCQBjAgygQFYQIMoEAYQIMoEAYQIM4JBBhAgzgkAYQIM4JAGMEgzgkAYwIMoEAYQIMoEAYwSDOCQBjAgygQBhAgygQBjAgygQQYwIMoJAEgkGUCAMYEGUCAMRBlAgDGAWBAVAWBAEJBlAgDEGUCAMSlgQBAWCwBjAgygQBjBYMoEBGMCDKBAGMFgsFgDGBBlAgCQIMoEASBBYLAGMFgsCCiQCwWAJAgsCAIWCwIAkCCwWAJAgsFgCQIMoEASBBlAgCQIMoEASBBlBYAxgQZQIAkCDKBAEg8j51ffFP&#43;XT9Zx7CDyPnS1XZapoiT/Dp&#43;s449f0N9P1PdVU/Sv8AtKYQbaqfpX/aUxg9DkwgkGcCAMIJBnAgDCCQbIJAGEEg2QSAMIJBsgkAa4EGyCQFa4JBsgQBrgkGyCQBrgQbIJAGuBBnAgDXAgzgkEGECDOCQBjBIM4JAGMEgzgQBhAgygQBhAgygQBhAgzgkBWMEgzgQBhBIM4EAYQIM4JBBhAgzgkAYwSDOBAGECDOCQBhAgzgQBhAgygQBjBIM4EAYQIMoEAYwIM4EAYQIM4EAYQIM4EAYwSDOBAGEFgygQBjAgygQBjAgygQBIEGUCAMYEGUCAMYLBYEASBBlAgDGBBlAgCQIMoEAYwWCwWAMYEGUFgDGBBlBYAxgQZQWAMYEGUFgDGCwWCwBjBYLBYAxgsFgsAYwWCwWAMYLBYLAGMCDKCwBjAgygQVEg8n5y/ftP8Alk/WU9dB5HzocjMuU1VY/hk/Wccev6HTp&#43;p7uqn6V/2lMINtVP0r/tKYwd3FhAgzgkFGECDOCQBhAgzgQQYQSDOBAVhBIM4EAYQSDZBIAwgkGyCQBrgQbIJAGuBBsgkFGuCQbIEAa4JabIEEVqtFpsgloGu0lpttJaBrgkG20loGuCQbLRaBrgQZ2ktAwgQZwSCDCBBnAgDCCQZwIAwgQZwSAMIEGcCAMIEGUCAMIEGcCArCCQZwIAwgQZwIAwgkGcCAMIEGcCAMIEGcCAMIEGcCAMIEGcCCDCBBlAgDGBBlAgDGBBlAgDGBBlAgDGCwZQIAxgQZQIAxgQZQWAMYEGUFgDCBBnBYAwgQZwIAxgQZwIAxgQZwIAxgQZwIAxgQZQWAMYEGUFgDGBBlBYAxgQZQWCoxgQZQWAMYEGUCAJAgygQBjBYLBYAxgQZQIAkHjPO776pfyyfrOPaweL88Pvul/LJ&#43;s449f0N9P1P0Ko39K/7SmNpuqJ&#43;kd4qY2nocmqBBstFoGqBBstFoGuCQbLRaBrgQZ2i0DXAgzgQBhBIM4EAYQSDZBIAwgkGyCQBhBINkCANcEg2QIA1wSDZAgK1wSDZAgDVaINkC0DVaLTZaLQNVotNlotA1Wi02Wi0DVaS022i0g1WktNtotCtVpLTbaLQNVpLTbaLQNUEg22i0DVAg2Wi0DXBINlotA1wIM7RBBhBINkEgDCBBnAgDCBBnBIAwgQZwIAwgQZwLQMIEGdotAwgQZ2i0KwgQbLRaBrtFpstFoGu0Wmy0WgYQIM4EAYQINkCAMIEGcFgDCBBnAgDCCwZQWAjCBBnAgDCCwZQWAMILBlAgDGCwZQIAxgQZwIAxgQZQWAMYEGUFgDGBBlAgDGCwZQIAxgQZwIAxgQZQWAMYEGUFgIwgsGUFgDCDxXnj9&#43;Uv5ZP1nHuIPEeef35S/lk/Wccev6HTp&#43;p&#43;kVG/pHeKmNpuqJ&#43;kd4qYwehyarRabLRaEarRabLRaFarRabbSWgarRabbSWgarRabbSWgarRabbSWgarSWm60loGq0QbLRaBqgQbLRaBqgQbLRaBqgQbLRaBrgkGy0Wga4JBsgQBrtEGyCQBrtFpsgkAa7RabLSWga7RabLRaBqtFpstFoGq0Wmy0WhWu0lpttJaQa7SWm20loGu0lpttFoGq0lpttFoGq0lpttFoGq0Wmy0WgarRabbRaBqtFpstFoVrtJabbRaBqtFpttJaBrtFpstFoGu0Wmy0WgYWi02Wi0g12iDZaLQNcCDOBAGECDOBaBhAgzgQBhBYM4EAYQIM4EAYQWDKCwBhAgzgQBhAgzgQBjAgztFoGEFgytLaBhBYMoLARhAgzgsAYQIM4LAGECDOBAGMCDOBAGMCDOBAGMCDKCwBhBYMoEAYwIM4EAYweG89fv2l/Kp&#43;s493B4Xz2&#43;/qX8q39Zxx6/odOn6n6fUZ&#43;kd4qYWHQ9vtu8VMbTu4tNhLDdaLSjTaS032ktA02ktN9pLQNNotN1hLANNotNtgsA02i022CwDTaLTbaLQNNotNtotA02i022i0DTaLTbaLQNNotN1pLQNNotN1pLQrTaS032ktA02ktN9hLQNNpLTdYLANNpLTdYLANNpIN1osA02i022i0DVaS022ktA12ktNtotA1Wi02Wi0DVaLTZaLQNVotNtpLQNdpLTbaLQNVotNlotINVotNtpLQNdotNlotA12ktNtpLQrXaLTZaLQNVotNtpLQNdotNlotA1wINkC0DXaINlotINcCDZaLQNdog2Wi0DXAg2Wi0DXAg2WltA1WltNlotA12i02Wi0DXaW02Wi0DXaLTZaLQMLRabLRAGu0tpnaIAwtFpnBYAwgQZwIAwgsGdotAwgQZ2ltAwgQZ2ltA1wWDO0toGuBBstLaQa7RabLS2ga7RabLS2ga7TwXnwkZfo/yrf1nH6DaeA8&#43;0jzgo/wAq39dxx6/ob6fqfqz2&#43;27xMbTe9ntu8TG09Dk1WktN1otA02i022i0DTaLTdaS0DTaLTdaLQNFotN1otKNFotN9hLQNFgtN9hLANFosN9hLANFgsN9hLANFgsN9hLANFhLDosJYBosJYdFhLANFpLTosJYBotJadFhLANFotN9nAlgGi0Wm6wWAaLRabrBYBosFhusFgGiwWG6wW8ANFgsN1gtA0WEsN9otA0WEsN9otCtFgsN9pLANFgsN9hLANFgsN9hLANFosN9gsA0Wi03WCwDRYLTfaSwg02iw3WC0DTYLTdaSwDTaLTdaLQNNotN1pLANVotNtgtA1Wi022i0DVaLTbaLQrVaLTbYLCDVaLTbYLANVotNthbQNVotNtgsA1Wi022ltA02i03Wi0DVaLTbaW0iNNpbDbaLQNVgtNtpbQNVotNtotA12i022i0DXaLTZaW0DVaW02Wi0DXaLTZaW0DXaLTZaLSDC0Wmy0Wga7S2mdpbQNcH575&#43;pHnDR/lG/ruP0a0/O/P9I84qH8o39dxy63odOn6n6&#43;9ntr4ksOhzPaXxJYdbcXPYLDosFhbHNYLDosFgsc1nAWHTYSwWOawWHTYSwtjnsJYdNg0fAWOawlh02DRixzWCw6NGNGLHNYLDp0ZNGWxz2EsOnRk0Ysc9hLDp0ZNGLHPYSw6dGTRqLHPYSw6dGpNHwA57BYdFnAis4Ac9gsOiwWcAOawWHRYLAOawWHRYLAOawWHRYLAOawWHRYLAOawlh02Cwo5rCWHTYLArmsJYdNgsA5rCWHTYdFLJeMr/V4d6prVITrUkzEdyImez52jJYeio&#43;bNVyzXrMYmpqXL&#43;476Pm9gKUK9rqq/Odm9Rynr6Q6R09pePSi57rWtVVXoRJO3D5ByhiFSMOtNF2uqezHk2ns6VCjQRUo0mU0XajGokmw47fEz7Q6R0uZeaw/mlsXE4nxbTT968h9PDZAybhlRdAlVydNVbvVs9R9IHHbq7z3luNNY9nLUyZgayIj8JRWMyQxEjqOCt5r5OqIujSpSXotdMdcn2QSN9o7Ss6xPs81W80Ni0cX4o9n70OGr5sZSpr7LKdX7D0/fB7MG46&#43;8Mz09X5/VyXjaMaTC1WovTasHNYfpJqqYXD1lmrQp1PtMRTpHxPMMT0uJfndhLD3NXIOTqsfoLF1scqHFU81aCr&#43;ixL2/aajuQ6R19JZnpbPJ2Cw9BV818W36upSqeVUU4qmRsfTm7C1Fjmpd7jpHU1ntLE67R7Pl2Cw6nUXMWHtVq6lSDGw0jnsFh0WEsA0WCw32CwDRYLDfYLANFgsN9hLANNgsN1gsINNgsN1gsA02Cw3WCwDTaLTdYLANNpbTbYLANVgsNthbCDTaLTdYLANNotN1hbANNotN1gsA02i03WFsFjTaLTdYLBY02i03WFsJY02i03WCwWNVgtN1otFjTaLDdaW0WNNosN1otFjVaLDbaW0ljTafnH0hpHnJQ/k2/rvP020/NPpGSPOWh/Jt/Xecut6XTp&#43;p&#43;1OZ7S&#43;JLDoWmsqTRnTJxc9gsOjRjRjIc9gsOjRk0YyGiwlh0aPgNHwLkOewWHRZwGj4DIc2jFh0aPgLBkOfRjRnRZwFnAZDm0Y0Z02EsGQ59GTR8DpsFhchzaPgNHwOmwWDIcuj4DRnTYLBkObRk0Z1WCwZDl0ZNGdWjGj4FscujJozr0ZNGLHLohozq0fAaPgLHJouA0XA6tGNGLHJouBNFwOvRjRixyaLgTRHZoyaMtjk0RNEdmjJohY49ENEdmiJohY49GNGdmiJohYywuR6uKptq3sYxy9Odeo76WQcKyFqOfUXVsQ6cmymCa3Uqp6zrPHv1d7mLerTTWolpo4TD4eNFRY1USJRM/XtNwBxmZnu61QACAAAAAAAAAAAAAAAAAAAMXMa9Ie1HJqVJOV&#43;ScBUm7C00nmpb7jsBYmY7JMRPd5vLGSsLg6DH0VejnOi1VlIhf8AQ&#43;Roz0WX/aWg2dlyqnUfH0Z7enMzr5eXeIjbw5dGLDq0ZNGbthy6MaM6tGNGLHLoxozq0Y0Yscuj4DR8Dp0Y0Ysc2j4DRnToxoxY5rOAs4HTYSwlq5rBZwOmwWCxz6MWHRZwFgsc&#43;jFh0WCwWOewWHRYLBY57BYdFgsJY57BYdFgsFjnsFh0WCwWNFgsN9gsFjRYLDfYLBY0WFsN1gsFjTYLDdYLCWNVot4G6wWCxptFpusFgsabRbwN&#43;jGjFjTafmH0kpHnPQ/km/rvP1XRn5Z9JqR50YdP/km/rvOXVn6XTp&#43;p&#43;8LTz7CaPgb4EGMnOpaNGNEb4EDIxlo0XAaLgb4EDIxlz6IaLgdECBkYy59FwGiOiBAyMZc&#43;iJojpgQMjGXNouA0R0wIGRjLm0Q0R0wLRkYy5dFwGi4HVaLS5mMuXQ8CaHgddotGZjLk0I0J12ktGZjLl0JNDwOu0WjMxlyaEaE67RaM0qXHoeA0J2WiwZlS49CTQnbYmoWJqLmVLi0I0J22JqJYmoZlS4tCo0SnbYmoWJqGZUuLRKTRKd2jTUNGmov3CnDolGi4Hbo01DRoPuFOHRcCaLgd&#43;jQmiQfcKcOi4DRcDu0SDRIX7hTLApGHiNjlOk1UG2sVOJtPPtNzL16emAAGWwAAAAAAAAAAAAAAAAAAAAAAAHx8rJfikTP7LEQ4dHwPqYmnfiHug06HgevWa1h49vO0uDR8Bo&#43;B36HgTQ8DWTLh0fAmj4HdoeA0PAmQ4dFwJouB36HgTQ8Bkrh0Q0R3aHgNDwGQ4NENEd2h4DQjIcOiGiO3QjQ8BkOHRDRHbohoiZDi0Q0R26ImiGQ49FwGi4HZouA0XAZDj0XAaI7NFwGi4DIceiGiOzRcCaIZDk0XAaLgdejGjJkOTRcBo&#43;B16MmjGQ5dHwGj4HVoxoxkOXR8Bo&#43;B1aMaMWrl0fAaM6tGNGLHNoxozp0Y0Ysc2jGj4HVo&#43;A0ZLHLo&#43;A0fA6tGLBY5tGNGdNgsFjm0Z&#43;T/AEppHnXh/wCRb&#43;u8/YbD8h&#43;lhI87cN/IN/2jzG8&#43;HTp&#43;p&#43;9QINembrGmbrMFw2QINembrGnbrFGUNkCDXp26xp26xRlDZAg16dusmnbrFGUNsCDVp26x3husUZQ2wINXeG6x3husUZQ2wINXeG6x3lusUZQ2wINPeWax3lmslLlDdAg095ZrHeWaxUmUN0CDT3lmsd6ZrFSZQ32i00d6ZrHemaxUmWrfaLTR3pmsne2axUmWrotFpz97ZrHe2axUmWrotFpz97ZrJ3xmsVJlq6bRac3fGax3xmstSZaum0lpz99ZrHfWaxUlw6LRac3fWax31msUlw6bRac3fWayd&#43;ZrFFw6rRacvf2ayd/ZrBcOu0WnJ39msd/ZrBcOu0WnJ39msbwZrBcO1iQZHPhcQ2urkRdkHQZl217AAI0AAAAAAAAAAAAAAAAAAAAAABi9yMY5y7GpIGlzEVyrrUx0aHN35NY78ms6W8lOnRoTRIc3fk1jvvEtylOnRITRHP33iO&#43;8RZTo0RNEaO&#43;cQmL4iym/RE0XA1d74jvXEWU26LgTRcDX3riTvPEWU2aLgNFwNfeeI7zxFlM9ENEYd44k7xxFlM9ENFwMO8cRp&#43;IsplohouBjp&#43;I03EWLouA0fAmm4jTcRYuj4E0fAabiNNxFhoxo&#43;A0qayaUWLo&#43;BNGNKNKLDRjRjSDSCxNGNGXSDSCxNGNGXSDSCxNGNGXSIL0FiaMaMt6C9BYmjFhb0F6CxjoxZwMr0F6CxjZwPxz6XUjzvw3/AKez/aPP2S9D8b&#43;l1Z88ML/6ez/aVDO3Z06fqfrLsaiOXP0mPfuJ52plCKjku6VMFyj84lri9L37iTv3E80uUfnGK5RTnCzF6fv/ABJ3/ieYXKSc4i5STnCzF6fv/Ed/4nllyknOIuU05wsxep7/AMSbw4nllymnOMVyonOFri9XvDiTeHE8ouVE5xFyonOFmL1e8OI3jxPJLlVOcRcqpzhZg9bvH5xN4/OPIrlZOcRcrJzhZg9fvH5xN5fOPHrldOcRcrpzha4PYby&#43;cTeXzjxy5XTnGK5YTnCzB7PeXzibz&#43;ceLXLKc4i5ZTnCzB7TefzibzTnHilyz84xXLPFRZg9tvROcTenzjxK5ZXWpiuWHcRa4Pb71&#43;cTevzjxC5XfxMd7v1KSzB7neqc4m9U5x4be1TUo3tU1KLMHuN7Jzib2TnHh961eJiuVKv9KLMHud7JzhvZOceF3nW/pSbyrf0otcHut7pzjFcrpzjw&#43;8a2sxXKFdekWYPbrlhOcY75TnHiFxtdf2iLiqy/tqLMHuN9Jzib6TnHh&#43;81uepO81v7RRZg9zvpOcTfSc/1nh&#43;8Vf7RSaer/aKLXB&#43;r&#43;amPTGYrENRZtYi&#43;s9OfmH0aVHv84sQjnKqd0d&#43;uw/TyLEV4AAFAAAAAAAAAAAAAAAAAAAAAA4cs4pMHkjE13KiIjIz8c37zuPLfSJinYbzXVjVVNPXZTzJ4u/8ACB8Lfac71l30nP8AWeG09XnqNPV/tFLbOD3O&#43;k5xd9Jzjw3eKv8AaKO8Vf7RRZg91vpOcN8pzjw3ea39ooTFVk/bUWmD3aZYRf2jJMsJzjwiYyun7ZUx1dP2hZg95vdOcVMrpzjwm8a2su8q/wDSizB7veyc4u9k5x4Tedb&#43;lLvSt/SizB7veyc4u9U5x4TetX&#43;lLvWpxFpg91vVOcXevzjwu9qmpS73qalFmD3W9fnF3p848KmV38TJMsO4izB7nenzi70TnHhkywutTJMs8VLZg9xvNOcXefzjxCZZ&#43;cVMspzhaYPbbyTnF3kms8UmWU5xkmWU54swe03kmsu8U1ni0ywnOMkyunOFmD2W8U1l3ims8cmV05xUysnOFpg9jvBNY3gmtDyCZWTnFTKqc4WYPX7wTWXeCazyKZVTnFTKqc4WYvW9/TWXv6azye9E5xUyonOFmL1ffk1l78ms8omU05xlvNOcLTF6nvyF7608smU05xUyknOFmL1PfWjvjTzCZSTnFTKSc4WYvT98aO&#43;N1nmUyj84yTKPzhZi9L3tus/I/pVqJV87MM5OwtT/ADHnuEyj84/OvpArafzioOmYwjU9NwlrWKl9ytlF&#43;mekL&#43;JTXvB/E5a319T7S&#43;8wMu1Q61x9QnfqpyghUOnvtUi4urrOcApv71V5xO81ecaQCm3vFTnE01TnqawBnpqnPUaV/OUwAVle7nKLl5y9ZiALcutRK61JIkCyQEAsiSACggAoIAKCACggAoIAKCSJAoJIAoIAKCACiSEAykSYgD1f0dOcnnU1EVUR1F6KiLtTMv7j9ZPx7zBqOZ544NrVhHpUa7iljl96IfsIhJAAVAAAAAAAAAAAAAAAAAAAAAAPCfSlXtwWT8PLvbqPfHR7KIn/AIvee7PzL6Ua7nZZweHWbaeHvTPmlzlTZ/hQLDxUiTEEVlIkxAGUggAoIAKCACgkiQLIJIkCggAoIAKCACggAokgAsggAslkxLIFuXWouXWvWSRIGV7ucvWXSP5ymAAz0r&#43;epdNU56msBG3T1OcXvNXnGkAbu9VecVMXV1mgAp098q6y9&#43;q/0pygFOtMfUKmUHnGClQ7Uyi/Up5bzmrrXytTcvRQRPSU&#43;4eey795s/JT3qEp6Sv9fU&#43;0vvNZnX&#43;vqfaX3mBGgAgFBAQUEAFBABQQSBZEkkAUEAFBABSAAAAAAAASAAkSAAAAAAAAAAAAAAAAQAUEAH3PMyq6j53ZPc1EVVqK3PqVqovvP2k/D/NitofOjJrrZnEsbE61j95&#43;4FhJAAVAAAAAAAAAAAAAAAAAAAAAAPx/6QKrqnnhi2qiRTbTakarEX95&#43;wH4b5yV&#43;8ecmUaqK1UXEvRFbsVEVURepCSsPmggIqggAoIAKAAAAAAAAAAAAASJAAAAAAAAAAFIAKCACiSACyCCQKCSAKCACggAoICigAAefy795M/JT3qegPP5c&#43;8mfkp71CS9FX&#43;vqfaX3mBnX&#43;vqfaX3mBFAAAAAAAAAAAAAAAgFBABQSRIFBABQQAUEAAAAAAAkSAAAAAAAAAAAAAAAAAB2ZHrd3y3ga1t2jxNN0TEw5FP3k/AMHUbSxtCo9Yayo1zl1Iin7&#43;WEkABUAAAAAAAAAAAAAAAAAAAAAEc5rGq5zka1qSqqsIiH8&#43;1KjqtR1R6y56q5y61U/avOzKtHJHm7iqtVzmvrMdRo2tlVe5qxwhM659XkPxMkrAACKAAAAAAAAAAAAAAkABIAAAAAAAKCACggAoIJAoJIAoIAKAAAAAAAAAAAAAAAAefy595M/JT3qegPP5c&#43;8mfkp71LBL0df6&#43;p9pfeYGVf6&#43;p9pfeYEFBAAAAASAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD&#43;gqdRtWkyqxZY9qOautFP58PX5F&#43;kXKWTkZRxlNmMw7UjmvROC7PJHQmwQS/VwfJyN5z5Jy61EweJRKsStCp7NRPJ0&#43;KSh9Y0yAAAAAAAAAAAAAAAAAAAcWVsrYPIuAfjcbUsptzIiZ3Pd0NanSq/1mN2MxmHwGEqYvF1W0qFJLnvdsTlXh0n4551&#43;ctTzkyklVGLSw1FFbQprtjpcvFc2zUiZ9qyVhp84PODGecWPXE4lbKbZSjRRZbTb&#43;9V6V6fCET5RJEkVQQoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABIAAAACkAFBABTz&#43;XPvJn5Ke9T758DLf3kz8lPeogl6Kv8AX1PtL7zAzr/X1PtL7zAAAAAAAAAAAAAAAAAAAAAAAAAAASQKCACggAoIAKQABIAAAAAAAAAAAAAAAAAArXOY5HNVWuasoqLCop63In0iZUydbSx38fQTNL1io3/F0&#43;XrQ8iAP3DI3nPknLrUTB4lEqxK0Kns1E8nT4pKH1j&#43;emucxyOaqtc1ZRUWFRT1uRPpEypk62ljv4&#43;gmaXrFRv&#43;Lp8vWhbSn6wD42SPOvI&#43;Wka3C4pG1VTPRqpa9NieC7U2Kp9kqAAAAAAAAAAAGNSoyjSdVqvaymxFc5zlhGom1VXoQyPyjz487qmVsVUybgqiJgKLoc5jp07k6VXmouxOnbqgOXzz86HZfyjosNUfu&#43;gv6JqpF7ul6p7p2JqlTzQBloAAAAAAAAAAAAAAAAAACRIAFBABQQAUEAFBBIFBCgAAAAAAAAAAAAAAAAAAAAAAAAD4GW/vJn5Ke9T758DLf3kz8lPeogl6Kv8AX1PtL7zAzr/X1PtL7zAAAAAAAAAAASQKCACggApJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAArXOY5HNVWuasoqLCop6nIfn9lTJVlHEr3zDJCWvX2mpmTMvgnrPKgWP2vIvnZknLjWtoV0p11TPRqZnTm2a86wfbP56a5zHI5qq1zVlFRYVFPU5D8/sqZKso4le&#43;YZIS16&#43;01MyZl8E9Zq0p&#43;uA&#43;JkXzsyTlxrW0K6U66pno1MzpzbNedYPtlQAAAA8J57ee3c9JknJNX&#43;I/DXxDV&#43;q1tavO1r0eOwPnee3nt3zSZJyTV/h/wANfENX63W1q83WvT4bfCgGbaAAQAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAAEgACkAFBABQQSBQQoAAAAAAAAA&#43;Blv7yZ&#43;SnvU&#43;&#43;fAy395M/JT3qIJeir/X1PtL7zAyr/AF9T7S&#43;8wApJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK1zmORzVVrkWUVFhUU9Nkbz&#43;yvkpGUqytxuHbmsqr7SJCJCO6NnTPSeYAH7RkTzxyRly2nSr6DEr/2Fb2XKvBdjvJn4H3j&#43;eT0GTvPjL2TcK/DU8UlZitVrFrtvWnxavDUspwLaU9x57ed9LJGGqZNwb78fWZDla5U0DVTbKftRsTy6p/JzKpUfWquq1XufUequc5yyrlXaqr0qYkmVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAAAAAABIAApABT4GW/vJn5Ke9T7x8HLf3iz8lPeogl6Gv9fU&#43;0vvMDOv8AX1PtL7zAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAAAAAAHwct/eLPyU96n3j4OW/vFn5Ke9RBL0Nf6&#43;p9pfeYGdf6&#43;p9pfeYAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUAAAAAA&#43;Dlv7xZ&#43;SnvU&#43;8fBy394s/JT3qIJehr/AF9T7S&#43;8wM6/19T7S&#43;8wIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHwct/eLPyU96n3j4OW/vFn5Ke9SwS9DX&#43;vqfaX3mBnX&#43;vqfaX3mBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4OW/vFn5Ke9T7x8HLf3iz8lPepYJbsRi8X3mr/9wj21/wCxTWa&#43;94z4Q/yUMKyI7GVEVyNRaiorlmEz7cx6OlRwVzKejwKtdVwstRKudVYvklZWOjnZzpccMVPLz/e8Z8If5KDveM&#43;EP8lDVXRrazkY5jmzmWndb5Ls/Wd&#43;MwtBKTlwuHR9NHIlOvTq3Kv206FXwTyi44Knly97xnwh/koO94z4Q/yUNjsmziW4aliGVK61EpOYiKkLwXpQ2uyLUa9k1FYxyVFuqU3Mixty5l6IFxwVPLm73jPhD/JQd7xnwh/kob6eSX1notKotSktLS3Npqrouti3XKHNjMJUwWIWjU2wjkWFSUVJTMuwXHBU8su94z4Q/wAlDVWyhjqcW426f7pqfuNZqr7W&#43;UkzHB55bd6ZQ7T6DeQb0yh2n0G8hyglK6t6ZQ7T6DeQb0yh2n0G8hygUOremUO0&#43;g3kG9Modp9BvIcoFDq3plDtPoN5BvTKHafQbyHKBQ6t6ZQ7T6DeQb0yh2n0G8hygUOremUO0&#43;g3kG9Modp9BvIcoFDq3plDtPoN5BvTKHafQbyHKBQ6t6ZQ7T6DeQb0yh2n0G8hygUOremUO0&#43;g3kG9Modp9BvIcoFDq3plDtPoN5BvTKHafQbyHKBQ6t6ZQ7T6DeQb0yh2n0G8hygUOremUO0&#43;g3kG9Modp9BvIcoFDq3plDtPoN5BvTKHafQbyHKBQ6t6ZQ7T6DeQb0yh2n0G8hygUOremUO0&#43;g3kG9Modp9BvIcoFDq3plDtPoN5BvTKHafQbyHKAOremUO0&#43;g3kG9Modp9BvIcoBbq3plDtPoN5BvTKHafQbyHKAW6t6ZQ7T6DeQb0yh2n0G8hygFuremUO0&#43;g3kG9Modp9BvIcoBbq3plDtPoN5BvTKHafQbyHKAW6t6ZQ7T6DeQb0yh2n0G8hygFuremUO0&#43;g3kG9Modp9BvIcoBbq3plDtPoN5BvTKHafQbyHKAW6t6ZQ7T6DeQb0yh2n0G8hygFuremUO0&#43;g3kG9Modp9BvIcoBbq3plDtPoN5BvTKHafQbyHKAW6t6ZQ7T6DeQb0yh2n0G8hygFuremUO0&#43;g3kG9Modp9BvIcoA6t6ZQ7T6DeQb0yh2n0G8hygUOremUO0&#43;g3kG9Modp9BvIcoFDq3plDtPoN5BvTKHafQbyHKBQ6t6ZQ7T6DeQb0yh2n0G8hygUOremUO0&#43;g3kG9Modp9BvIcoFDq3plDtPoN5BvTKHafQbyHKBQ6t6ZQ7T6DeQb0yh2n0G8hygUOremUO0&#43;g3kG9Modp9BvIcoFDq3plDtPoN5BvTKHafQbyHKBQ6t6ZQ7T6DeQb0yh2n0G8hygUOremUO0&#43;g3kG9Modp9BvIcoFDq3plDtPoN5BvTKHafQbyHKBQ6t6ZQ7T6DeQb0yh2n0G8hygUOremUO0&#43;g3kG9Modp9BvIcoFDq3plDtPoN5BvTKHafQbyHKBQ6t6ZQ7T6DeQb0yh2n0G8hygUOremUO0&#43;g3kG9Modp9BvIcoFDq3plDtPoN5BvTKHafQbyHKBQ6t6ZQ7T6DeQb0yh2n0G8hynbkyro&#43;9fxCUbsM9uelffs9nhOsUMN6ZQ7T6DeQ56mIrYmvfXfe5GwiwiZp4GJE&#43;t/wgd&#43;I/wCJq/bX3nW3LeUmthMZVm5qoty5rUVI1Qs59cHLXScVVT5zl95rckLHBFArnue9XucrnKsqqrKqp1VMoufTqNp4ejRdVjSPpoqK6FnZMJnRFzIhnhcEzEMVVcxiMZe5z1WESUTonpVDamTsKqwmModVT/lA535Se6s2uyhRp1kqJUdUa1Zc7yqqInBIQi49UfdSw1Gl7D2qjblm5tq7VVdi5jdicntwz2tda65JRW3J0qmxYXaimrQU&#43;b61AlPKFRlNlN1Om&#43;m2mtNWOmHJcrs8LMyvQaK1XTVVelNlNF2NYmZOs3Po00Y5UbComswoUmPYquSc4Gg1VkVVbCKu3Yh92jkR1ViOc6lSuVEalR6oqquzMmvic9bApQejXsTPnRUdKKnBQPjWu5q9QtdzV6j6ugp831qNBT5vrUD5VruavULXc1eo6nJD1ROhSo2UmdfqQDktdzV6ha7mr1HZRaj6rWrsU&#43;rQyJiMVh3V8PgqtWm1yNljXLnz6vD1prNRrMxaTNPPWu5q9QtdzV6j0uJ83cXhG1n1cHUSnRfY59rrV250XpTNt4prPnrQpaREtzKi9K8C4SmUPlWu5q9QtdzV6j6/d6XM9anPXptZVRrUhFQTpMRZG0S4LXc1eoWu5q9R9KnhXVUcrKbnW7YkzdgarUVVouhGoqrCmGnyrXc1eoWu5q9R3Kxspm6S6NuoDgtdzV6ha7mr1HZUajYg7G4Ni0HVoS1jmtXOsyqKv/hUD49ruavULXc1eo&#43;u7CNY1jnMhHtubn2pKp70UtbBsoV6lFzUV1NytVUVYlFgD49ruavULXc1eo&#43;roKfN9amFWkxtNXNSFTiB8213NXqFruavUdIA5rXc1eoWu5q9R0gDmtdzV6ha7mr1HSAOa13NXqFruavUdIA5rXc1eoWu5q9R0gDmtdzV6ha7mr1HSAOa13NXqFruavUdIA5rXc1eoWu5q9R0gDmtdzV6ha7mr1HSAOa13NXqFruavUdIA5rXc1eoWu5q9R0gDmtdzV6ha7mr1HSAOa13NXqFruavUdIA5rXc1eoWu5q9R0gDmtdzV6ha7mr1HSAOa13NXqFruavUdIA5rXc1eoWu5q9R0gDmtdzV6ha7mr1HSAOa13NXqFruavUdJlb7Mz0T64A5LXc1eoWu5q9R20GNe&#43;HJKQdtLJ&#43;lar0a1rEWL3vtSdXED4truavULXc1eo&#43;1VydoWJUVrXU1WEex1yTq4KatBT5vrUD5VruavULXc1eo&#43;roKfN9ammpTa2s1qJCLAHBa7mr1C13NXqPq6CnzfWo0FPm&#43;tQPlWu5q9QtdzV6j6ugp831qYvo00Y5UbComsD5lruavULXc1eo&#43;lh6LHsVXJOeNptTDUlWEZ61NxpMxbM7RD5FruavULXc1eo9NifNrHYPC96xGBeylml10xOtEWU8pwd3pcz1qMJkyh8i13NXqFruavUd9em1lVGtSEVBo26jMxU01E24LXc1eoWu5q9R9BKbVWEbKqHUka5WuaqKiwqL0EHz7Xc1eoWu5q9R3OY1GrmMqFJj2KrknOB8&#43;13NXqFruavUfVTD03KiIyVXMiSplVwaUKrqVSna9iw5J2KB8i13NXqFruavUfTbRpqmdvSvTxLoKfN9YHy7Xc1eoWu5q9R9DDU21Fdckwb&#43;70uZ61NxpMxbM7RD5FruavULXc1eo&#43;3Qyf3quyjQouqVHrDWoq51JWwLcPWfRq00R9NytciOmFTiil&#43;3KZw&#43;La7mr1C13NXqPoYmm2mrbUiTZoKfN9ZiYqaaibfLtdzV6ha7mr1H1dBT5vrUaCnzfWpFfKtdzV6ha7mr1H1dBT5vrUwq0mNpq5qQqcQPm2u5q9QtdzV6j6dChTfSRzmyq8T6&#43;B818Rj8LVxFOmxjabL0So5Wq9M&#43;zq2rmN4TVs5PK2u5q9Rtw&#43;IxOF0mgc5mlYtN8N2tXah9Srgm0ajqdWi5j2rCtdKKhrZQpLTaqtzqidKl&#43;3JnD5VruavUYoipVzoqez0n16mHppTcqNhUSdp8yr9f/AIf3mdtZhYm3bV/4ut9p/wC81v8AxJ4J7jOusYqqvznJ7zW5ZWeCIZV9TBOTu9Zi5r6KJK7E9pq5&#43;o2Me3BsvZ7Vd34H9DU1px9xxUMUyk1M6L7MKiosKb25QoRD8PRqRsuvSE1ZlQz5v9G/px/VtxSzQwir/Yr/ALR514N&#43;SO4PXFYecQzYiPcl/rPm18dTrqz2WU2022taxHQiSq9MrtVTVp6fO9SmmGVVZY9USMy5tRcmaPT0tLGj0qXTqlJNT61NWORHSqpqMKFVjGKjljOB6PErXp0Llo4VaiV3XojkVZ9mMyrM7TlxtdlfDvinTb&#43;nubo5WJRZRZ8E2ajlZlhW0dG9KdVJRUc9qykbM6RsND8ZTe21LWpMqjUXOpmbvw3GNTfd35KXJ61XMx9KWr&#43;F9zkjqU5sW&#43;g/EvXDU9HS/ZbKr7zm09PnepRp6fO9SmmHLU&#43;sd4qZN/Cn&#43;L3GDll6qnSpUdCRGv1oBnh/r2&#43;X3Hp8BhdPkKvbk/GV3LXp56TsyqiPzp7C5knP4psPLUXIyq1y7EO1MYxKbqaVVscqOVsLCqkwvrXrOukxTG3d6Wtk5Ew2JrYqtU0bXudjElLlrtlG25tjr52azzS/Wt&#43;yv7jofll1TDYijUe13eKqVXvVqyrs/k6VONa9LSIt2ZEXoXgauOWafavyTu2/u38VFtt7onXt2HwcT9e3wT3m7vFLn&#43;pTnr1Gvqo5qyiIZ2qvErrduqg2aFddG9YZtRc21OBk9Kbqj2U66PRzWsRbFSUSOrYciVURFRHbUheJudjUdUc9KdJirzWQiZug4zdeHbWr8tTkVrkRdqLB10XYPu6rVpzUb85c5xOqNVUWenONI3WVljW2pmg&#43;7kx9JmFxK1kW2YzORufR1NaL4eKofBqOR0QdaYtqUlpo&#43;GuVHKkdKTHvUD0mIxGDioqyqPR6oqVU9pP06Zs3H0k8vxco/eeK/Of71ORcSxyIi1FVGpCIs5k2/vLUxbatV1R75e9yucsbVUD62kyRuy/u38VFtt7onXt2Hx6/1Lhp6fO9SmFWqx1NWtWVXgBzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGz9j/B/4jWZXezEdEeuQNmG&#43;sXwPrYmjWq08OtKk91HRNRitaqpP7Xluk&#43;PQe1j5csJB9LB5ZrYCUw9e1q7WqkooH2MLgXYTIGMfjEs0rUVjHbUVNi9a&#43;o&#43;NhH0GYli4mnpKX7TZVPcMZlmtjlTT11VqbGokIhzaenzvUoH0sqrk9KrWYClDU/E&#43;5yz1qfJq/wDEM8nvNmnp871KaalRrqzXIsokAdJ6TDJikyfhEq0rmPqUrEa3NTajk9pV1rJ5jT0&#43;d6lGnp871KB9/LWl7o9cUiaTvTtDMXaOF9UwfBqfVu8FJp6fO9SmL61NWORHSqpqAywn1S/aOzB1&#43;642hiFbdoqjX264WYODD1mMYqOWM87Db3ilz/Up31mMXKYm36NlzLVBvm9UqNpVVTFU0Yy5ioiXtVUWdmzVJ&#43;fGdXK9WvhqeGq4p76NL8DFmEOfvFLn&#43;pRrUe5Ny04n69vgnvBjXqNfVRzVlEQaRus5bd3SOz7WTcRhaTaKotNtZtKpKuSJdKWyvhJx4/Dupv073StZyuhGqkTnz6lz7Dh0jdZVqou1yrKyZUd&#43;FfAzw31a&#43;Jqc9qtXOZUKrGMVHLGcD12GwdKhSpV8PhaiV0bLVRUqtqLmzKvRs25j5eXa9WrlByVWMbb&#43;FGwqxxVOngfOp5QdRY5lLEPY134kaqoimvT0&#43;d6lA34F9Bldq4mnpKVy3NlU6eB15VXJ6VWswFKGp&#43;J9zlnrU&#43;W2tTRM7ulejiXT0&#43;d6gMcH&#43;35D7eQqVGtlJKdWmlR7mLoGvarmLU6LkT9nb&#43;/MfCw1RtNXXLEnZh8orhauloV3U3wqXNRZhcynbWYxpzmJt&#43;hV8Tin5LXD0blrMpI11WkiIx1REzw7M1GoqZ&#43;pDxmWe6d&#43;/hNH&#43;BNLofq9J02fNPmd6pxF6xqhSd4pc/1KWKj3Sbn2asZ&#43;x5T7fm9/x7/yl96HwsTUbUVtqzBtTEU0zo6PIpy37t69nssWlNamG0ttul/a2Ta6PWeYx/3hiPzHe85FxDF2vVesaenzvUplp9jSZI3Zf3b&#43;Ki2290Tr27D49f6lw09PnepTCrVY6mrWrKrwA&#43;jkBcJ33CpjmK&#43;grockxtzIq8JPt4ahhsT5zo9MclJHVluo1mOR6J0s5vDbyHlKFemykjXOhU4H06OX0pOR76OHrVWtVqVKjHXREZ4VJzdKydriu7n7urK9KhSw2FbTrrXcxajNKrYvaipCpnWUm5EXgcWS3YRKlNMbTvpOaiTcqWrrzKc9fKCYmrpKlRFWIREbCImpETYhpZXpJTaiuzoidCluOUqXdlR2EWpUTBU7KTWqk3Kty686nnqv1/8Ah/efTqYimtNyI6VVI2HzKv1/&#43;H95z3rxTer2XnPlnDZLy3WwWFyLk1yUoudVw6KrlVEXojWfJ/3od8CZH/7r/qZefCR54Y/xZ&#43;o0&#43;Ab22m5ZiIp93/eh3wJkf/uv&#43;pP96HfAmR/&#43;6/6nydIznf5TRpGc7/KaTKVxh9b/AHod8CZH/wC6/wCp97zVyhg8uYyrhcVkbJ7HMp6RrqWHREhFRFRUWdaHhT1f0dpOX6/8q79ZhrTaZ2i2doiIe33Jkv4MwnxDeQm5cl/BuE&#43;IbyH0bRaeuo4ee5fO3Lkv4NwnxDeQblyX8G4T4hvIfRtFoqOC5fO3Lkv4NwnxDeQblyX8G4T4hvIfRtFoqOC5fO3Lkv4NwnxDeQblyX8G4T4hvIfRtFpajguXzdy5L&#43;DcJ8Q3kG5cl/BuE&#43;IbyH0rRaMY4Ll83cuS/g3CfEN5BuXJfwbhPiG8h9K0W8BUcFy&#43;buXJfwbhPiG8g3Lkv4NwnxDeQ&#43;lbwJaKjguXzty5L&#43;DcJ8Q3kG5cl/BuE&#43;IbyH0bRaKjguXzty5L&#43;DcJ8Q3kJuXJfwbhPiG8h9K0Wio4Ll83cuS/g3CfEN5BuXJfwbhPiG8h9K0Wio4Ll83cuS/g3CfEN5BuXJfwbhPiG8h9K0WlqOC5fN3Lkv4NwnxDeQblyX8G4T4hvIfStFoqOC5fN3Lkz4NwnxDeQblyZ8G4T4hvIfStFoqOC5fN3Lkz4NwnxDeQbkyZ8G4T4hvIfStFoqOC5fN3Jkz4NwnxDeQbkyZ8G4T4hvIfStFoxjguXzdyZM&#43;DcJ8Q3kJuTJnwbhPiG8h9O0WDGOC5fM3Lkz4NwnxDeQblyZ8G4T4hvIfTsFgxjguXzNy5M&#43;DcJ8Q3kG5cmfBuE&#43;IbyH07BYMY4Ll8zcuTPg3CfEN5BuXJnwbhPiG8h9OwWFxjguXzNy5M&#43;DcJ8Q3kLuXJnwbhPiG8h9KwWio4Ll83cuTPg3CfEN5BuXJnwbhPiG8h9K0Wio4Ll83cuTPg3CfEN5BuXJnwbhPiG8h9K0Wio4Ll83cuTPg3CfEN5BuXJnwbhPiG8h9K0Wio4Ll83cuTPg3CfEN5BuXJnwbhPiG8h9K0Wio4Ll83cuTPg3CfEN5BuXJnwbhPiG8h9K0WDHXguXzdy5L&#43;DcJ8Q3kG5cl/BuE&#43;IbyH0rBYMdeC5fN3Jkz4NwnxDeQblyZ8G4T4hvIfTtFgqOC5fM3Lkz4NwnxDeQblyZ8G4T4hvIfTtFoqOC5fM3Lkv4NwnxDeQblyX8G4T4hvIfTtFgxjguXzdyZL&#43;DcJ8Q3kG5Ml/BuE&#43;IbyH0rBYKjguXzdyZL&#43;DcJ8Q3kG5Ml/BuE&#43;IbyH0rC2io4Ll8zcmS/g3CfEN5C7kyX8G4T4hvIfStFgqOC5fN3Jkv4NwnxDeQbkyX8G4T4hvIfSsFgqOC5fN3Jkv4NwnxDeQbkyX8G4T4hvIfStLbwFRwXL5m5Ml/BuE&#43;IbyF3Jkv4NwnxDeQ&#43;laLCYxwXL5u5Ml/BuE&#43;IbyDcmS/gzCfEN5D6VosGMcFy&#43;buTJXwZhPiG8g3Jkr4MwnxDeQ&#43;nYLBjHBcvm7kyX8GYT4hvINyZK&#43;DMJ8Q3kPpWi0YxwXL5u5MlfBmE&#43;IbyDcmSvgzB/EN5D6VosFRwXL525MlfBmD&#43;IbyDcmSvgzB/EN5D6VotFRwXL5u48lfBmD&#43;IbyDcmSvgzB/EN5D6VotGMcFy&#43;buPJXwZg/iG8g3Hkr4MwfxDeQ&#43;lYLRjHBcvnbkyV8GYP4hvINyZK&#43;DMH8Q3kPo2ltJjHBcvm7kyV8GYP4hvINyZK&#43;DMH8Q3kPpWi0VHBcvm7jyV8F4P4hvINx5K&#43;DMH8Q3kM8dg69asjqVK9qNie/VaPSv7LUVPKc&#43;7sZ2f/AP1sR/ymZrhf7tu48lfBmD&#43;IbyF3Hkr4MwfxDeQ6cDh6lGgrarLHK6Y7w&#43;t0J&#43;05EXyHTaWIjhLl83ceSvgzB/EN5BuPJXwXg/iGch9K0joa1XLsRJUtRwXL5248lfBmD&#43;IbyDceSvgzB/EN5DvRyKsWu2wub8K58y9S9RnaStZLl87ceSfgzB/EM5BuPJPwXg/&#43;7t5D6NpbRUcFy&#43;buPJPwXg/&#43;7t5BuPJPwXg/&#43;7t5D6VotFRwXL5u48k/BeD&#43;IZyH575/YTD4Pzho08NQpUGLhGuVtNiNRVvdnhPA/VLT8x&#43;khI85qH8k39d5x60Rg6dKZyaPPSitXz1x7UWM7Fn/AANPj9w/vPRPv&#43;d6R58ZR8GfqMPlnm3n6pd9e0OdmTKlRFViuciKiKqMzIq7C1sk1qDlbVubDlaqq3NKbUk9TkXJ66JfbvpYim19yN/C5rthuy5hKbMKtWqssbe5ERYl7lSOpDNtU8Z3D&#43;89E9J9HlJWecmIYvRhXfrMPjH3/o/SfOrFfyi/rMN9Ofqhjf0y/QrCWm&#43;0lh7reRptFpusFgsabRabrBYLGm0Wm6wWCxptFpusFgsaLRab7BYWxotFpvsFgGi0Wm&#43;wWAaLRabrBYBptFpusFgGm0Wm6wWFGm0Wm6wWAabRabrBYBpsFhusFgGmwWG6wWFGmwWG6wtgGiwWG&#43;wWBGi0tpusFgVptFpusFgGmwWG6wWKBpsFhusLYEaLBYb7BYBosFhvsFgGmwWG6wWAabBYbrBYBpsFhvsFgGiwWm&#43;wWAabBYbrBaBpsFhut4CzgBpsFhus4CzgBptFpus4Fs4AaLBYb7BYBosFpvtFosabRabrOAs4AabRabrOBbANFgsN9gsA0WltN1osA02i03WKLF1EGm0Wm6zgWwDRaLTdYWwWNFotN9gsFjTaLTdoxoxY02i03WCwg02i032CwWNFotN9gsFq0WFsN1hbBaNFgszG&#43;w&#43;dl3DOq5Nc9iKrqDkqwiokom2Z4Kq&#43;QxvtOuszEXSt9K19NitaqIiZ5RUVV2e5E8quM7D5/wCi7hpLG/hmYN2QsMtLJrajkVHV3LVhVRURF2RHBEXynz/gvjv9RtOsa1X6sxvnLqsLYbrBYfStp8erXVKyVWuq2o7O1Ytt6c07T6VhFyfQcioqLC9EnRYZ1v3Wa9mm0/LfpMSPOjD/AMk39d5&#43;sWH5V9KCR504f&#43;Rb&#43;u859b0N9L1NfnikefWUfBn6jD5R9bz1Yi&#43;feUUc1FzU9v5bD4&#43;ip/2beo8u3ql6Ne0PsZGyymTkfSrte&#43;k7OiNzqily1lmnlFlOlQY9tNq3OvREVV6Nh8vDYWhWxDKdS1jXLnW2VGJwtCjiH06dr2ouZbYXymWmB6H6O0nzrxX8m79Zh5zRU/7NvUel&#43;jdqJ514pERETubsyfaYb6fqhjf0y/SrRabrRYey3kabRabrRYLGm0WG6wWCxpsFhusFhbGmwWG6wtgsaLBYb7BYLGiwWG&#43;wWCxosFhvsFgsaLBYb7C2Fsc9gsOiwWCxz2Cw6LBYLHPYLDosFgsc9hbDfYWzgLRz6MaM6LBYWxz6MaM6LBYLHPoxozos4F0fAWObRjRnToxoxY5tGNGdOjGjFjn0Y0Z06MaMWObRjRnToxo&#43;BbHNoxozp0Y0Ysc2jGj4HVoxoxY5dGXRnToxoxY5tGNGdOjGjFjm0Y0Z06MujFjl0fAaPgdWjGjFjl0fAuj4HToxoxY5tHwGj4HToxoxY5tGNHwOnRjRixzaPgNHwOnRjRixzaPgNHwOnRl0Ysc2j4DR8Dp0Y0ZLHNo&#43;A0Z06MaMWObRjRnToxoxY5rBYdNgsFjm0YsOmwWCxzWCw6bBYLHNYLDpsGjJY57BYdGjGjFjnsFh0aMmjFjRYLDfoy6MWOewWHRYLBY57BYdFgsFjnsFhvsFhLGiwWG&#43;wWC1aLC2G6wjmw1VRFVehE6RY1WGL6TKjHMe1HNckK1UlFQxxK47BVNJWwyVKEZ9DKub17RWyjgcPSZVqYhqNfnbEqq&#43;RM5mNolZ1mHwO71O5bvudpNNobkZnifxRqjP4HomUm02IxjUa1qQiIkIiHwd85P3n3nQVbYn8KTfFs7ebmM8r&#43;cbadFrMmTUqPXPVcxUazr2qeX4D4XDbbXXvtPj9mY0nW7fae5lOL3tbOtYKiI5EVFRUXYqHw8mY&#43;tlNipWRq16CI5rmsVbs/SiSh9&#43;hTiixLVTNsXae3fXbTedNvZfFWxsFhusFhmxpsPyb6U0jzrw/wDIt/Xefr9h&#43;RfSukeduG/kG/7R5y6s/S6dL1NfnukefuUvCn/s2Hxj7fn4ip5/5Shqrmp7Py2Hw5d/Zu605TzzEzLvrMU&#43;hUr4estFlChY&#43;1rUdd&#43;FZ9euRTrYegtZlehe&#43;1zVdK&#43;0s&#43;rXJx0K9bD1Uq02ORyeELw2iviK2Iquq1GOVy&#43;EJ6yYzw1cMD0/0Ztu87cX/JO/XYeXl39m7rTlPWfRaiu878XKKi9ydm/x0zWsTEwxvMYy/UNGNGdWjGj4Hot5nLoxozq0fAaPgLRy6MaM6tGNHwLkOXRjRnVo&#43;BdGMhy6MaM6tGNGMhy6MaI69GNEMhyaIaI69ENEMhyaMaM7NENEMhyaMaM69ENEMhyaNRozs0Q0QyHHoy6M69ENEMhyaNRozs0Q0XAZDj0ZdGp16IuiGY49Go0Z2aIaLgMxx6PgNGuo7NDwGh4DMcejUaNTt0XAaIZo49GNGdmhGi4DMcejGjO3QjQjMcWjLozs0PAaLgT7g49HwGj4HboeA0PAfcHFo&#43;A0fA7dCNCMxxaPgXR8Ds0Q0QzHHo&#43;A0fA7NCNCMxx6PgNHwO3QjREzHFo&#43;A0fA7dENEPuDj0fAaPgdmiGiQZjj0fAaPgdmiQaJBmOPR8Bo&#43;B2aJBokGY49GNGdmiQuiGZTi0Y0anbohohmOLRjRnboiaJBmOPRjRnZokGiQZjj0fAaM7NEg0SDMcejGjOzRDRDMcejGjOzRDRDMcejGjOzRDRDMcejGjU7NFwGi4DMcejUaNTs0XAaLgMxx6PgNHwOzRcBohmrj0fAaM69ENFwLmOTRjRnXohoxmOTRjRnXoxoxmOTRjRnXoxoxmOTRjRnXoxoxmOPRjRnXoxoxmOTRnNjMThsJTmtiqWHWUtdUciJO1PcfU0Z5/FU0dXrsqNlFe5FRybUnkM7b&#43;G9NblpXziroqI3KWR3N6bsV/8A8mFXKGT6uKVrMTgqj3oizRciXLnzRK5&#43;U8xlbDUcnYpzWthipc1P3H3vNzzbxa4bv&#43;IYylUfnpU39Dda6l6zl37O0zXeWOUcLQSkj0osRyvzqibcynxMod3VKdOvlJMA1ZVH93dWu4Q3Z4nqcdgMVURtBtKamkthHJCraq7fDPnOql5p4N&#43;FfSx7G4h9RsTEaP7PHia0230nLSalZ20/8uzy&#43;R8sZAyBhq1Vco1soYl2ZUZhnMVUnYiOzdanVU&#43;kTJmjctLA411SPZR6Ma1V4qjlhPIp8Pzg8zso5Dur0ZxmDSJqNT2mz0K3958Cg12Kq06VFqvfUcjWtbnVVXYh5ur8V18vq7vp9H4L4Tqa5a7TL9kwVTveBoYmyzTUm1LZmJSYk3aM4mpiMnUqWBp1KTm0adOm1zkhdkTHk8h9fRntjZ8TaPPhy2H479LiR534ZP8A5Bn&#43;0eftmjPxf6YUjzxwqf8A69n&#43;0qGOpN6tdL1NXn6kfSFlPwp/7Nh8Q&#43;75/wAf/EPKcaqX&#43;yYfCLp2bdznMyfSptbSp1MRUYlRzqjUcjEVJRERc2yFldZ0Uq9CtkpuDo0qKV2UHvfUWi1XOVHOVUVVSfwQqKi9HUq0KFbJTsZWq0UrsoMYymlZqucqOaiKiIs/glFRU6Orna1mT6VRzqtOpiKjFptbTcjkYipCqqpm2SkJrCuE9Z9FTZ88sZ/Iu/Xpnkz1/wBE6p/vnjJ7C79emN09pfrejGjNst1llNZm3Fp0Y0ZulNYlNYsatGNHwNsprEprFrTVoy6M2SmssprJclNWjGjNsprEoLkpr0Y0ZslBKC5Ka9GWwzlBKC5KYWILENmYSguSmuxBYhszDMS5WmFiCxDPMJQWUwsQWIZygzCzGGFhbTLMXMLMYYWi0zzDMLXGGFpbTKUEoSzGGNotMpQSgsxhjaLTKUEoLXGGNotM5QSgsxhhaLTOUEoLMYYWltMpQSgtcYY2i0ylBKCzGGNotMpQSgsxhjaLTKUEoLMYY2i0zlBKEtcYYWi0zlBKCzGGFotM5QSgsxhhaLTOUEoLMYYWi0zlBKCzGGFotM5QSgsxhhaLTOUEoLMYYWi0zlBKCzGGFotM5QSgsxhhaLTOUEoLMYYWi0ylBKCzGGMC0ylBKFtMYY2i0ylBKCzGGNogylBKCzGGMCDKUEoLMYYwIMpQSgsxhjBIM5QSgtMYYQIMpQSgsxhjAgylBKCzGGMCDKUEoLMYYwIMpQSgtMYYwIMpQZgYwxgQZZhmFmMMLT5WVMA91RcRSarpT22pnWdZ9jMTMFjxNw8mzzZp5Xx&#43;HxmMu7vh5VtPZpHT08Eg9S9WU6bqlRzWMaiq5zlhEROlVM8xz5Qw64zJ9fDMqWLVYrZzdPRsXMuwE&#43;Z8vlaWcl70hc2I0&#43;diXIz8MRrszH2WKyoxtSm5r2ORFa5qyiprQ5u6runu1ntWxbKGeTcNUweTqGGrVUqvpNtuRISOhPIkJxgLvES6LT4FPzKyPSy4mVqVFWVEdpFpovsX5ocidEZ1jWp6GUEoJiJ7prM6&#43;mactTJ2Fqvc&#43;pSRznbVlTfahnmGYrNMLUPxP6Zkjz0wv/pzP9pUP2/MfiH0z/8AWmE/9OZ/tKhJ7N9OPqcfn46/z/ykqOVM1PZ&#43;Ww&#43;HDv7R3UnIfV876ml8&#43;cou1oz9Rh8szcu0RFN6YDEq1FWrTbciKiOrU2rCpKZlWQuAxKNVUq03Woqqja1NywiSuZFk6MVh6yVqVdabm0tHR/SuYqsT2G8M5u7zQruYlKmxrmU66KqU0ark0eZVhI2yMp5WofJh39o7qTkPWfRdU0fndi1VZ/gnZ1&#43;3TPKH3vMCtofOnFL/APKKnpMLcs7RFP2XvSax3tNZ8BcfxJ3/AOcW3HF6Dvaax3tNZ57v6ayd/TX6xZi9F3tNY72ms87vBOd6xvDiosxei74msd7TWed3h85Sd/8AnJ5RZi9H3xNY74ms83vBNaE3jx9YtcXpO&#43;pr9Y76mv1nmt48fWN4/OUWYvTd9TWO&#43;prPMbxTnKTeKc5BZi9P35NY78ms8vvH5yE3l871izF6nvyax39OceV3nx9Y3kmv1izF6pMenOL35NZ5XeXzlG8vnKLMXqu/prHf01nld5fO9Q3l85BZi9TvBOcN4Jzjyu8053rJvP53rFmL1e8E1jeCazye8/nDefzhZg9ZvFOcN4pzjyW8&#43;JN6fOFmD1u8U5w3inOPJb0&#43;cTeic4WYPXbxTnDeSc48hvROcN6pzk6xZg9fvJOcN5JzjyG9U5ydY3qnO9Yswev3knOG8k1nj96/OXrG9fnC1wew3mnOG805x47eqc4b1TnCzB7Heac4m9E5x47eqc4b2&#43;d6xZg9jvROcN5pzjxu9k543qnOFmD2W805w3onOPG72TnDeyc71izB7Leic4b0TnHjd7fOG9k5wswey3onOG9E5x43eyc4m9k5wswez3onOG9E5x4ze3zvWN7JzhZg9nvROcN6Jzjxm9k5w3unOFmD2e9E5w3onOPGb2&#43;eN7JzhZg9nvROcN6cTxm9k5xk3KivcjWXPcuxrUlV8iEswex3onOG9E5x41MroqSjsy8Rvb5xbMHs958RvNNZ4zeyc8u9k5xLMHsVyonOJvROceNXKyc4m9053rLZg9nvROcXenzjxe9053rG9k1oLMHtN6JzhvNOceM3t84u9vnizB7Lefzi7zTnHjd7JzlLvZOcLMHsd5pzhvJOceO3qnO9Zd6pzhaYPYby4jeXE8fvX53rLvVOd6xZg9fvJOcN5JzjyG9U5xd6/OFmD1&#43;8k5w3ims8hvT5xd6JzhZg9fvFNY3inOPIplNOd6y70&#43;d6xZg9bvFOcN4JrPJ7z&#43;d6y7z&#43;cLMXq94JrG8E1nlN5/OLvJOcLMXq&#43;/pzh39OceV3knOUu8vnKLMXqe/prHf01nl95cS7x&#43;d6xZi9R37iO/cTy6ZR4oXePFBaYvT9&#43;4jvyazzO8U5xd4JzhZi9L35NY77xPNplDU5RvBdYsxek77xHfU1nnN4F7/xFmL0XfeI77xPPd&#43;TWnWO/fO9Ysxei76msd8TWee798/1jv3zkFmL0PfOI74ms8/35NY7&#43;msWYvQd8TWfjf0vVNL54YV3/wCvYn&#43;ZUP0bv3E/LvpMq6Xzow7tWCanpvJLekVLg84q7Xed&#43;Oe5yIi251X5rTk09H&#43;1Z8pDLKDld5z41VWc37mlMuzq3pgFa5HsVXPpMpOVuIaiQ23OiW/NQwZj8n0rnUmuR6sc1FdiGqiSipstTWb61DAMpYdza9a6pTuqfo5hc2yYzTd0rsFGhgH0sQ51etdTp3U/0cSufbE5pt6U2gfO7xR/tmfKQ7vNbFNpecOIe1yKi4dUlF4tOQmSlXftf8r/AJQPeLlNOd6zHeic71nwpXh1iV4C0xh9zeic71kXKic4&#43;J5R5UFrjD7S5UTnGK5Ubzj4&#43;fX1Eniosxh9jeqc4m9fnHyPKJQWYw&#43;uuVeKmK5V4qfKzCUFmMPqb1XWpN6LrPmeQeQWVD6S5UdxMVym7ifPErwFlQ795uJvN/E4ZXWJ4iyodu8qnEbxqalOKRm4i1qHbvKpqUu8qmr1nDm4jMLKh3byfq9ZN41Di/raPILKh2bxqaybwq60OTyDOQqHX3&#43;r/Sk79VOXOM&#43;v1gp09&#43;rDvtY5s&#43;sTxBTo75W1k75W5yGieIlP6QFN/fK3OHe6vONEpqJKagU397q88d6q880SmoSgKb&#43;9VeeTvVXnmmU/pBPEFN3eavPHeK3OU1Z&#43;gkKCm7T1ecpNPV5ymqF1CAU26erz1Gnqc9TVPET4gbNPU56jT1OeprkTwQFNmnfz1Gnqc9TXPBBPADZp6nPUumqc9TVIkDZpqnPUaapz/Wa5QdYGzTVOf6xpanOU1jyoBs0tTnOGmqc5xrzax/W0DfRxFNK9PvNWoyiroe6mkuamtE6T6mTl7plSk6gmIylWw9VyuTBs0jH0nU/ZckbFlc6Lr4GjJDsMuIoph25W3hK2rhdHb06&#43;iNs8T3f0f6D/AHbSyzvOmqd5iJvuXbHCDnvtTUQ8BTp4emz&#43;IxdbD92otSvTe1EqvrLMMY1c8REqvHWhxpXqqiLep7rzxj/efJ3cdP3zQVNN3O3TWZrYu6fxcdp4jFOyetiYFuNTbf3qzyRb5dpddrSYY6er/aKNPU/tDVIngbSm3TVOepNM/nL1mueAlNQGzSv5y9Y0tTnr1mvyKXN/SgbNNU5yjTVec41ZuJZQDZp6vPUunq89TVPETxBTb3irz1L3mrz1NM8Rn1&#43;sFN3eqvOHeqvONOfWM/AFN3e6vOL3utzjRn1eoZ9QKdHfK3OHfaus554DyAp09&#43;q6/WXv1Y5ZTUJKU6&#43;/1SplCrxOORKAqHbvGpxG8n8TilBPFRZUO7eby7zecE8RPEWVD6KZUcVMqKfNniOoWlQ&#43;nvVdamSZVXWp8rqL1CyofWTKvziplX53rPkdQ8gsxh9jeqc46sNVxGJprVpsctNFhXwqpOrMed8hnSr1KM2OVEXam1F8UUWYw9BXxa0GJNOsmeL3stTwQ2riGZ2or7kopVVyxb&#43;Gf9DzdSpSqNlKVj5z2r7K&#43;QzxGNq4hrWXvbTaxrbL1VMyIkx5JFmMPuriKjWK65so1HK25JRF2LHlQ2Oq1GPe11SmljrXKrkhFz5vUp8WrlN1WhYumRyta1f0y2Zo/ZjhrFPKSNxdeurKiaWor7WVITaqwuZUVPILTF9pteq5jXI5svarmtuzqiTMdSmpMpfOPmvx9FjcPUbTVazKbotdDWqrnLCpGeJnafPvdzlFmL0iZS&#43;cVMo/OPN6R3OLpX89RZi9KmUE1nhPPaslbL1FydGFanpOPraapzzzfnC5z8qMVyyugT9ZRZVM8d/1PjPD9zTI15QVyecuMsRFXisdCC6v/Z0/lryBX08Rg8U6hg0TDVFmittqXXJcqzm6Icm0YfB4ptDGIuGqJFFLrkttS5FnP0Q1dh89&#43;IxlVrG1Ie1iQ1HVVVGpwzZjPDuyg5XUsMxVvT2mU6jvaTiiJnAxMcl/ftf8r/lMbq/9nT&#43;WvIXJNy5br3IiLotiLPNA&#43;9m1jNrUnlQZtfqI0ubUM2ombiM3HrATwLcSeAnggFngglP6Qk&#43;HUJUCzxHtLslfAkrrUkgWF1KIErrE8AEeHWPKhM3FB5UAubWM2v1CF1EhdSgWUEoSF4dYjihBZ4CeBM2vqGbWvUBZEqSU1L1iU1dZRZXWoldZJ4IJ8Oogsjb0dRJXWJkCxwVBCazEAZQnOQRxQxAGUePUM2pTEsrrASmoTwEqEleiQEiV1ljWkeUQmuPWBJEiG6/UWE1yBBIjgnWM/N9QCV1jOolfAi5wMs/AdRiAMpT/ANhKcTEAZSglP6QxAGX&#43;ImfWQAWFELqUgAudAEnokZ9frAypaDT01xVOpUoo6XspqiOcmpF6D6uS6zcflakyg6vk7EYmq5HLgn6NjKTafstSNqyiyq/vPkTx9RnTrPo1G1KTnMe3Y5roVOjahJix0U8bg3s/iMLVxHeKKLiKj3ItVlZFWHseueIiUXXwORso1ET1BFREREREgSi7feWPAsrr9Yn&#43;oJm1KM2teoC3cBdwQmbX1iOKAJ4CU1CPDrEL/wCwCU1DNxELqUgFzcRm1kAGWbWPKYgDKPDrEGJYAsLqELqJmTiJAsxsErrJK61ErrKLK6xKknw6hK8OoCyokk8EE8EAs8BPBCSmpesSmpesCymoSmombiM2teoCynEZtYzaxm1oAzaxm1iOKCPDrAubWI4oSFCIupQEFhf6UioqLnIBln4j2uJiAMva4iSCV1gWRJLl1iVAs8BPAk/1Anw6gLPA87l77zZ&#43;Sn6ynoZ4Ieey995s/JT9ZQktuN/6mxnh&#43;5DIxx2bznxk5v8A2QyKj6uEov0VFaNJr6b3W1XTCuXpbrRERU8TKsytRbUqualJtF0UXosuYqbE1qioi7dhqqOo0arWVarajqEQtN0sqomzOmxeg1VcTRa2o6jcr605uimi7fFeiQOIwyZ9&#43;V/yv&#43;UzMMlqm/K/T&#43;i/5QPuASmpBK8Ooy0AXLrjwFy61AQupRC8OsgAsa1QQmtCAC5ta9QzcSACymoTwQgAs&#43;HUJXWQAWV1qJXXPiQAWU1DNxQg2gWOKKIXULV1KI4onlAgMp1un1iW6v3AYgylnEeFv9eIGJYVdhfa1eVEMZVelVAtq6o8RHFOsgAsJrGbipDfhMFisdUsw1F1RU2xsTxXYmwDTm1esyp06laolOlTV712Na2VXyH0mYfJOBarsXiO&#43;1k2UcOq2bF2v6U2bNnEqZYxrqS0cDSp4Kgkzo0jNmSVcvSidKQpddZ2moJmI7tdPIeUH00q1abcNSXbUrvRiN8U27eBkuTMFT9nFZYotftRKLHVUjxTp4Gh9NlVVq4ivUqvd&#43;J6r&#43;9dpi5&#43;CbspK7P0OU3hrHido/H8In8WsN6uvH6&#43;Px/J0aPIVL2H18bXcm2pSY1rV8EXOLcgu9lr8fTVcyPejFRvFUTOqeBytXBLmio3i/8A0D6aMbclFtRqbVZUVYMz0948xF/tU/7/AMLEaT32iPn&#43;Tq7jkn4a/wD6rxuHEPzYbEYTFP6WUayKqJrzxm5TgTQO23tnyohi6miNVzXo5PX1HPKPdqelNXExP7S2YnCYnCPtxFB9JZVEuSEWNsL0&#43;Q0ndhMt5QwcJSxLnMSEsf7SQnRn2J4Qbm18lY9f4uiuCqqi/pMOk01WM0t6NibNsqacnzJXWolTux2R8Rg6XeGOZiMKq5q1J0ptVM&#43;rZ4cT54GU8EEpqIiKuxJFq9ObxUC5uKDNr60JCa&#43;pBKautQLHFAjVXZn8CXaoQKqrtVVAtjtRM2vqQhbl5y9YFlNXWonwJK6k6hKakAKqrtUCU1L1jNxT1gAITX1oI1KgAC1fHwUWu5q9QAEAFBABQQoAsqnSpjJQLK61Erw6iSERVz9GsCzwQbehBKJszkmQMpanQq&#43;UkousgkC5ta9QhNZABY4oIXh1kAFhfHwFq6l6iAAC3LrXrErrnxAgLK8OoTwQCAspqQZtS9YEBc3FB7OteoCAsJrQRxQCAsLw6xaurqAI7oksu1qS1dShM&#43;ZQFy&#43;PiLl4dRABlOtEEpqQxAGUpqGbUvWQAXNxGbWvUQAXNrU89l37zZ&#43;SnvU9Aefy595M/JT3qWElhlilUrecWKbSW1yOmZiMyGnumN7T6bjtxv8A1NjPDkMyo&#43;f3TG9p9Nw7pje0&#43;m4&#43;9gKa0mvxj3OZTa1zGubtuVIzdc&#43;Q2YnDPxtNuLwyVKyIjab5atyuRImM/DrA873PG9p9Nx0ZDpupZUqsf&#43;JKSz1odBhkz78r/lf8oIfbABloBbXc1eoQvDrQCAsJzk9YhuteoCAst1L1klOanrAAty6k6kJc7nL1gW1dS9QhdadZiAMs3OQezrXqIQDKU1L1i75qGIAyuXh1EuVen1kKABAAzFJ1gCkAAouXx8c5ABZTpb1D2V6VTxIfYp4ahkfDJicdSbVxdVv6HDPSUanOen7v37A04bJlNlJuKylVWhh3tVabW/jqrwRdicVzZ01yTF5VrVKS0MLT7phYjRU/2s0KrnbXTyHJi8ZXxtbTYmqtR6pEx0cE6DFlJGolSqqo1djU2qSZiG9dJ2nwlKmtRZiGIvtOVYN1XEshrKTUtbsnYn&#43;vE1VKz6i54RqbE1GEp0p1CJ2qYmfE&#43;39f/G52119Eeefy4/H9lc9z1lyqviYmSI1VzTPgLF1p5Vj3iqcpmZm5YmTHvpuuY5UUK2ElVzcEJLdSqWJmJuEb7qWISKkU6kfiTY5eJqqUn06isc1ZTV0mM6kRPIbqVdFTR11V7F2L0t8Dtlr1PG3iefz/AD&#43;bFTr27NNngnlJs2unwQ2VqLqLoXO1c7XJsVDWcttZ1mpbibi4dGEx&#43;IwT1qYWq&#43;mq7c&#43;ZfFNi7T6KswOV6auwzWYPHI1P0OZtOquyG6lXNm/1U&#43;MqJrIi9CkG3EUq2HrOoV2uZUYsOa7oNZ9ZmMo5Vp0sLlF2irM9lmM25tT06U255/epy08kZSrVqtGjgMTWqUVRKjaVJX2zsmNfRrA4weswH0cZdxNSMU2jgmIqS6pUR6qi7VRGzKpxVD0uTfoyyXhnI/H4mtjVRV9lE0TFSNioiqu3PmVOjyqLflwP13FfR35u4imjKWHrYVUWb6VZyqvD2pSPJ0HyMR9FdB1Zy4bK1SnSzWtqUEe5PFUVJ6hRb85B6zFfRvl/D0kdS7tilV0WUqsKnH2kRI8vSfGxnm3lrAOqJiMl4lqUkue9tNXMRImbklNnED5gAAAAAAAAAAty61Fy8OpCACynNT1iW6l6yAC5l1p5BCc7rQhURV4JrARqVOsqMcuz3ySUTZnXiFVV2gVUt6F8VQirISU2SngLl1r5QAF3h1CU5qesCFL7Opesns616gICwnOTyoLdSovlAgLavQk&#43;CyFRU2oqeKAQpAAKQAUEAFBABQQAUEKABABS3O1r1kAGVyrmXbrUkrqTqQklT2s3T0AJTmoJTV1EAF9nUvWPZ1qhABc2v1CE5yEAFjUqdZ5/LqRlJn5Ke9T755/Ln3kz8lPepYSW7GrPnNjF4chkbMr5IxOIyrWxNCs1qudnuVUVIzdByJkXKS/&#43;bZ8Y7kBT7ePxVCpglpU6tNypiFcxrKattZCwmxDVg8o08Nh0pVMNpbaulaukthYzdB8nc2Uu1M&#43;MdyDc2Uu1N&#43;MdyFtKbzDJixlyvmRf0X/Ka9zZS7Uz4x3IdeS8l1cHXfWrVWvc5tsNlenj4EV9S5dSdRbna1MR5CKviQAAAAAAAAABIAAAAAAPIA8oA8oADMAA8gAADySW1dUeOYCAsJ0uTyHZk3AtxtddIr24ek1X1qiJ&#43;BqJPWsf6ZgOnJ2HoYKgzK2NdKI7&#43;HotXPUci7V1Ii/10L82vXq4mu6tWctSo9ZVV6ToyllBcdi3VWsaymxLKTUbFrE2JBz0mrUVXPdDG53SvqJMxEW1rrO01C0qSNbpaqfZauaTF7tI5XOfPggqVFqOlcyJsRNiGBnWPee7pvvFYa9vx/X8l9lOhVF2pqJ5CZwbcVVyqkKqxqJmGYAVJRZT1C53Ss&#43;OckKPKBZb0t6lHsr0qh25NyJlTK7kTAYCrXRVVt6NhiKiTCuXMmbWvSh6TAfRnlfEaN2Mr0MGx03tnSPbtjMnsrOb9rYvkA8rRcjmLQqVERi7F5q&#43;U1VKT6T1a9M6dPQfqmB&#43;jXIeGh2JXEYx1kOR77G3ZpVEbCp4Kq7ek&#43;3SwWFyPiVq4XDU6NCvDaiU2I1GqmxfDOvhJ2vPXGe8dvy/L5OczjN&#43;z8qwPmX5wY&#43;FZk2pRYr7FdiFSnbszwudUz9CKelwP0WTo3ZSylr0lLDs8Yh6&#43;Rfw8OJ&#43;hg5U3bzuTPMvIOTIauBbiakKmkxP6S5JnYvsovRKJ/r6CnTZRptpUmNZTYiNa1qQjUTYiJqDmo5IUjHL&#43;F34kKjMAAAAAAAHNi8n4LH2d8weHxNk26ak19s7YlM2xD4uM8wfN3FtqW4N2HqVFuvo1HJbnnMiy1E6IjwPRgDwuL&#43;i3Avs7nlKvRib9MxtSdURbHTrPiYz6NMtUG1H4erhcSjV9hrXq170nbCpCLGfb1n6qCUtvxHFeamX8HVSnVyTinOVLppM0qdbZSc2w&#43;R5T&#43;hTRisHhcdSSli8NRxFNFuRtWmj0RdcL051FFvwEH7LjPMfzdxjqj3ZObSqVEi6i9zEbmiUai2ovk8T4&#43;K&#43;i3JzqSJg8oYmjUnO6qjaiKmqERufZ0kpbfmQPR&#43;cvmZi/NygmKfiqOIwz6iU2KiK16qrVXO3OiJmXpXoPOIir0ZtagCoir0ZtYlqbM/iRVnaoFlqbM6hVVekmfWM4ACeAAAAAAAHkAHlAADyACoqpsVUIALcuufHOLtaIvkIAMpTmp1k9nmr1k8gAvs85eosJzk6jHygC26lTrFruaq&#43;BABYVFzyniQqOVNiqguXpWfHOBAW7WiL5IEpzU8igOshfZ1L1j2ecvUBAWE5yesWrw6wJ1gtjuavkJszLKAZfi8feYgy/F4&#43;8DEpB5FAAs&#43;IASefy595M/JT3qff6j4GXPvJn5Ke9RBL0db6&#43;pm/aX3mszr/AF9T7S&#43;8wAy/F05/eY9OeR5DLbmVYXWBj5B1DxADyjMPIAHkAADygeQZwHkAAAAZwAAzAAJLDulI8cwEBbfnIPZ4r6gJmHgLk6GoW5ypthOGYBa7pSPHMITpcnkIMwFlqa19Qu1NRCeQmcDK52vNq2GIAA&#43;zjU3ZkajgIjEYqK1eUzo39ludP/ZUXWcmR8O3E5TotqIiUmLpKiuSWo1udZ6I6PKaso4tcbj6&#43;JlVR7lVsoiKjdiJm4QBzIivcjYN1ZUY1KLFzJ&#43;JdaigmjY6s7ozJOs1KsrKrKnP1bfs7&#43;jp/rt&#43;H&#43;/4QnkAksnRwM4zCBAAZzvoZHxNeklRjFVF2Q1VNVTJ2JpqqK3OiwqHn/1PRusnp/0vW9tb/n&#43;LtyFk2Ow9Zn4qbuo1qkbUVDtG2u3aXHbTbX1RT9j8wv8AozAf/U/2jj0R5H6NMRUrea7qb3S2hiXsppCey2Gujrcq&#43;U9cdHIMalNlVise1HNdtRTIAcmCe9l2Fq/jpfhWIub0KdZy4xFpKzFsRVWlmeidLF29W06UVHIjmqioudFTpN7efqZ18eFMKibHptb6zMGGkRUVJTOhTBnsuVnlTwMwAAAAAAAAAAAAAAAAPA/SpiKjMNk3DI79FUfUe5qomdzUaiL6S9Z&#43;cKqr0ntfpRr1XZbwmGV/6Knhr2thMznOVFWfBreo8TCmZagBdhJAuYgAFzjxEDOAkgkAC5xmJ5QL5CAZwKAQCjyEAFkDOQCghQAHTtGcABn1CQAGYLtAAeUZwCeIHkAAeQDygCo5USEcqEzl8gC5daL4pInWiKQAZqqOz25&#43;mDH2dSp5SeCmW3Oi59QE9nnL1FhOcnrMR5AMrV4daHn8uIqZSZKR&#43;hT3qfePgZc&#43;8mfkp71EEvR1vr6mb9pfea85sr/X1PtL7zWAAAFmcy7ehRn8CZyyi7esCALmWFE8AAz9AkWuXoWNagALdbkQvs8V9QEkSWUTY1PKS93QseGYC2uVNSccwiNrk8NpM/STygZexxX1EmNjUQmYsgW53QseGYxgu0kAMxZ4Ezax5AL4CFJIzgBmLHkGwCSWZ4kkAWOJAXygfVwK91yBj8TLWurObQprEu1uTZmRUX1eB8hVlUQ&#43;xjrqPm9k2lbYlV1So5LYuVF9lepfcfMw7bq6L0NzquokzUW3prO&#43;0ax7sq8tRlJNjUz&#43;JqzdPqDnK5yuXaqySCaxUUvU3z2mY/qFzdBM48pZK5oZ023VGt1qYyb8C27Fs4LJjq7Y6TP6OvR0z6muvMw&#43;pi67qFJzGqiNZQR1jkRWq9X5pRcyrakoi6pTWclPLVZjUatNqtRIVL3R5GqqtThmhNRnlR0adF/arNpp402Wu/WSD5eY49Hp6/aiJhz6kx1OrtvzMvsMyxSdmqUlTUqta7yQ2zrldhsTGZPrQtS1k5lVyObHFGw79bqPhyJLt8L0p9nTXr9bXxrvPzv8bfpXmdhcpJhlq5LxNBuDSuqVaVRyLKwkqlspsjp6Nh65K&#43;OY2X0Ecic1Tyn0W4pj8kY3CIjtJSrpUcsZlRzURPL7C&#43;o9wdNOjhFRM/M3622/qiPlX4ORuUad1tVrqbtSodTHtqNlrkVOBHU2VGoj2o5NsKhyYJETE12sS1jVhEmTd7RMRPuxWu0TMeHaqI5Fa5EVFzKi9Jy4BXMY/DVHS6i6E4tXYp1nJX/Q4&#43;hW/ZqItJyr0dKes76&#43;YnVx28TEusAGGmD/AGXNdxhTMxqJNN3gVqy1F1oBQAAAAAAAAAAAAAAAfj3n&#43;6pU88cYjnq5GJTaxqum1LGrCJ0Z1VfKebVFTaiofS85aj6vnNlN1R7nqmKqNRXLKwjlRE8ERETyHzUVU2KqGWkBbl6URfIWW9LepSCDNrLDV2O60JavQqL5QJAKqKm1FQgCS&#43;QSTyAMw8ozCChBc/gSFHgBZJ5BI8gDMPKMxY4gIGfiSFGwBI8gkeQCpBPKXNBPKALnJAzoAkqkkq&#43;AAeUmYZgLnGeCQVJkBIzDOSQKCFAZxnHlADyAZwBVhc6eUnlCLClVEVJTqAmc&#43;Blz7yZ&#43;SnvU&#43;&#43;fAy395M/JT3qIJejr/AF9TP&#43;0vvNeY2Vm/p6kqie0vTxNcNTpVfIAngSVLKdDetRevRm8EgBa5c8L4i3WqJ5ZJnVdaiAMks2Kqr6oCqiLFqeUxzazJFSIXyLqAl7uhY8MxM65yrKLGwgCBmEKI4gWdQnUTMJAQILM7SQoDMPII4jMAkCQBYJmBfECSCwQgFJIAuYeQkDygAWU1DOB9PLafd/8AI0/3nBR9ijVf0r7KfvPv5Yye/KGV6TKOjp4anhmrpUX2GU5XPq1wnDxj4uJZQp07MPUdUpq7M5zYV0JCrGqTlvtEzg69GYymeIn8v8uaSbRAzHVyBBZXoIAzH0cjUm1cYiO2KqJm4qfOg&#43;nk6KeCxVV2ZNG5FXxS1PW5DzfFf9vHmo/l6fhZred&#43;Imf48fzMNGNquqUqLliayvrujnOcqL5PZT1nGdOPhMUrF/FTYxjk1Oa1EVOtFOaTvr2eTXssDYQGmn6H9FP/AOV/&#43;j/4z9CXYfnf0VVGJVypSV7UqOSk5GznVEulY1JKdaH6IpqOzMiqjUVVWETOqnHk1FWm&#43;o7Or3Sb8W5GYSoq82OvMY4JtuEYmtJMT53h0jxpLoOfHMvwdRUWHMS9q9KKmfMdAOsTU25TFxTCk/S0WVIi9qOjVJmcmTvZw7qO3Q1HMnXnmfWdZdoraYTWbi02mNH6pDLYYUfqkMXF002AAoAAAAAAAAAAAAcGXaj6Pm/lGrSe5j2YWq5r2rCtVGLCousD8KqValao6rVe6o96q5znLKuVdqqusnkEcQYaMxAAEAACoqpsVU8C3L0oi&#43;QmYnlAst6W9SiG9DutCQALavQqL5QqKm1FQhUVW7FVJAglS3a0RfIJavQqeCgTyDMWG9DutBavRC&#43;CgTylgQqbUggASJEgJHkGYsFBYJBVTOSFAQoAkBJVXgSS5s2YCZhm1jNrEAIEKIXUALKkksrBJ4APIMwzahm1gXyiCRxKiKAzoSVGwSoFkIsZyTwGbUBksRKbPcefy395M/JT3qffRYPgZcjeTIX/ALFPeogl6Kui6ep9pfeYRxMq/wBfU&#43;0vvMEnUAzCeBY4kzAJUCeAlQEDNrAgDJFSIVMxFlP9CRxKipsWVT3AQQVc2okgI4jMBBAngJURxGYB4CFEl27QJ5Rm1AQAlQI4jNqAFjXmJIAsInEkgsSBAWI2k8gAvlJJsoVG0sRTqPppUax6OVi7HIi7CSPQ&#43;c1d&#43;DwmBySkezhqbqrkcvtLnSPDNPVqPPvz4el/i956HzwbpGYLEtajmuaqaVqZlTNbn648p55/1FL/ABe846VjrPPn&#43;G&#43;j6Np/T/MNQL45xm6PWd2EgZgs9IASfZw1JFydTpOVYxFanSd9lVnNx9lD4x99rafcsMq1Vpw2q5HW&#43;yioxLVVdqQq5sy51PL8RP1aR&#43;v4Q76zj0Opt&#43;kR85/2fErVVr16lZyIjqjlcsbJVZNcHT3Ri5mYyg93Q2XNnyuRE9Y7jiP2Epvd0Np1WvcvgiKqnouHmy1hzR5BmN1XC4ig1HVsPVptVYl7FTOaY4lu&#43;zUTE9nsvov/AOpMR/Ju/XYfqfSfln0X/wDUuI/k3frsP1PpNwkuTKSr3drUX8T0RTqYlrGpqQ48ZFTG4enGdPa/rqO4xr52mW9vGsQAA6Objwyo3KGLpoqJ&#43;FyN8mdfcdhxucjcrSqwmg/8R0e3UzKljfWo6u8RMV5mmNfeBy3usT/EuotH6pA9EZSWEhIMmpDUTUhjXWY8z3bUAGwAAAAAAAAAAA875&#43;/9GY//AOn/ALRp6I8b9KH/AE3h/wCcb&#43;o8SPysDMIMNEjNqAAsIvSI1EAACVE8AAlRmLADxQZuJFACOIhQAAElSNsALlTMiqgu1oi&#43;QmbWIAstXoVPBRDeh3WhABbV6IXwUQqLnSCFRyomZVQCAt2tEXyCWr0KngoEkZtRYb0O60Fq9EL4KBMxYzbSKiosKkDoAQuoASoASongMxRUXPsGYnlKqKBM2sQAAgCRIFlVJPAs8BmAmbUMwjiIUBHE&#43;Dlv7yZ&#43;SnvU&#43;8fBy394s/JT3qIJeirr&#43;nqfaX3ms2V0/T1M/wC0vvMMwETUIXUWQufOAjiTMAQJBYUZgINpZ4EkCpqXYFSOPgQqLHgBJ4Aqt1Z0Ea1AgLmEqBIGYACzwG0hYUCAuYbOgCQM2sABPAAAJBY1qM2oCQI4lnXsEagPR5KqU8sZBxGTMXWsdhnNq0arlmxuxZSUzIieSeCHyso5NxWAosTEUlRGvVqPTO10z0&#43;TZtGRsWmEylTV6NWlV/RVUfEK1dsz0bF8h1NxWOyPUxWAvbVp01jRVUlrmrOeJzSizEnDqa7a1tr24b6cbXMa&#43;8T&#43;f&#43;HxgfVdXyLjEl&#43;Gr4Ko5y56TkexJ6VRehNSIFyNSqo12Dynha9yeyx7tG9ztSNX98F&#43;7EeqJj&#43;uYtyzj38PlFhPA762Q8qUGI52DeqKsQxUevUiqclbDYjDW6ehUpXbL2K2es3rvpt2m1jaJ7S17Og&#43;xharMTkqrhEqMZUfakvVYhFnoReB8YqLHDwMdXp51MTUw7dPeNYnXaLie/zt3OyPXj9HVo1F1I&#43;39ZEQ1uyVjmpmoK/hTcj16mqpoSvWTZUd5FNiY3EN/wC0685j/qI4n5w6V8PPado&#43;U/kaPHYH9JZiMPPs3Q5k8J8he/4tfrK7qqaq36RPGHSdWFxuUajlXC0qlRW/iWk1VjxjwO2muVsU6x&#43;T6lSM8V2&#43;z6eaTG3W319esfOP8sT0uhP/ALI/vEx&#43;bs8wcpV087MPQRKSMrsex9tFrVhGq7aia2ofrOw/L8i4PKLcq0dBTwmBxa3aFXNp3O9lboREXo2&#43;J&#43;g4JMp08JTbi6jK1ZE9t6Mic/k8Nhrp/Fa7eMZ/H8Gdulrrreu8T&#43;1/kzSamVXTsptRE/rynZsOajh3Me&#43;pda56yuaTfom9Kq7xU7aTtXp&#43;bnvN1QtVswkuXgkk/SO1MTrUzRERIRIKbx2n1T8v6tlxtbblaJVf0E5/tHYcn/5f/wDj/wDiOs7bRERERwxr7/u11Pac1mtZU2GtntOc/o2IbDLYAAAAAAAAAAAAAH519K1Ri1cl0ke1ajUquc2c6ItsLGpYXqU/RT8p&#43;k2pTf5zUmte1zqeFa16Is2rc5YXVmVF8qElYePBYJ4mVVBM9BAAzCAAAEqXb0AQFzdCiFAkieAADMI4gAIULqKmbOSeAAFzCOIEkTwEKAGYsZkzkKu0CQoBZUCAspqGbWARzkSEVY1FuzZ0RfJBIEQgD2V6FQQnQ7rQgAti9GfwWSKiosKkAqOciQirGoCFQXa0RfJBUVs7FTygYyusSZWp0O60JYvRn8FkCZtRc2sioqLCpAAseAiNpBsAAsqqCU1FEldZ8HLf3kz8lPep9/NxPgZb&#43;8mfkp71EEvQ1/r6n2l95gbK8aep9pfeYT5CBCjZ0kAFWE6BKhM&#43;Ym0ACxxGYCFhfASpALmE6kIAKi686agqR4EKmbbs1AQFVERJTOgkBGvMM3iQAWfIQAAJLGvMfVyJ5s5W84JfgMOiUWrC16zrWTqTpXyAfKjVnEaz0uUPo/8AOHJ&#43;HdXayhi2tSXNw71VyJ4KiT5DzKKjtmZdQFzElQAABYAgLm8SSoF8T7VW3HZOp5RRZrUYo4lFj2k2NesrOpFXp8h8Q78k49uCxLm1kuw1dujrNlU9lenN0pykmLimtNp02jaPZw1GrTqK1dZD6OWMD3WvKKj2OS5j2qi3NXYuY&#43;cmoms3DfV1jXbx29v2bKNeth3q&#43;hVfScqQqscqLHkOmjlnKVB6uZjaqqqR7br06lk4oLm8ROmu3eHGYie76X&#43;8WVu1/wCWzkL/ALxZV7X/AJbeQ&#43;XIMfZ6X/GPkmGvD6f&#43;8eVu1/5beQf7x5W6cV/ls5D5gH2el/xj5GGvDurZYylXejnY2qiokQx1nqSDnrYzFYhiMr4mrVaiyiPeqpPlNJUleiTUaax2hY1iPZ9rzMxTMH53ZOq1EcqOqLTS3bL0VieSXIftZ&#43;F&#43;byNTzkyZCyvfKX66H7odYJAAVAAxe5rGOe5Ya1JVeAHNh/bx&#43;Kf&#43;JEta12rNnRPKdFRy5mtX2lOfAItPBpUqKt1VVe7iq/6HQxqze6ZXo1Ib39VM6dmSIjURE6CgGGgAAAAAAAAAAAAAPxjz6qMq&#43;eWUHU3teiKxqq1ZSUY1FTxRUVPIfs5&#43;EZdqU6vnBlGrTe2ox&#43;Kqua5qyjkV6wqL0klYcPiJUgMqubUI1KQAIgCYLOtAIXYMwgCAACyozEAFjiIUhUzJIEUFkZgICxxQkQA2FnykAFSJ2COITYpALCkBZUCAubUM2sCFRcyiFCbFATwQZiACxxEKQAAWVE8AHQQqQuYRxQAjnIkIqxqF2tEXyQSFToAF9lehUEJ0O60IAMrXdCT4LJFSCGSOXZObiBifBy394s/JT3qffu1tRfUfAy5G8mQn/Yp71LBL0Nf6&#43;p9pfeYGyvGnqdPtL7zCdWYgQozayACzqQKqqkkCZgALCiNagQRJZ1ISVUCxrUZtRAAlQABUWAqdKbBARUTiBCx5CrrTYYgXMnE2YfD4rGOVuDwtfEK3alGkr48YO7zcyPv/AC9h8nq5W0ll9ZzdqMTbHjmTyn7Xg8HhsBhWYbCUWUaNNIaxiQiFiC34MzB1n5Rw&#43;T61Oph6teqylbVYrXJcqJML4n7zg8JQwGDpYTDU0p0aLUaxqdCIaco5JwWVabGYug160npUpv2OpuRZRUXo2HYWIQPyP6RMm0cn&#43;dCVaDUa3GUtK5qbL5VFXy5l8ZP1w/LvPvJmX8o5cr5R3VV7jhaSU6b0e1yq1JVXWos7VXo2IJIeNTOIjpnwJdciLOYSZVZ1ZiFidhAAAAAsa1E6swH2smYpMoYfdWLexFiMNUeqy1eZ4Kn9LmPl4vC1cHiHUarFY5q9JoPu4XFUctUG4DHvRuKakUMQ79r5ruPH9&#43;3MxU3DrrtG2uG39v64fCmduZRBuxeDrYOu6lWYrXNWDQjozKWJvsxtrOs1KguZeAtVegqIVEVdg9lPne4KqrtAeynzvcFVV2kAHfkKoyj5wZOq1XtZTZiqTnOcsI1Eekqq9CH7ufzyf0MahmQAFQOLHLpnswiLCO9uos7GovL7jdXxTKCoxEV9VyexTbtXkMMJhHUldUrPvqvzuU6a/T9U/wBmNvq&#43;luaivdc5IRNiKbADm2AAAAAAAAAAAAAAAA1YjEUsJhquJruspUWK97oVYaiSq5uB/P8Am1H6/wCe/nDg8k5Gr4J66TFYyi6myk1c7WuRUV66kT1rm1qn4&#43;ZlqFjUpNgEqhFAWU1CNSgQFjXmIucAAALOvOM3gQAWNRAWVCIFLKRsEJrAgLCkACYAAs8BmIALGbMQq6hKgQFnWgzawICwviQAVFUhU2&#43;QBKahm1kAFhfEgLKgQFnWgzAQq7RGrOFTNnAmwskAFzahCayACwpAWV1gNqHwMt/eLPyU96n354IfAy5G8mRs0Ke9SwS9DX&#43;vqfaX3mBsrounqdHtL7zDN4kELCidSEAubWJ1IQAWZzKQFXPn6wIAiSWE6V6gIIks6kJMgXNrkTqQgAAACoqpsCpKSnlTUTaVMyzMAfe8xMpUcmed1B2IcjaeKpuw9y7GuVUVOtURPKfsp/PVRjajFSM3uPR5I&#43;kLzgyWyjhay0cdRRzWo6ui6REmPxIufyliUl&#43;xAA0gR6XMcm2UKRyw1V1IB4Dzc&#43;jKhTw2ly&#43;q1qrk9mhSqK1tPxVM6r6vE81575IwOQ/OCng8n0VpUXYZtRWq9zvaVzk2qq6kPaZA&#43;krI2UsIq5SqsybiWZnMqr7LuLV/dtPH&#43;fuUsFlbzlpYnAYqniKKYRrFfTWURbnLHrQkq84Xbt6xmJMmWlhE4iSSWNQEAAAAqIq7APrYXLDK9FuDysj61K6W15l9PXtmU/rPmNeLyM&#43;nTbiKFRtbDVEltVEW1EmM&#43;pdmZT5vsp873HTgcpYrJ9XSYepbMXNVJa5OKf0pmY94dNepUVtFw0OoPpfsqvTwML1Xb1dB9pMVkvHMmpdk2uifipNV1J2z9no6cydamFbJGUmUkqsbSxtFUlHUVR6bYzJtXyD61rpT7zH8vk5l2KQzfUvbCMY3i1sKYZ9ZYmfdjaIifE2AQ5dkE9rgVlT&#43;hj&#43;eYXpXyHoMieemVsj2UlrLi8K2E0FZVWEzZmu2tzJCbUTUWJSYfsi1GpmmV1Ic1XvtV6sooyizN&#43;kcsqvgnKfN83/OnAZcoMWnSq4Wq5PwVWKjXLmRbX7HZ1joXMuY&#43;6b1mvLExbnw2Ep4f2pV9VyQ6o5ZVToAEzMzckREeIAARQAAAAAAAAAAAAAPlecPnDg/N3J64nErfUdKUaKLDqjv3InSvR4wi9GVsrYPIuT343G1LKbcyImdz3dDWp0qv&#43;uw/Gcv5dxHnDlR2NxDGsSLKdNv7DEVVRJ6dq5&#43;PRsJMrEObKeUsRlfKNbH4pWrWrLLrUhEhIRE4IiIhyljUpDLQAAATOC8AE9CbBKaiACxqUkQBKoABZTUI1KBAmcRBdieIEUAACzrSSAC5vARqzkAAJnUsqEjPm6AiLnUFjUpFRU2oAAAAsqQAXNqCIkpnIVPxJ4gIUgLOvOBAXMI1KgEAhU6AAKirs1kAFnggzcUC7Z1kAscUJCptQCVTYoAFnXnGbigEPg5b&#43;8Wfkp71PvxqVD4GW0jKTPyU96lgl6Gv/xFT7S&#43;8wM6/wBfU&#43;0vvMCABE7CxrUCBEVSynQnWRVkCwnSvUEVE2J1kAFWdZCpnzdRAAAidgAFhE2r1CdSAIGbxJtAFkgABFhZQPZexbZReHQAB6ij9J/nJRpNpvwuBrOakLUc1yK7isLBn/8AFPzh&#43;D8n9T/&#43;Y8rF2dNvSgzJt9RbKeq/&#43;KfnF8H5P6n/APMa8T9JfnHicPUoJh8Fh1qNVukptcrm&#43;ErEnmZ8hBZTBKLLEarUWOlStY1n4UgyBFAAAAKiKuwBt27Raq9A9lPne4XKu3OgD2U&#43;d7gqqu0RqIAAAA2Ua9bDvV9Cq&#43;k5UhVY5WrHkNYA&#43;nv/ABdT/iqWGxcfh09FFt1xEbf3GTsfkiq9b8kLTvXO6niFls9KJEeTYfKRJLmTYB9OMgdO8v8ALLdkDZ/9y/yz5QA&#43;ppsiUPqsFicVO3T1UZb4W7fKTfLKWbCZNwlFG/gc5l72rruXas7D5hZRdvWB04nKWOxdyV8VUe18Sy6GrHBMx9fIfntlfItlLS96wrYTQ1lm1M2ZrtrcyQiZ0Sdh56AB&#43;yZD89skZaspaXuuKdCaGssXLmzNdsdnWETMqxsPRH88nqsifSBlfJkU8U7eGHTorO9tNux&#43;3aqbZzJCQW0p&#43;uA&#43;NkXzsyRl2GYXEWV1/wDL1vZqdOxNi5knMqwm2D7JpkAAAAAAAAAAA0YzGYfAYSpi8XVbSoUkue92xOVeHSbz8l88vPJ&#43;XKrsDgXOZk5i512LXVOldTdSeVc8IkmViHF51&#43;deI848Xa26lgaS/oaKrnX5ztbvdsTpVfgAGWgsqQAXMvAR5SFTNn6gGzxIWZ25xCdC9YEAVFQAAAAAAFSdkhVRV2dQ2J4kAsalJEbQJVAALKdKdQjUoEAiNoAF/Z8VIVehAIEVUAAs60GbX1kAFhSAs684RBsLm4oI1KigFzKpCu/EviQAAAExsLOtEUgAubigjUqKQAWM2foIVqqixOZROtAIC5tcCNWcCAAAfBy394s/JT3qfePg5b&#43;8Wfkp71LBL0VdP09SVj2l95hm1T4mVf6&#43;p9pfeYECVUAAAAAARFUuZNqz4AQyVF2rm1ySdWYIvUAzJx8SSqhUgAAAAAAUBY15hKJsTrAQozJxJtAFldY25029KEAAFzO2bdRAABURV2AQqIq7B7KfO9wVVXaA9lPne4KqrtIAAAAbC5l4KQANgLPQotjOuwCbS5k4idWZCAFWQAAAAAAAJguZeBESSzGzrARG0kyEWC5l4AQ9VkX6Qcr5LininbwoJ&#43;zWd&#43;kTbsft2r0zmSEg8qqQAP23IvnZkjLsMwuIsrr/AOXrezU6dibFzJOZVhNsH2T&#43;eT2WQ/pHyhgbKGU2d&#43;oJCX7KrUzJt2OzIu3OqrtNWzT9UB8zI/nFkvLtK7A4prqiJLqLvZqM2TLdSSiSkpPSfTKgAAAB4jz8876uS5yTk59uJqMmrWa5JpNXoTU5Uzz0IqRtlA&#43;b59eeNStUrZFyc5zKTFWniauxXqmZWJqb0KvTs2bfBDYWZ29ZhtAWNWcgAAIkgE1hc5V9RAAAAIsFlF2p1EAFjVnICz5QIE2lzLwKqKiAYrnAAAAAAAAlULKdKdRABYnYodtUJtnUEVUAgLKLtTqEalAgCoqbUAAAAAABVVZ2iU6U6g7b5EIBYToXrCoqECKqbFCALOtJGZeAEBYXoz&#43;BABV16yF2tXgBAABZUSnSnUQAWE19Z8DLaRlJn5Ke9T7x8HLf3iz8lPepYJehr/X1PtL7zAzr/X1PtL7zGFIIC5k4idWYBGvMJRNidZAAVVXaAAAACrtSOogLEpKIBBtLmTiJXyAIRNq9QnVmIAAAAAAAAVEVdgEMkRX7NvvJ7KfO9wVVXaA9lPne4KqrtH4vH3kAAAAAAAARJAFROoZk4qRVkCzGzrIiwABYRdnUQFmdoEAVIAAAbQBY1jMnFSAVV6iAAAABUUQi7OogAAs684idmfgBadR9Gq2rSe5lRio5rmrCtVNiovQp7HIf0jZQwFlDKbO/UUhL9lVqZk27HZkXbnVVzqeN2eJAP3PI/nFkvLtK7A4prqiJLqLvZqM2TLdSSiSkpPSfTP57p1H0aratJ7mVGKjmuasK1U2Ki9CnrslfSRlTAYGph8VSbjqiJFGrUdarM0e1Ce2mxehdufPm1bNPYeevnR/u/k9KWFfTXH18zGrnWm3PL48cyT064VD8hqVH1qrqtV7n1HqrnOcsq5V2qq9KmzGYzEY/F1MXi6rqteqtz3u2ryJw6DSZmWogAAAs685ABYnZ6wubMNniJ8qAQFzLszeJFRU2gAAAAAAAAVE6hKzIXMkeUgFnWnUI1L1kADYCyozLwAgLGrOQAAAKn4VIVdiEAAACoqoJRdqdRABY1KRUVNqAqKqAQFlF2p1CNSgF6PAhXJCJOogAAAAAALcvTn8SAC5l6I8AiZ9qEARVRUWFQhZXMqCU6UAgLCa&#43;sQuoCHwct/eLPyU96n3j4OW/vFn5Ke9SwS9FXWK9SE/aXb4mvaZ1/r6n2l95gQAAAAAUALEbVgCFhenMJjYkEAuZNiT4ic&#43;cgAKkLALtSOlCAAAAAKiKuwCFRFXYPZT53uCqq7QHsp873BVVdpAAAAAs3bdusgAAu3Mu3oUgAFjpXMgmNnWAiNvUFUgAAAAAAAAAIsFidnUQsIm3bqAInUJ6EE3bSKkAAAAAAAAAAAmcBtLs2dZFXoQSBZnaI1ZzEsqgACUXb1oFRU8NYAEAFAkAC7M/SE1qTaAAAAIqoABcy8AqQQIqpsUACyi7U6hGrP4AQqbfAhVzZusCbVAAAAAAAALOvOQAWEXYseJFRUBWqqOAO2&#43;GYhZRdqdQjVnAgAAAAAAAAAAsraglF2p1D9lPEgFjUpFRU2oCoqoBAWUXanUI1L1gQBUVNqAAAAKmdFQgRYWQqQsAAAEWV6c58DLf3kz8lPep94&#43;Dlv7xZ&#43;SnvUsEvQ1/r6n2l95gZ1/r6n2l95gRQFhRmTiBERV2IWETas&#43;BFVVAFlejN4EAAAAAAABV1oQrc6xEgQqIq7CqiNXnL6iKqrtAeynzvcFVV2kAAAAAAAAAAAsIm3bqAiIqmUps2r0KYqsgCrM55niQqLKQvkXURUhYUAAAAAAAAAESSxrIqgWY2dZAQChF6OggAsdKEBcy8FAgCpACABUSfAAiSFXoTYFWfAgAAAAAAKiqmwgAuZeChUVCFRYAhUSfAqIjlzZl4kXNmAKsqCACggCqCFkAAAAAAyRelUmCROxZC5s3WQACzrz&#43;IhF2L1gQBUVNqAAAAAAAFTYq&#43;Qhf2U4gQAAWV6c/iMy8CACwu3o1kExsLM7UkCAsJ0L1kVFTagAAAX9nykL&#43;yviQAAAAAAqKqCUXanUQAWNS9ZFRU2oCoqoBCrnRF8glF2p1FRJlEXaBiAqKm1AAPg5b&#43;8Wfkp71PvHwct/eLPyU96lhJeirp&#43;nqTm9pfeYSibE6zKv9fU&#43;0vvMCKTO0AAAAAAAAAqIq7AIVEVdgzJtzrwCqq5ujUAzJtzrwCqq5ujUQAXanFCBFhZKqdKbFAgAAAAAAVEkCFjXmEomzPxIBZ1ZiAAAAAKiykL5F1EABUhYUFRUiFCpAEAKidKrCATaXMnFSKvQmZCAWSAAAAEAAAAAFRehc6BU6UzoQqZs4BE6V2BVkq&#43;1wX1GIAAAAAAAAAAAAC/h8VALmSE8oRejanEgAsIuzqICz0LnQCAts7M/vIAAAAAADJM2fUYldmzagAIAqggAyRVTwGZeBJABUVAVFVNijMu3MBAVU6dqcCACu2xqQIkqiEVZWQAAAAAAAABUVUIALmXojwFq9GfwIAKmxSGSOzLOfMSEXYseIEBVRU6CAAAAAAAAABsWQAKqqi5tmoSi7U6htb4ZiAWJ2L1nwMtoqZSZKR&#43;hT3qfePg5b&#43;8Wfkp71LCS9DX&#43;vqfaX3mBsxH/E1PtKayKAAAAVEVdgEKiKuwZk2514BVVc3RqAZk2514BVVc3RqIAAAAAAAVF6F2KQAFSAXanFCAAiTsLEbc3AKvQmZAGZNucKqqQAAAAAAAAAAAAKi9C7CIiryiUTZ1gVUt25yKqrtCL0LsCpARAAAAAAAAAAAAL&#43;HivuAbM67dRFWQABZnMpABVSM&#43;1NZCosCJ2bdQEAAAAAAConSuwAmZJXyEKqyskAAAAAABZnanlIAKqdKZ0IEWNhZRdqRxQCAqoqeGsgFTN7XUQrtSdBAAAAAAAAABSAKqLGwsou1OoxAGaN2qmfMYl/Z8VF07UkCAsTsXyEVI2gAAAAAAAAAABW7V8CFbt8ikAIqpsLKLtTqIALE7FkgLcvj4gQF9ldaBWrt2pwAgAAAACt2xrICu2zrAh8HLf3iz8lPep94&#43;Dlv7xZ&#43;SnvUsJL6uIyzk/TvTvGdHKn4Ha/A1b5yf2j0HchwLRdiMorQYqI6pWsSdkqsHXlPIWKyVRZVr1KLmvdaliqq&#43;tELSW2b5yf2j0Hcg3zk/tHoO5D5AFFvs75ycm3ETwsdyEXLWAXN3jNqsdyHxwKLfX3zk/tHoO5BvnJ/aPQdyHyAKLfX3zk/tHoO5BvnJ/aPQdyHyAqIqQoot9ffOT&#43;0eg7kG&#43;cn9o9B3IeePRZJ80lypk2ljFx2i0kwzRXRCqm2U1Ci03zk/tHoO5BvnJ/aPQdyHLl7IK5EWh/E6dK137FsRHFdZ8gUW9DvnJ/aPQdyDfOT&#43;0eg7kPPAUW9EmWcnz/AMRH&#43;B3IVctZORfZr&#43;g7kPOAUW9DvnJ/aPQdyDfOT&#43;0eg7kPPAUW9DvnJ/aPQdyDfOT&#43;0eg7kPPAUW9DvnJ/aPQdyDfOT&#43;0eg7kPPAUW9DvnJ/aPQdyDfOT&#43;0eg7kPPAUW9DvnJ/aPQdyDfOT&#43;0eg7kPPAUW9DvnAdo9B3IEyxk/pxHoO5DzwFFvQrlrAL/2/oO5BvnAdo9B3IeeAot6HfOA7R6DuQqZayemZa8p9h3IedAot6FcsZPnNiJ/wO5BvnAdo9B3IeeAot6HfOA7R6DuQb5wHaPQdyHngKLeh3zgO0eg7kG&#43;cB2j0Hch54Ci3od84DtHoO5BvnAdo9B3IeeAot6LfOT02YjPrsdyE3zgO0eg7kPPAUW9DvnAdo9B3IN84DtHoO5DzwFFvQ75wHaPQdyDfOA7R6DuQ88BRb0O&#43;cB2j0Hcg3zgO0eg7kPPAUW9FvnJ67cRn12O5Cb4yf2j0Hch54Ci3od84DtHoO5BvnAdo9B3IeeAot6FMsZPnPiPQdyBcs5PX/t832Hch54Ci3od84DtHoO5BvnAdo9B3IeeAot6HfOA7R6DuQb5wHaPQdyHngKLeh3zgO0eg7kG&#43;cB2j0Hch54Ci3od84DtHoO5BvnAdo9B3IeeAot6HfOA7R6DuQb5wHaPQdyHngKLehTLOATZiPQdyGSZZydt7xC/YdyHnAKLeh3zgO0eg7kG&#43;cB2j0Hch54Ci3od84DtHoO5BvnAdo9B3IeeAot6HfOA7R6DuQb5wHaPQdyHngKLeh3zgO0eg7kG&#43;cB2j0Hch54Ci3od84DtHoO5BvnAdo9B3IeeAot6HfOA7R6DuQb5wHaPQdyHngKLeiXLOT4RExGz5juQm&#43;cB2j0Hch54Ci3od85P7R6DuQqZawGzTynFjuQ86BRb0W&#43;cnLsxEeLHchN85P7R6DuQ88BRb0O&#43;cn9o9B3IN85P7R6DuQ88BRb0O&#43;cn9o9B3IN85P7R6DuQ88BRb0O&#43;cn9o9B3IN85P7R6DuQ88BRb0Tcs5PRyTiM3T7DuQm&#43;cn9o9B3IeeAot6HfOT&#43;0eg7kG&#43;cn9o9B3IeeAot6HfOT&#43;0eg7kG&#43;cn9o9B3IeeAot6HfOT&#43;0eg7kKmWsAmzEeg7kPOgUW9HvrJ67a8/wCB3IRcsZO2pifJY7kPOgUW9DvnJ/aPQdyDfOT&#43;0eg7kPPH08HkVcXhGVtOjHVL9G22UW1JWVnN1KKLd2&#43;cn9o9B3IXfOT7f&#43;Izp8x3IedOzJ2TnZQ7zFRGd3oOrLKTdHQKLfV3zk/tHoO5D5OU8TRxWObUoPvalJEVYVM8rrOQjfrfIKLf/9k=" alt="Screenshot 2023-02-23 at 11.18.19 PM.png"  />
+</p>
+<h2 id="完整代码-1">完整代码<a hidden class="anchor" aria-hidden="true" href="#完整代码-1">#</a></h2>
+<p>Shader：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>// Upgrade NOTE: replaced &#39;mul(UNITY_MATRIX_MVP,*)&#39; with &#39;UnityObjectToClipPos(*)&#39;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Shader &#34;Learning/GeomertricTransformation/vf1&#34;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span> SubShader
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> pass{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> CGPROGRAM
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #pragma vertex vert
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #pragma fragment frag
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #include &#34;UnityCG.cginc&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> uniform float4x4 _MVP;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> struct v2f{
+</span></span><span style="display:flex;"><span> float4 pos:POSITION;
+</span></span><span style="display:flex;"><span> };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> v2f vert(appdata_base v)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> v2f o;
+</span></span><span style="display:flex;"><span> o.pos=mul(_MVP,v.vertex);
+</span></span><span style="display:flex;"><span> return o;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> fixed4 frag(v2f IN):COLOR
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> return fixed4(1,1,1,1);
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> ENDCG 
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>C#：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>using UnityEngine;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>public class MVP : MonoBehaviour
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> void Update()
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> Matrix4x4 mvp=Camera.main.projectionMatrix*Camera.main.worldToCameraMatrix*transform.localToWorldMatrix;
+</span></span><span style="display:flex;"><span> GetComponent().sharedMaterial.SetMatrix(&#34;_MVP&#34;,mvp);
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="在c中构建旋转矩阵使模型旋转">在C#中构建旋转矩阵使模型旋转<a hidden class="anchor" aria-hidden="true" href="#在c中构建旋转矩阵使模型旋转">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>using UnityEngine;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>public class MVP : MonoBehaviour
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> void Update()
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> //构建绕Y轴旋转的矩阵
+</span></span><span style="display:flex;"><span> Matrix4x4 rm=new Matrix4x4();
+</span></span><span style="display:flex;"><span> rm[0,0]=Mathf.Cos(Time.realtimeSinceStartup);
+</span></span><span style="display:flex;"><span> rm[0,2]=Mathf.Sin(Time.realtimeSinceStartup);
+</span></span><span style="display:flex;"><span> rm[1,1]=1;
+</span></span><span style="display:flex;"><span> rm[2,0]=-Mathf.Sin(Time.realtimeSinceStartup);
+</span></span><span style="display:flex;"><span> rm[2,2]=Mathf.Cos(Time.realtimeSinceStartup);
+</span></span><span style="display:flex;"><span> rm[3,3]=1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> Matrix4x4 mvp=Camera.main.projectionMatrix*Camera.main.worldToCameraMatrix*transform.localToWorldMatrix;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> GetComponent().sharedMaterial.SetMatrix(&#34;_MVP&#34;,mvp);
+</span></span><span style="display:flex;"><span> GetComponent().sharedMaterial.SetMatrix(&#34;_RM&#34;,rm);//传入着色器
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>// Upgrade NOTE: replaced &#39;mul(UNITY_MATRIX_MVP,*)&#39; with &#39;UnityObjectToClipPos(*)&#39;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Shader &#34;Learning/GeomertricTransformation/vf1&#34;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span> SubShader
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> pass{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> CGPROGRAM
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #pragma vertex vert
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #pragma fragment frag
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #include &#34;UnityCG.cginc&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> uniform float4x4 _MVP;
+</span></span><span style="display:flex;"><span> uniform float4x4 _RM;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> struct v2f{
+</span></span><span style="display:flex;"><span> float4 pos:POSITION;
+</span></span><span style="display:flex;"><span> };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> v2f vert(appdata_base v)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> v2f o;
+</span></span><span style="display:flex;"><span> //将传入的旋转矩阵与顶点相乘 
+</span></span><span style="display:flex;"><span> float4 p=mul(_RM,v.vertex);
+</span></span><span style="display:flex;"><span> //将顶点变换到裁剪空间
+</span></span><span style="display:flex;"><span> o.pos=UnityObjectToClipPos(p);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> return o;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> fixed4 frag(v2f IN):COLOR
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> return fixed4(1,1,1,1);
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> ENDCG 
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="在c中构建缩放矩阵使模型缩放">在C#中构建缩放矩阵使模型缩放<a hidden class="anchor" aria-hidden="true" href="#在c中构建缩放矩阵使模型缩放">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Matrix4x4 sm=new Matrix4x4();
+</span></span><span style="display:flex;"><span> sm[0,0]=Mathf.Sin(Time.realtimeSinceStartup)/4+0.5f;
+</span></span><span style="display:flex;"><span> sm[1,1]=Mathf.Cos(Time.realtimeSinceStartup)/8+0.5f;
+</span></span><span style="display:flex;"><span> sm[2,2]=Mathf.Sin(Time.realtimeSinceStartup)/6+0.5f;
+</span></span><span style="display:flex;"><span> sm[3,3]=1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>GetComponent().sharedMaterial.SetMatrix(&#34;_SM&#34;,sm);//传入着色器
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-glsl" data-lang="glsl"><span style="display:flex;"><span>v2f vert(appdata_base v)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> v2f o;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> float4 p<span style="color:#f92672">=</span>mul(_RM,v.vertex);
+</span></span><span style="display:flex;"><span> <span style="color:#75715e">//将缩放矩阵与顶点相乘</span>
+</span></span><span style="display:flex;"><span> p<span style="color:#f92672">=</span>mul(_SM,p);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> o.pos<span style="color:#f92672">=</span>UnityObjectToClipPos(p);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">return</span> o;
+</span></span><span style="display:flex;"><span> }
+</span></span></code></pre></div><h2 id="在shader内部实现模型旋转">在Shader内部实现模型旋转<a hidden class="anchor" aria-hidden="true" href="#在shader内部实现模型旋转">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>// Upgrade NOTE: replaced &#39;mul(UNITY_MATRIX_MVP,*)&#39; with &#39;UnityObjectToClipPos(*)&#39;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Shader &#34;Learning/GeomertricTransformation/vf1&#34;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span> SubShader
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> pass{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> CGPROGRAM
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #pragma vertex vert
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #pragma fragment frag
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> #include &#34;UnityCG.cginc&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> struct v2f{
+</span></span><span style="display:flex;"><span> float4 pos:POSITION;
+</span></span><span style="display:flex;"><span> };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> //构建绕Y轴旋转的矩阵
+</span></span><span style="display:flex;"><span> float4x4 RotateY(float _Angle)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> float4x4 R_M={
+</span></span><span style="display:flex;"><span> cos(_Angle),0,sin(_Angle),0,
+</span></span><span style="display:flex;"><span> 0,1,0,0,
+</span></span><span style="display:flex;"><span> -sin(_Angle),0,cos(_Angle),0,
+</span></span><span style="display:flex;"><span> 0,0,0,1
+</span></span><span style="display:flex;"><span> };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> return R_M;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> v2f vert(appdata_base v)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> v2f o;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> float4 p=mul(RotateY(_Time*10),v.vertex);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> o.pos=UnityObjectToClipPos(p);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> return o;
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> fixed4 frag(v2f IN):COLOR
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span> return fixed4(1,1,1,1);
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> ENDCG 
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://EitanWong.github.io/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://EitanWong.github.io/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://EitanWong.github.io/posts/shader/uniform%E4%B8%8Eproperties/">
+    <span class="title">« 👈 Prev Page</span>
+    <br>
+    <span>Uniform与Properties</span>
+  </a>
+  <a class="next" href="https://EitanWong.github.io/posts/shader/%E7%9F%A9%E9%98%B5%E5%92%8C%E5%8F%98%E6%8D%A2/">
+    <span class="title">Next Page 👉 »</span>
+    <br>
+    <span>矩阵和变换</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share MVP矩阵 on twitter"
+       href="https://twitter.com/intent/tweet/?text=MVP%e7%9f%a9%e9%98%b5&amp;url=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fmvp%25E7%259F%25A9%25E9%2598%25B5%2f&amp;hashtags=">
+    <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share MVP矩阵 on linkedin"
+       href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fmvp%25E7%259F%25A9%25E9%2598%25B5%2f&amp;title=MVP%e7%9f%a9%e9%98%b5&amp;summary=MVP%e7%9f%a9%e9%98%b5&amp;source=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fmvp%25E7%259F%25A9%25E9%2598%25B5%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share MVP矩阵 on reddit"
+       href="https://reddit.com/submit?url=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fmvp%25E7%259F%25A9%25E9%2598%25B5%2f&title=MVP%e7%9f%a9%e9%98%b5">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share MVP矩阵 on facebook"
+       href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fmvp%25E7%259F%25A9%25E9%2598%25B5%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share MVP矩阵 on whatsapp"
+       href="https://api.whatsapp.com/send?text=MVP%e7%9f%a9%e9%98%b5%20-%20https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fmvp%25E7%259F%25A9%25E9%2598%25B5%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share MVP矩阵 on telegram"
+       href="https://telegram.me/share/url?text=MVP%e7%9f%a9%e9%98%b5&amp;url=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fmvp%25E7%259F%25A9%25E9%2598%25B5%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28">
+            <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2023-2023
+        <a href="https://EitanWong.github.io/" style="color:#939393;">Eitan&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄copy';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻copied!';
+            setTimeout(() => {
+                copybutton.innerText = '📄copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+
+<script>
+    $("code[class^=language] ").on("mouseover", function () {
+        if (this.clientWidth < this.scrollWidth) {
+            $(this).css("width", "135%")
+            $(this).css("border-top-right-radius", "var(--radius)")
+        }
+    }).on("mouseout", function () {
+        $(this).css("width", "100%")
+        $(this).css("border-top-right-radius", "unset")
+    })
+</script>
+</body>
+
+</html>

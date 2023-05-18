@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Shader和渲染管线 | Eitan&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="什么是Shader Shader着色器，是一种较为短小的程序片段，用于告诉图形硬件如何计算和输出图像，过去由汇编语言来编写，现在也可以使用高级语言来编写。 💡 Shader是可编程图形管线的算法片段 它主要分为Vertex Shader和Fragment Shader 什么是渲染管线 渲染管线也称为渲染流">
+<meta name="author" content="Sulv">
+<link rel="canonical" href="https://EitanWong.github.io/posts/shader/shader%E5%92%8C%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.0dcd30655f684635e8d387636982f36d45e2607d9dde19da5180cecacb25b773.css" integrity="sha256-Dc0wZV9oRjXo04djaYLzbUXiYH2d3hnaUYDOysslt3M=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="apple-touch-icon" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="mask-icon" href="https://EitanWong.github.io/img/Avatar.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="Shader和渲染管线" />
+<meta property="og:description" content="什么是Shader Shader着色器，是一种较为短小的程序片段，用于告诉图形硬件如何计算和输出图像，过去由汇编语言来编写，现在也可以使用高级语言来编写。 💡 Shader是可编程图形管线的算法片段 它主要分为Vertex Shader和Fragment Shader 什么是渲染管线 渲染管线也称为渲染流" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://EitanWong.github.io/posts/shader/shader%E5%92%8C%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-05T21:54:28+00:00" />
+<meta property="article:modified_time" content="2023-04-05T21:54:28+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Shader和渲染管线"/>
+<meta name="twitter:description" content="什么是Shader Shader着色器，是一种较为短小的程序片段，用于告诉图形硬件如何计算和输出图像，过去由汇编语言来编写，现在也可以使用高级语言来编写。 💡 Shader是可编程图形管线的算法片段 它主要分为Vertex Shader和Fragment Shader 什么是渲染管线 渲染管线也称为渲染流"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "Posts",
+          "item": "https://EitanWong.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "🖼️ Shader",
+          "item": "https://EitanWong.github.io/posts/shader/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Shader和渲染管线",
+      "item": "https://EitanWong.github.io/posts/shader/shader%E5%92%8C%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Shader和渲染管线",
+  "name": "Shader和渲染管线",
+  "description": "什么是Shader Shader着色器，是一种较为短小的程序片段，用于告诉图形硬件如何计算和输出图像，过去由汇编语言来编写，现在也可以使用高级语言来编写。 💡 Shader是可编程图形管线的算法片段 它主要分为Vertex Shader和Fragment Shader 什么是渲染管线 渲染管线也称为渲染流",
+  "keywords": [
+    
+  ],
+  "articleBody": "什么是Shader Shader着色器，是一种较为短小的程序片段，用于告诉图形硬件如何计算和输出图像，过去由汇编语言来编写，现在也可以使用高级语言来编写。 💡 Shader是可编程图形管线的算法片段 它主要分为Vertex Shader和Fragment Shader\n什么是渲染管线 渲染管线也称为渲染流水线，是显示芯片内部处理图形信号相互独立的并行处理单元。一个流水线是一序列可以并行和按照固定的顺序进行的阶段。每个阶段都从它的前一阶段接收输入，然后把输出发给随后的配装线。就像一个在同一时间内，不同阶段不同汽车一起制造的装配线，传统的图形硬件流水线以流水的方式处理大量的顶点、几何图元和片段。\n💡 所谓GPU的渲染管线，听起来好像很高深的样子，其实我们可以把它理解为一个流程，就是我们告诉GPU一堆数据，最后得出来一副二维图像，而这些数据就包括了”视点、三维物体、光源、照明模型、纹理”等元素。 在各种图形学的书中，渲染管线主要分为三个阶段：应用程序阶段、几何阶段、光栅阶段。\n1、应用程序阶段 这个阶段相对比较好理解，就比如我们在Unity里开发了一个游戏，其实很多底层的东西Unity都帮我们实现好了，例如碰撞检测、视锥剪裁等等，这个阶段主要是和CPU、内存打交道，在把该计算的都计算完以后，在这个阶段的末端，这些计算好的数据（顶点坐标、法向量、纹理坐标、纹理）就会通过数据总线传给图形硬件，作为我们进一步处理的源数据。\n2、几何阶段 主要负责顶点坐标变换、光照、裁剪、投影以及屏幕映射，改阶段基于GPU进行运算，在该阶段的末端得到了经过变换和投影之后的顶点坐标、颜色、以及纹理坐标。简而言之，几何阶段的主要工作就是“变换三维顶点坐标”和“光照计算”。 问题随之而来，为什么要变换顶点坐标？我是这么理解的，比如你有一个三维游戏场景，场景中的每个模型都可以用一个向量来确定它的位置，但如何让计算机根据这些坐标把模型正确的、有层次的画在屏幕上？这就是我们需要变换三维顶点坐标的原因，最终目的就是让GPU可以将这些三维数据绘制到二维屏幕上。 根据顶点坐标变换的先后顺序，主要有如下几个坐标空间：Object space，模型坐标空间；World space，世界坐标空间；Eye space，观察坐标空间；Clip and Project space，屏幕坐标空间。下图就是GPU的整个处理流程，深色区域就是顶点坐标空间的变换流程，大家了解一下即可，我们需要关注的是每个坐标空间的具体含义和坐标空间之间转换的方法。\n2.1、从object space到world space object space有两层核心含义，第一，object space中的坐标值就是模型文件中的顶点值，这些值是在建立模型时得到的，例如一个.max文件，里面包含的数据就是object space的坐标。第二，object space的坐标与其他物体没有任何参照关系，这是object space和world space区分的关键。world space坐标的实际意义就有有一个坐标原点，物体跟坐标原点相比较才能知道自己的确切位置。例如在unity中，我们将一个模型导入到场景中以后，它的transform就是世界坐标。\n2.2、从world space到eye space 所谓eye space，就是以摄像机为原点，由视线方向、视角和远近平面，共同组成的一个梯形体，如下图，称之为视锥(viewing frustum)。近平面，是梯形体较小的矩形面，也是靠近摄像机的平面，远平面就是梯形体较大的矩形，作为投影平面。在这个梯形体的内的数据是可见的，超出的部分会被视点去除，也叫视锥剪裁。 例如在游戏中的漫游功能，屏幕的内容随摄像机的移动而变化，这是因为GPU将物体的顶点坐标从world space转换到了eye space。\n2.3、从eye space到project and clip space eye space坐标转换到project and clip space坐标的过程其实就是一个投影、剪裁、映射的过程。因为在不规则的视锥体内剪裁是一件非常困难的事，所以前人们将剪裁安排到一个单位立方体中进行，这个立方体被称为规范立方体（CCV），CVV的近平面（对应视锥体的近平面）的x、y坐标对应屏幕像素坐标（左下角0、0），z代表画面像素深度。所以这个转换过程事实上由三步组成： （1）、用透视变换矩阵把顶点从视锥体变换到CVV中； （2）、在CVV内进行剪裁； （3）、屏幕映射：将经过前两步得到的坐标映射到屏幕坐标系上。\n2.4、primitive assembly（图元装配）和triangle setup（三角形处理） 到目前为止我们得到了一堆顶点的数据，这一步就是根据这些顶点的原始连接关系还原出网格结构。网格由顶点和索引组成，这个阶段就是根据索引将顶点链接到一起，组成线、面单元，然后进行剪裁，如果一个三角形超出屏幕以外，例如两个顶点在屏幕内，一个顶点在屏幕外，这时我们在屏幕上看到的就是一个四边形，然后把这个四边形切成两个小的三角形。 现在我们得到了一堆在屏幕坐标上的三角形面片，这些面片是用于光栅化的。\n3、光栅化阶段 经过上面的步骤之后，我们得到了每个点的屏幕坐标值，和我们需要绘制的图元，但此时还有两个问题： （1）、屏幕坐标是浮点数，但像素是用整数来表示的，如何确定屏幕坐标值所对应的像素？ （2）、如何根据已确定位置的点，在屏幕上画出线段或者三角形？ 对于问题1，绘制的位置只能接近两指定端点间的实际线段位置，例如，一条线段的位置是（10.48， 20.51），转换为像素位置就是（10，21）。 问题2，涉及到具体的画线和填充算法，有兴趣的话可以研究。 这个过程结束后，顶点和图元已经对应到像素，之后的流程就是如何处理像素，即给像素赋予颜色值。 给像素赋予颜色的阶段称为Pixel Operation，是在更新帧缓存之前，执行最后一系列针对每个片段的操作，其目的是计算出每个像素的颜色值。在这个阶段，被遮挡的面通过一个被称为深度测试的过程消除。 pixel operation包含下面这些流程： （1）、消除遮挡面； （2）、Texture operation，纹理操作，根据像素的纹理坐标，查询对应的纹理值； （3）、Blending，通常称为alpha blending，根据目前已经画好的颜色，与正在计算的颜色的alpha值混合，形成新的颜色。 （4）、Filtering，将正在计算的颜色经过某种滤镜后输出。 该阶段之后，像素的颜色值被写入帧缓存中。\nShader和材质、贴图的关系 Shader(着色器)实际上就是一小段程序，它负责将输入的顶点数据以指定的方式和输入的贴图或者颜色等组合起来，然后输1.出。绘图单元可以依据这个输出来将图像绘制到屏幕上。输入的贴图或者颜色等，加上对应的Shader，以及对Shader的特定参数设置，将这些内容（Shader及输入参数）打包存储在一起得到的就是一个Material（材质）。 之后我们便可以将材质赋予三维物体来进行渲染输出 💡 材质好比是引擎最终使用的商品，Shader好比是生产这种商品的加工方法，而贴图就是原材料\nShader Language Shader Language的发展方向是设计出在便携性方面可以和C++\\Java相比的高级语言， 💡 “赋予程序员更灵活而方便的编程方式”，并“尽可能的控制渲染过程”同时“利用图形硬件的并行性，提高算法的效率”。 ShaderLanguage目前主要有3种语言\n基于OpenGL的\nOpenGLShadingLanguage (GLSL) 基于DirectX的\nHigh LevelShading Language（HLSL） NVIDIA公司的\nC for Graphic（Cg） ",
+  "wordCount" : "3047",
+  "inLanguage": "en",
+  "datePublished": "2023-04-05T21:54:28Z",
+  "dateModified": "2023-04-05T21:54:28Z",
+  "author":{
+    "@type": "Person",
+    "name": "Sulv"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://EitanWong.github.io/posts/shader/shader%E5%92%8C%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Eitan's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://EitanWong.github.io/img/Avatar.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://EitanWong.github.io/" accesskey="h" title="Eitan&#39;s Blog (Alt + H)">
+            <img src="https://EitanWong.github.io/img/Avatar.png" alt="logo" aria-label="logo"
+                 height="35">Eitan&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://EitanWong.github.io/" title="🏠 Home">
+                <span>🏠 Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/search" title="🔍 Search (Alt &#43; /)" accesskey=/>
+                <span>🔍 Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/posts" title="📚 Posts">
+                <span>📚 Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/tags" title="🧩 Tags">
+                <span>🧩 Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/archives/" title="⏱️ Archives">
+                <span>⏱️ Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/about" title="🙋🏻‍♂️ About">
+                <span>🙋🏻‍♂️ About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://EitanWong.github.io/">🏠 Home</a>&nbsp;»&nbsp;<a href="https://EitanWong.github.io/posts/">Posts</a>&nbsp;»&nbsp;<a href="https://EitanWong.github.io/posts/shader/">🖼️ Shader</a></div>
+            <h1 class="post-title">
+                Shader和渲染管线
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-04-05
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>3047字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>7分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Sulv
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://EitanWong.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">📖 Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%98%afshader" aria-label="什么是Shader">什么是Shader</a></li>
+                <li>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%98%af%e6%b8%b2%e6%9f%93%e7%ae%a1%e7%ba%bf" aria-label="什么是渲染管线">什么是渲染管线</a><ul>
+                        
+                <li>
+                    <a href="#1%e5%ba%94%e7%94%a8%e7%a8%8b%e5%ba%8f%e9%98%b6%e6%ae%b5" aria-label="1、应用程序阶段">1、应用程序阶段</a></li>
+                <li>
+                    <a href="#2%e5%87%a0%e4%bd%95%e9%98%b6%e6%ae%b5" aria-label="2、几何阶段">2、几何阶段</a><ul>
+                        
+                <li>
+                    <a href="#21%e4%bb%8eobject-space%e5%88%b0world-space" aria-label="2.1、从object space到world space">2.1、从object space到world space</a></li>
+                <li>
+                    <a href="#22%e4%bb%8eworld-space%e5%88%b0eye-space" aria-label="2.2、从world space到eye space">2.2、从world space到eye space</a></li>
+                <li>
+                    <a href="#23%e4%bb%8eeye-space%e5%88%b0project-and-clip-space" aria-label="2.3、从eye space到project and clip space">2.3、从eye space到project and clip space</a></li>
+                <li>
+                    <a href="#24primitive-assembly%e5%9b%be%e5%85%83%e8%a3%85%e9%85%8d%e5%92%8ctriangle-setup%e4%b8%89%e8%a7%92%e5%bd%a2%e5%a4%84%e7%90%86" aria-label="2.4、primitive assembly（图元装配）和triangle setup（三角形处理）">2.4、primitive assembly（图元装配）和triangle setup（三角形处理）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#3%e5%85%89%e6%a0%85%e5%8c%96%e9%98%b6%e6%ae%b5" aria-label="3、光栅化阶段">3、光栅化阶段</a></li></ul>
+                </li>
+                <li>
+                    <a href="#shader%e5%92%8c%e6%9d%90%e8%b4%a8%e8%b4%b4%e5%9b%be%e7%9a%84%e5%85%b3%e7%b3%bb" aria-label="Shader和材质、贴图的关系">Shader和材质、贴图的关系</a></li>
+                <li>
+                    <a href="#shader-language" aria-label="Shader Language">Shader Language</a>
+                </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h1 id="什么是shader">什么是Shader<a hidden class="anchor" aria-hidden="true" href="#什么是shader">#</a></h1>
+<p>Shader着色器，是一种较为短小的程序片段，用于告诉图形硬件如何计算和输出图像，过去由汇编语言来编写，现在也可以使用高级语言来编写。 💡 Shader是可编程图形管线的算法片段 它主要分为Vertex Shader和Fragment Shader</p>
+<h1 id="什么是渲染管线">什么是渲染管线<a hidden class="anchor" aria-hidden="true" href="#什么是渲染管线">#</a></h1>
+<p>渲染管线也称为渲染流水线，是显示芯片内部处理图形信号相互独立的并行处理单元。一个流水线是一序列可以并行和按照固定的顺序进行的阶段。每个阶段都从它的前一阶段接收输入，然后把输出发给随后的配装线。就像一个在同一时间内，不同阶段不同汽车一起制造的装配线，传统的图形硬件流水线以流水的方式处理大量的顶点、几何图元和片段。</p>
+<p><img loading="lazy" src="data:image/webp;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4&#43;JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAEIAcYDASIAAhEBAxEB/8QAGwABAAMBAQEBAAAAAAAAAAAAAAUEAwECBgf/xABKEAABAwMABAkIBggFBAMBAAAAAQIDBBEFEtEhFTEUVJNVE5KUNbFzBkFTURYiYXEygZGyNGVyoXQjouEzQoLBJFI2RYNEYmPw/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AP2GombTU8k776MbVctvoI5uankYj2YmrVrkui/LtT8S1l/CKvzLvIaUHh9P5tvkApb4qeh6v&#43;nWN8VPQ9X/AE6yUFwIve9T0RV/06xvep6Iq/6dZKXAEZvep6Iq/wCnWN71PRFX/TrJMXAjN71PRFX/AE6xvep6Iq/6dZJ3FwItcxUoiquIq7J&#43;zrL1FVMraSOpY1zWyNuiO4UNJF/lP/ZUo4HwWm/YAkQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFPL&#43;EVfmXeQqVVVUUXo82pp0ZpRQo5dNFVFRE&#43;gt5fwir8y7yHiKkjq8bTNl0tFGN2Itr7OBQIqX0hqmxVlRHFE6OkZHI5t1&#43;ZHJdbKbS51jXte57mM0rpZt7tsmsuuwdA98jlh2SaOm262do8Gw0djYHMVnzI1VVbIvvAjKzJVkfUuY7q9OndIqKxL30kRP3KaplJoEl016xeu0G/LwJo3Ly46F0asern3bo3ct1te54TEw2cj3vfpSK&#43;6u9YEficrU1dXVJI9FSO66GjbRS&#43;y6/UeaPL1lTktFHRup3Odoe&#43;RE4bfQhIU&#43;EpKWodPEj0c9LPTSuj/pVPeKbDUtLLFJHp3hRyMuv/Ut1AiJc5U9aqI/Q0UVy3RF2IvBsLOUzNTTNZHGjEkdCsy//AFalrqWk9H6Nl9BZEve/ze9bqWKjF0tU7SmjRy2sv0p7vqA846qdWYvr3Ki6SLoqiWuhzBeC037B7pKBmPpJIY3vczarUct9FLcCfQeMF4LS/sASB04dAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACnl/B6vzLvIeaGrp0oIE6&#43;P8Aw2/5k9xdc1r2q1yIrVSyovrKm6cdyKHsIBtxum9vH2kHG6b28faQx3Tj&#43;Rw9hBunH8jh7CAarV03t4&#43;0hzjlNyiPtoZ7px/IoewhQzeLoI8RO5lJE1yIllRv0oBKcbpvbx9pBxum5RH2kMW4rHqif8OHg/6EO7px/I4ewgGvG6blEXbQcbpuURdtDLdOO5FD2EG6cdyKHsIB7kq6ZYnf8iL7K/50K&#43;B24Sltt&#43;Q13RjuRQ9hCzHEyGNscbUaxqWRqJZEA9HQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8ve2JjnvcjWtS6qvqQob/xfK2fgoEiCO39i&#43;Vt/BRv7F8rZ&#43;CgSJHZ7wao&#43;pPKg39i&#43;Vs/BT5z06zU8no89cFVxOqEcmlG5irptuB9k37KfUeiDxebp2Y2nbXV0b6nq061yNVE0vWW9/YzlbPwUCRBHb&#43;xnK2fgo39jOVs/BQJEEdv7GcrZ&#43;Cl6GaOeJssT0exyXa5PWB7AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU8v4RV&#43;ad5BQwx8Rg/lt/wANv&#43;X6BlvCKvzLvIe6L9Bg823yAeXTUTZXROfAkjG6Tmra6J7wktG5HK10Ko3htbYQ&#43;Xx1RW1c0tPAqKlPJEukifPdNll4eEryYuskrI6plOtO1lI2B6XS8jrptsnusB9A2Wlc9Wo1t0W21nCplx/HozSVzLWVb6HqvYj6emqoa5kkss00aLdERtkvwJf7jKooZ6ejaixvcqxObZqXW6uRbATElXRRLIj9BFjRFcmjwXPbZaRyMVvVLp/Z2JtIHI0lU&#43;oquqbJKrns0WaOjdETgRS1T09Qs2PnZAqJGx6SNds0FW2z9wEu3qHqqNbGuitls1Nh7SKO3&#43;GzsoRTo8hE2ofEzRdJUNcmjZ127L8JLpwAZywxdS/&#43;Wz7K/wCVCpgbbkprf9H&#43;5elX&#43;U/9lSlgfBab9j/cCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU8v4RV&#43;Zd5CjPknUVLjaeJqLLVq2NrnfZb8t7qXst4TV&#43;Zd5DJtJDWY6mZM2&#43;g1rmqi2Vq24UAjW&#43;lLKWSpp6yB7paZ6tcsLboqIiLf8ABSx8S0b9FYo5pGvVGsc1mxyr6rnuXAU0k8DmqrWMV6yNvtkVyWW6ntmAoInK5kTm3ekmij1sjk9yeoCknpCtUlZLTOjigo2NV7pWqqqqpfgQt4bJzZCSsSRI0ZDIjGKy&#43;1NFFv8AvPS&#43;j2PWN0fVuRj26D0Ryppp7l957gwtHTVDpoUkYrnI5Wo9dFVRLJsAzydbV09bQ01N1X/Je5qrIirayX9RQo/SpkjZEqYnJJC5Y3tjbdHOR2jsUmKvHQVskUkumjoVVWK11rX2KYrgsfZqNiVqNRERGrb13/G4GKekVL1iR9VNpOXRb8nC71t&#43;sr1fpBUcWqZ6SlW1G9vWtlSyuau1UT6S5J6PY&#43;V0znxuvM7TdZ6pZ3vT3KaNw9GyXrEY7Sujl&#43;ZbKqJZFX3gdoKp9bjUqXKxWytVzNH1N9V/pOYHwSl/Y/3PdNj4MbRvhpmq2NdJ2iq3sq7VPGB8Epv2P9wNpcjBDWpSyaTXK1HI5U&#43;XaqoiX9&#43;xS1wkHnqLJzdc6gSFyTRNY5r0&#43;bYq8F9nrJWgjlhoYY5nK6RrERyrwqoFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZzwsqKeSCS&#43;hI1WrZdtlI9mDaxiMbkK5GtSyJ13B&#43;4lABG7m/WNdz39huf9Y13Pf2JI4BHbn/AFjXc9/Yp5XHyUmOmniyNaj2olry/Sn0E6QfpdlaLGYWR1bO2Fsio1rncCrdNgFluHu1F3lX87/Y7ub9ZV/Pf2LdDVwV1FFVU0nWQyNuxyetDcCN3N&#43;sq/nv7Dc36yr&#43;e/sSR0CMXC3RUXI11l//AG/sXaSmjo6WOnivoRpZNJbqbAAAAAAAAAAAAAAAAAAAAAAAAHAOg4dAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACvXzupqCedlldHGrkv70QoQQ5eaCOXecSabUdbiybL/eW8siuxFWjUVVWF1kROHYUaPPY6OkhY&#43;Z6OaxEVOqfsW31Ab8UzHSkXdk1neKZfpSLuyaznxDjOUO5p&#43;ofEOM9u7mn6gO8Uy/SkXdk1kfm/Rmq9IMY/H1&#43;QifC9UcqcWS6Ki395f&#43;IcZ7d3NP1D4hxnt3c0/UB4hx2Up4GQQ5GFkcbUa1qUyWRE&#43;898UzHSkXdk1j4hxnt3c0/UPiHGe3dzT9QDimY6Ui7smscUzHSkXdk1j4hxnt3c0/UPiHGe3dzT9QDimY6Ui7smscUzHSkXdk1j4hxnt3c0/UPiHGe3dzT9QDimY6Ui7smscUzHSkXdk1j4hxnt3c0/UPiHGe3dzT9QDimY6Ui7smscUzHSkXdk1j4hxnt3c0/UPiHGe3dzT9QDimY6Ui7smscUzHSkXdk1j4hxnt3c0/UPiHGe3dzT9QDimY6Ui7smscUzHSkXdk1j4hxnt3c0/UPiHGe3dzT9QDimY6Ui7smscUzHSkXdk1j4hxnt3c0/UPiHGe3dzT9QDimY6Ui7smspTVVfFUvp0yaSyRt0ntjpEXRT6dpd&#43;IcZ7d3NP1EUysoqfMVNdT1aaNWjesa&#43;F&#43;xU2XTZ7gM3Z&#43;RiSK/LaCRo696Ph0eG231XJKJcnM9rGZNvzMR6KtKlrL95C8WxElHkYpqpFlrHyK2RIH3YjvVwfQSdBl6SG3GKpF0Y2sajIX&#43;r18AF7iuX6Ui7smspPq69k74m5LrFjVGvWOkRUaq&#43;/aXPiDF&#43;3dzT9RA1a0j21sdNkXRsrJmyqqxP0mKlr22cC2A1f6Qvj6zTzCN6vSRb0fDorZ1tvquSce9JZNBuTb9hH3WlS1l&#43;8g20eIXHV1PLVIs1S97mSpC&#43;7Ect7cH0ErR5ekiu6oqUcugjERkL7WT7gOOrMi17tLKxNjbJ1ayLTpa/4/ccrK7IUcyRSZONVW1lSmTbf7ytNPjZqhj3SN6t0jVe3qn2Rrb2S1tt1U9V9Rjquo65KlURkatY3qn8K/cB73nXJFTyPybG8YarkatMl0/eb42oyuSp&#43;tZkWM&#43;h1MmsrOqsc1YOrqlVIWK1Ekikde/3HMJX02NbJDPVdY1Vu2RIn&#43;/gtbZYCX4rmOlIu7JrHFMv0pH3ZNZxPSHGe3dzT9R34ixnt380/UA4pl&#43;lI&#43;7JrHFMv0pH3ZNY&#43;IcZ7d/NP1D4hxfKH80/UA4pl&#43;lI&#43;7JrHFMv0pH3ZNY&#43;IsX7d3Mv1D4ixft3cy/UA4pl&#43;lI&#43;7JrHFMv0pH3ZNY&#43;IsX7d3Mv1D4ixft3cy/UA4pl&#43;lI&#43;7JrHFMv0pH3ZNY&#43;IsX7d3Mv1D4ixft3cy/UA4pl&#43;lI&#43;7JrHFMv0pH3ZNY&#43;IcX7d3NP1D4hxnKH80/UA4pl&#43;lI&#43;7JrHFMv0pH3ZNY&#43;IsX7d3Mv1D4hxft3c0/UA4pl&#43;lI&#43;7JrHFMv0pH3ZNY&#43;IcXyh/NP1D4ixft3cy/UA4pl&#43;lI&#43;7JrHFMv0pH3ZNY&#43;IsX7d3Mv1D4ixft3cy/UA4pl&#43;lI&#43;7JrHFMv0pH3ZNY&#43;IcX7d3Mv1D4hxfKH80/UA4pl&#43;lI&#43;7JrMK5MvRUU1TvKJ/VNV2itOiXt6uE3&#43;IsX7d3Mv1FPLZvH1GKqYYpXukfGqNRIn7V/ACcheskLHrwuai/uB5pkVKWJF4UYnkAGpyye4KqIl1WyIV94UXK4ecQCxZPcLGG8KLlcPOIN4UXK4ecQDewsYbwouVw84g3hRcrh5xAN7CxhvCi5XDziDeFFyuHnEA3sLGG8KLlcPOIeo6ummdox1Eb3e5r0VQNbCx0AcsLHiWeGG3WysjvwaTkS5nx&#43;j5VD20A3sLGHH6PlUPbQcfo&#43;VQ9tAN7Cxhx&#43;j5VD20HH6PlUPbQDewsYcfo&#43;VQ9tBx&#43;j5VD20A3sLGHH6NP/AJcPOIaxyxytR8b2vavrat0A9WFjpwBYWQwWvo2qqLVQoqcKLIhzeFFyuDnEAsWQWQr7wouVwc4g3hRcrg5xALFkFkK&#43;8KLlcHOIN4UXK4OcQCxZBZCvvCi5XBziDeFFyuDnEAsWQWQxbXUj3I1lVC5y8CI9NpsAsgsh0zlmigZpyyNjbwXctkA92QWK&#43;8aLlcPOIN40XK4ecQCxZBZCvvGi5XDziDeNFyuHnEAsWQWQr7xouVw84g3jRcrh5xALFkFkK&#43;8aLlcPOIN40XK4ecQCxZBY8RTwzoqxSskROFWuuaAcsgsh0wfWUsblbJURNcnCivRFA2sLIYbwouVw84g3hRcrh5xAN7ILIYbwouVw84g3hRcrh5xAN7ILGG8KLlcPOIN4UXK4ecQDeyCyGG8KLlcPOIEr6NVslVD20AsA5w7UAFTLLbEVap7F3kK9FiqB1FC5aOFVWNFVdBNuwsZfwir8y7yHiKrho8XTyTu0WqxrU96qqcCAet047kUHYQ7unHcig7CGM2doadEWV0jFVytssa32Jdf3HqDN0FTHK&#43;CVZGxaOlotVftJdANN047kUHYQbpx3IoOwhyXJxxv0UYrtnDdEt9ZnNmqeJ7W6D3aUfWXtbZewGu6cdyKDsIN047kUHYQxfm6dlKlQ5rmp1vVq1eFFPNLnYKpJVYxydW3S2&#43;tALG6cdyKDsIUqmipqXL450EEcSq56KrG2vsLMGYp56lsCKqOc1FRV4Fv6jxkPFcb&#43;2/8AKBJgHFWyXAiaynhqfSGnZPG2RqU71RHJdL3Qtbpx3IoOwhhIt/SWn/hX/mQkwKm6MdyKDsIN047kUHYQ5X5OLH6PWtcqORV2f/30nmky0FY&#43;RsSOsxqOu7ZdFA97ox3IoOwg3RjuRQdhD0lcxXWVttirfSRf9ytBm6edW6LXWVzkvb3W1gb7px3IoOwg3RjuRQdhDFucppK19JG1z5GcNrWLtNO2pgZM1FRHpdEUDDdGO5FB2EKvo8xsdJOxjUa1tTKiInAnzKSxF4H9GqP4qX8wEoeXp8q/UdOOVNFU&#43;gCDwWPoZsNDLLSxPeukqucxFVfmUsx02FkmWJlPTK9LbNBPdczwez0ehX5rWd9nh&#43;0pSpaN9DVrNJBM98tlRGbUbt9/1AWZJPR6FVSSGmYqKqWWNDaeHC07mtkpqdFc3SROrRdnvPmqrD1yySuWGaXSld8yepL3SxL5HHVD6iR8KSfPSta5/CqWdwJ9IEk&#43;ixEejpU1MmnfR&#43;RNtuER0WIl6zQpad3V/atGmzZcouie6OmdTUrmxQOcxySot3IqcKJ6zWljrKeOsvTK3rvmjsqLZLWsvlA2ggwlS/Rhp6d66OlsjTg955WPBojF4vTrpuVrUSNNqpwlGhop6SvTrIpGxpErIZGpe/7SeQqMxdcqtkayRWs0lS6W2rfbYCTzFBR09PBLDSxRvSpis5rURftE6nCROZRd3UyLw8Yi/MhLJwgdIfOxMmnxsUrEex1Wl2uS6L8riXVbEVmFvV4r&#43;LT8rgLO58byGDm0G58byGDm0LpXra2Kgp1mluqXREROFVUDLc&#43;N5DBzaDc&#43;N5DBzaGOPzlNkHPbG1zVb7/WdZm6aSsfTNR2k1URXbLbQNdz43kMHNoNz43kMHNodXIsRXp1bvkcqcKbfqManNwU8zItB73PZpJoga7nxvIYObQbnxvIYObQ0oa1lfTpPG1zWrwX9ZZAiMXBFT5fIxwxtjYiss1qWTgJci6HxzI/&#43;vyEoAIXHUFLU1Fe&#43;enjkdxlyXe262shM6SIpG4j/FyH8U7yIBvunHcig7CDdGO5FB2ELhjVVMdHTPnlWzWJdQMd0Y7kUHYQbox3IoOwhWj9IKKSWCNjlXrm3RUTgX3KeJvSSkiaqta&#43;SyqiaNtoFzdGO5FB2EG6MdyKDsIeJstDA&#43;Bj2u0pl2IicCWvf6i1BOyoj6yNbtXgX3gYbox3IoOwhRzOLoIsPVvZSQtc2JVRUYl0JooZ3wOs80oFqm/RYf2G&#43;QCl/RIfNt8gAwy/hFX5l3kKNVjpK/HY90UiMlpnsmbpcDrJwKXst4RV&#43;Zd5DSi/QIPNt8gEC70eq6mv4xVTNfEtQsixaS/K1WaOihYhws1HWVXFeqbT1KsW3rjRqWsn4E7ZDmigHztZh6uWuqpo42aMiXaultVbIlv3Gr8ZWPnicqRqxtOjNFfU76ydtsCIB89uKeTGpTVTGSPSfrHOav8Ai/T9Ao8LWUyys0mK18Ssa5VvoJfYlvWfRWFgPn4MNV09THO5WzaKo1Wq7R0WpwOS3r&#43;gs5mKWauxzIp3QO03fM1EVeD6SXsR2Q8Uxv7b/IBzd1f0vLzTTCuxORnoKiKPLSK98bmtRWNRLqnvJoAfGeieFy2Er6any&#43;VdXy8WcrbpsjS6bEXhU&#43;yI2X/uWn/hn&#43;VCSAj8nj3V0jEuiMSN7VVfevAUMfhqigbUNRGP6yNrGqrlVLpwqT6pc5ooBBU&#43;JqKKocyKOJ8EltJ7l&#43;b7Nl/eVdx5Fk8krXpZ0yLotfa7fo2bD6fRQaKAfMrgKplc2rijiV7Z3yL86pptW1kJ&#43;j61KdqTRsjeir8rFuiJ6jfRQ7ooB0&#43;exVHVzMqnxZGSFi1UlmIxq2&#43;b6T6Ei8D&#43;j1P8VL&#43;YDu7q/peXm26iBzvozn67JUM9Fn5KdkGksr9FLqnusmxfvPsTjvsr9QEV6Mtcno/Ste7SciKiuta/zKSuiRvo74HT/wCr8ykmByx4mekUL5FuqNRVshoeXN0mK3gulgIGlzFZJLHpxXYtkcqJayuXZ&#43;4nkS5FNwWgt21b0&#43;ZrvspbYSybAOaJ3ROgCI9JGudjY2sesblqIrORL2&#43;ZDTd1ev8A5aTmmnPSD9Ch/iYvzISacAEWuOr&#43;BctKqe7qmny2J9H83h8jTSZLMOqoZq5Vjp1S6RpZ1tp96ReY/S8X/FJ&#43;VQJUp5OmdVUqMY1HPR6OS/q2lwAfPYjD1dBUzySaDmPVdBq&#43;q/u&#43;srY/0fq6SsWdWxr/ADdK2l9pq8J9SqXPPAoHz9Risis75WIxdJyuakb9HQXgvtQ2q8dWVMsEiaCOiiVHaS30ltwfiTa7eA5ZQK2MpXUdBFA5UVWN4E9S&#43;suHlNh6AgGUtTPnsgsNc&#43;nROru1rEW&#43;z6S5u2v6Xl5tpyh8cyX/AK/ISgHyXpN6OZzJ0UEGPzckMzZ2v61Wo3RROHg4fqJL0YhnpqWphqal1VMydUfM5qIr1sm2yE1YjcP/AIlf/Eu8iASZUyVLxyhmgv8AbatvrLYA&#43;apMBPTPjkaqORqs2OXb9Kmc2BrUVqRMhdoK5bqv2rrt&#43;8&#43;osLAQNdiqqWWSenT5nUqxI1z/ALK&#43;5CXo4OLUrIl4WtRFN7ADpQzvgdZ5pS&#43;UM74HWeaUC1S/okPm2&#43;QCl/RIfNt8gA5VQJVUktOrlakrFbdPVcj48dlIomxty7dFqWS9M3g/ElgBF8Sy3S7e7N1jiOW6Xb3ZuslABF8Ry/S7e7N1lSjZmaipq4nZZiJBIjUVKZNuy/vJ4jMZ4hkvPJ&#43;VAHEcv0w3uzdY4jl&#43;mG92brJNDoEXxLL9Lt7qmsR4ysWthqKvIdekN1axIUZtVLcNyUAHDoAEfW4&#43;eorI6qmq&#43;LyMYrNsaPRUX6zPiWW6Xb3ZuskwBG8Sy3S7e7N1nOJZbpdvdm6yUAHxvpfmsl6LYV1cuSSaRXIyOJKVFVyr95K412RymOgroMwnVzsR6f8AFbsv95a9II2PxEquY11lba6XttQkImNZG1rGo1LcCJYCO4llumG91brO8SyvS6d2brJMARnEct0w3uzdZtjKF1BTOifMsz3SOe56tRt1Vb8BdAA47gU6cAh6bE5GkgSCnyyNiaq6LXU6KqXW/Dc14ll&#43;mGd1brJM6BD1NNmIaaSVMuxVY1XW4q31feeaODMVNHDOuWaiyMR1uLN2X&#43;8kq/w&#43;o807yHjFeFUvmm&#43;QCtxHL9Ls7smscSy/S7O7JrJQARfEsv0uzuyaxxLL9Ls7smslABES4mvqljbVZNJI2SNfotgRt1Rb8NyWAA6Ucnj31zYFiqOokgkSRrtBHbbKnB95eAEXxHL9MN7s3WOI5fphvdm6yUAEXxHL9MN7s3WUM5PkcJh6nJTZZHNgYrkalKl3L6k4T6Mr1zGvopkc1HJoLsVL&#43;oD5z0YyGR9I8HT5KLKJGsiWfGtMl2OThThJfiWX6Xb3Zus2wzGsxNMjGo28aLsSxdAjOJZfpdvdm6xxLL9Lt7s3WSdgBSx9BLSyzzT1PXyzKmk7QRqJZLJsQvAACJTF10VRO&#43;lySRMmfpqxYEdZfruSwAi&#43;I5bpdvdm6xxHLdLt7s3WSgAi&#43;I5bpdvdm6xxHLdLt7s3WSgAi&#43;I5bpdvdm6xxHLdLt7s3WSgAi&#43;I5bpdvdm6zOoxWSqqd8E2WRY5E0XIlO1Ft&#43;JMADzGxI42sTgaiID0AAAAAAAReM8QyXnk/KhKEXi/EMl55PyoBJodOIdAAAAAAAAAAACNz/g03&#43;nyoSDPsp9RH&#43;kHg0/&#43;nyoSDPsp9QHoAAAAAAAAAAV6/wAPqPNO8h4xfhVL5pvkPdf4fUead5Dxi/CqXzTfIBaOnDoAAAAAAAAAAADGr/Q5vNu8hsY1f6HN5t3kAxxHhNL5tC4U8R4TS&#43;bQuAAAAAAAAAAAAAAAAAAAAAAAAAAAAIvF&#43;IZLzyflQlCLxfiGS88n5UAk0OlSvrmY&#43;BJXse/ScjGtYl1VVK2&#43;JV/8XV9lNYEoCL3vN0ZV9lNY3vN0ZV9lNYEoCL3vN0ZV9lNY3vN0ZV9lNYEoCL3vN0ZV9lNY3vN0XV9lNYEoCL3vP0VV9lNZtQ5NtZPJAtPLBLGiOVsiW2KBnn/Bp/8AT5UJBv2U&#43;oj8/wCDT/6fKhIM&#43;yn1AegAAAAAAAAABXr/AA&#43;o807yHjF&#43;FUvmm&#43;Q91/h9R5p3kPGL8KpfNN8gFoAiGz5SrrquOmmp4o4HoxEfGrlXYi&#43;/6QJgEX1Ob5ZS8yusdTm&#43;WUvMrrAlARfU5vllLzK6x1Ob5ZS8yusCUBF9Tm&#43;WUvMrrHU5vllLzK6wJQEX1Ob5ZS8yusyqt901JLPxukd1bFdbqV22&#43;8CYMqv9Dm827yHmjmdUUUMz7I57EctvqPVV&#43;hzebd5AMMR4RS&#43;bQulLEeEUvm0LoAAAAAAAAAAAAAAAAAAAAAAAAAAACLxniGT88n5UJMhmtyNJXVb4KSOaOd6ORVl0VTZb3AbZr7FJ/EsJM&#43;CpMv6TVuVfT5PFNhoIq5rYanSsq2XYlvX9Z96vAAVbC6EBXZeppZnM0mqmmrU2cCJbWbVGQnWkgZS3WplY2RL2to3S/wC4CaPOkRFVl3sw7qxiol7o27dt&#43;BP3iLJVCUcz3tR8kUd1RvAi24AJi50hMZXVbpkhqV00VuxyJbbbaUn56sjkcxXRq1q6KvtsRb8HkA&#43;oIuD/ALjq/MR&#43;VSSY7Saip60uQck1ZF6SVPFaVs94GX0pNG21QLmf8Gn/ANPlQkGfZQha1cvXUrqZ2PijR6pd3X3tt91iaZsagHoAAAAAAAAAAV6/w&#43;o807yHjF&#43;FUvmm&#43;Q1qo3S0ksTftPYrUv71QjKWbL01JFAuOiVY2I2/X8NvuAmCMxfiGT8&#43;n5UIj0my/pLQ4rr8dimPqEkajWNk09JPWlrFv0VnrallZNkaVKWqdKiyRI7SRq6KesCfWyHNJNu3gI/OK/dczY1d1jrNbo8N7lKSNYocg1Hv0tFHP2326KJs/ACc022vdPxCvai2VUQ&#43;IxC1nXo6ZXOayTRRHuuiXciItvquX65JEyNRLIipHTxaSIi201VeED6hXtS13Il&#43;DbwndJCBroXS1kUavaujCisRXaNrrZV&#43;uxjkZXLioWLL/NhkVLMddE4bXVPoA&#43;kRyFbKeFVXmneQg/RuodJWSMR75WLGjkeqLbht7ybyuzE1fmXeQD1jfDabzTfIaVX6HN5t3kInH1eWTH06Nx0aokaWVZ&#43;HZ9RrNUZiWB8e7ok0mql&#43;v9/3AWsR4RS&#43;bQulbHwvpsfBDJbTYxEW3vLIAAAAAAAAAAAAAAAAAAAAAAAAAAAcXac0T0AIvNJ/LpP4qPykmpGZxUbFSK5UREqmbV&#43;sv8Zg9vH20ApzYelld8zV0Vcr1S/&#43;ZfWd3UxyNR0si6DUa1b7UQt8Yg9vH20HGIPbx9tAKkmJgkpnU6q5WO4L/wCX6jseKhihnjYqp16WcvuLXGYPbx9tBxmD28fbQCpHjpmKxFrpXNYqbLIl/oUqO9GKGSZ8jtP52q1W32Wvfg&#43;sluMwe3j7aDjMHt4&#43;2gHtqI35USyIlkI2BL&#43;klV5hnlUv8Zg9vH20I6lex/pHVqxzXJ1DNqLf1qBK2AOgAAAAAAAAAABwWOgDliMxfiGS8&#43;n5UJQhIaiSgyNdp0dRI2WVHNdGy6KmiiATCtuvBfbcJG1HK7RS68K&#43;8ob5/V9ZzQ3z&#43;r6zmgLqwxqqqrG8KLwe48yUsMqqskTHqqWW6XuhU3z&#43;r6zmhvn9X1nNAWpaOnnVFmgY9WpZFcl7BlFTRNVscEbWqt1RG&#43;sq75/V9ZzQ3z&#43;r6zmgLscEcf2GNZ6tiWMcp4VVead5DDfP6vrOaK9dlHT0E8LMfWaT41an8r1qgF7G&#43;HU3mm&#43;QtlagY6OigY5FRzY0RUX1bC0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABlPTw1UfVTxNlZe&#43;i5LoVty4zkMHYQABuXGcgg7CDcuM5BB2EAAblxnIIOwg3LjOQQdhAAG5cZyCDsINy4zkEHYQABuXGcgg7CG9NQ0tIrlpqeOJXfa0G2uABuAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5Y6AAAAAAAAAAAAAAAAAAAAAAAAAB//9k=" alt="Screenshot 2022-12-04 at 7.40.29 PM.png"  />
+</p>
+<p><img loading="lazy" src="data:image/webp;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4&#43;JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAE0Ah4DASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAUEBgMCAQf/xABTEAABAwMABAcKCwYDBQgDAAABAgADBAUREgYTIVGUMVXSFrEUkxdUQXNxkWEidDQVBzPRMlJygTWyNiNkoqElVkPBwkLiJERiY0VTgpLDJrPx/8QAFwEBAQEBAAAAAAAAAAAAAAAAAAECA//EABwRAQEBAAMBAQEAAAAAAAAAAAARARIDAiExIv/aAAwDAQACEQMRAD8A&#43;OS/Sr/EXw&#43;pfpV/iL5YGZmBmZgZmYGZmBmZgZmYGZmBmZgZmYGZmBmZgZmYGZmBmZgZmYGZmBmZgZmYGZmBmZgZmYGZmBmZgZmYGZmBmZgZmYGZmBmZgZmYGZmBmZgchZPji/NntDj3IWT44vzZ7Qwoy/TL/EXy&#43;pfpl/iL5YHbtFPHV3ijppgTHNOhCgDjcSAXUchq/wDvFbvhUf7QYfRqnVrVWGqlhTZFkRrKQTVr34L19XdV&#43;Y1cbW5SvH&#43;I1Pnldr0MKPV7VfmRXG1v3q7qvzIrja3cw/WFPq7qtzIvjam6u6rcyL42p3GYU&#43;ruq3Mi&#43;Nqbq7qtzIvjancZhT6u6rcyL42puruq3Mi&#43;NqdxmFPq7qtzIvjam6u6rcyL42p3GYUjq7qsB&#43;iL42p4lrzaaC0XeCO3QKhhlpkSlCllWCeXeXnJ&#43;yfQ8Q&#43;cn9ZovgMXYwxBmZgZmYGZmF2zU0VbeaOlmBMcsyULAODgl/SanVrVaCqlhFlkIjWUg91K34L&#43;d6t/vJbvhCO1/U639QqvPL7WEYNXtVz/AOSL42puruq/Mi&#43;Nqd1mFLq7qvzIvjam6u6r8yL42p3WYUuruq/Mi&#43;Nqbq7qvzIvjandZhS6u6r8yL42puruq/Mi&#43;Nqd1mFLq7qvzIvjam6u6r8yL42p3WYUuruq/Mi&#43;Nqbq7qvzIvjandZhgevNqoLReYYrdCqGGWmjl0FLKsE8u8vHHl3zkfrlH8Ai7C8RYGZmBmZge6iiTPXQRL&#43;yuRKT6CXpdq1/qtL55Paw&#43;m1Wq&#43;q1LVy04sy1iJWjpGqXvevq9qvzIrja3K3P9Wq/Ol1WFTq7qvzIrja26u6r8yK42t3GYU&#43;ruq/MiuNrbq7qvzIrja3cZhT6u6r8yK42turuq/MiuNrdxmFPq7qvzIrja26u6r8yK42t3GYU&#43;ruq/MiuNrbq7qvzIrja3cZhT6u6r8yK42t4rr1aLdaquhNtp1QR1FMJFIMhXhWkRyn0PNninzk/T2j4F/vqYYWzMwMzMDMzA5CyfHF&#43;bPaHHuQsnxxfmz2hhRl&#43;mX&#43;Ivl9S/TL/ABF8sDkNX/3it3wqP9oOPchq/wDvFbvhUf7QYfVa9X&#43;IVPnldrr6T9uEn&#43;JVXsmX2l6No7Bu0t/IT7A7yrRVJSdNdOiUJ0jAqZIkx6OH2OnbqyKkudLUzp0oopQpYxndwuTprLHLXzzVwjno5SuRNYioSNHOSCfKT5MOwRWmNwzyv3STnGQ5aDudVihXBSoqIzAvug6SApEuTgkneMbsY5X6YodiTs6T5I7lyKjI2u00fXpaXkcghytI8obTTjOXLy1MMYqo0w0pENujmiJQCRLuyfafY90Xc0k08kEUK62SmhkREnRxkj3yArdn2NBBaaeFtNPC5iSUqttfFR00ERTWJK4iUqVHGRvweDPByPVUVsKdYu5E0kC6PaiMIiQCohSQMg&#43;XecsIzTDaQe&#43;8GCnru4aXRVFSJ2ZlxvlXneT2OjtGg3lQKS8R&#43;cn9ZovgMXY8n2m5xeut5pqSuoY5bPSVSu4oztJdLPJ7C4PnrOf6x0P&#43;XLf/AFfW3WOh/wAuW/8Aq&#43;thAM5/rHQ/5ct/9X1t1jof8uW/&#43;r62EAzn&#43;sdD/ly3/wBX1t1jof8ALlv/AKvrYUtXB/8AkduPk7pR2v6lWqHyhVeeX2vGdV9b7aipRRHVqhMlTURhCt&#43;EYP2uHLn61ZFfUjOf4y&#43;1gy2fa9G0LbQujfn2vbTwSVS1IiAKkoVIcnyDldPaFyNkqYo7kUyyJjE0EkSVq3AKUN2eAMNMMUk8U0sYBTCjaL9gzh8IOmoJBBKjgb3fRSzWi2V3dpjiXURIhiQJAorOkCSMeTA5XaqV00tXXQGOmTHTVUAh0ABuJ97f5QwhlHQWpCsBSTgjPlbSHC5eqqFxWyQ0kVLJFS10plGEk6APujhweTc6187jpVxUtInCpP8AqZNIe9GFjKY/yYUdINnL0GQNtHRuy2Xp2jbRwYt85H65R/AIewvEX9B10u9LR3Ciims9JVK7hiO0l0tI8vAXjvWKh/y7Qf1fW4IBnPdYqH/LtB/V9bdYqH/LtB/V9bCBZz3WKh/y7Qf1fW3WKh/y7Qf1fWwgXatn6nSnyCZHa5XrFQ/5doP6vrcxYNcbXTLkp5NWKBa6hSEIGDog6XKfL6mGYXQ/4tV&#43;dLq6Q4Xsui8XWrA8kpdQy7skZx5OF0SsVqqZYY5FKggEozGmeUIUscIB8jpL/hyKjXgKScEZzvcvPRJu95FwjijrKKfRBTtkoVCMAEHPJh16uamt9vWKNNPKRWyxpWsBZMeN3/8AWEfpp4Q9tPCurmEMOFLUCQCeAZLnYaRCxRR1CKaRcdXEAqJISkxqTycKhnGSfK&#43;KZQir6aSuipYKzbTBKI8ALiCDjSA3DfyMIKPMudDCsJKjvHIHzpp4Q5KFcFVQ09TNHAmZVJUaWiAnJT9k44X7VpkSKY01NSS20mIxnKQqRXlCjy5JywjQoHkL3SUs8NFDWLRiCckRq4cOxdoFT3ingSY4zVAYRhKTCCeRWN27h4HdmuFtuJqrVAuoSFRhFMZCkRJXGDgjg0t/rYURaas06ZgYSVx7VMW0G0KOEJdaogkpZRHKAFKQlYAOdxGQ7tfdO5ILeaampzU/J4T3SreuPOQQPJl175Ij5Rj0FhQFLCMg536LCqVPFfnIP/UWn4EP21PIzK8b&#43;cY5mtB4aIftqYYazM4DMzAzMwOQsnxxfmz2hx7kLJ8cX5s9oYUZfpl/iL5fUv0y/wARfLA5DV/94rd8Kj/aDj3Iav8A7xW74VH&#43;0GH0S4S/4nV&#43;fX&#43;0XX2r1XGdPypWe8Pp1/tF1tuPvD1vpgvbV86SM/ZDp7dP3h6226fvD1ui4SknJSMtlOlpaIzwuntx94Ntx94MLumOAMVJPKA6W3H3g23H3gwuZTwDc7FFXSUFUiphSgyR50dIZAJHL6Q4vbj7wbuhP3gwvbXhOSd5J8pbauht0/ebbp&#43;8GF/a7nj3zgnNyoD/ACMbk&#43;6EhJ94OJ18OlXW88NDG8&#43;hi7MzwDMzAzMwktW/3kt3whHa/oVdL/iVUM/66&#43;1/PdW/3kt3whHa80uE6flOr97/AF19pevI3bX2ttTwujt0/ebbp&#43;89i9tTwsZARg73R7oT95u6E8P93fgugpHIAG0k8AdLugcP927oHD/dvgvxyJjmRJoIXoKBCVDcccL2T1slXVS1MxBlmUVKI5PR6HGd0Dh/u3dKeH&#43;7fBeMuW2jo90p4f7t3Snh/u3wXto/Nr7XS7pTw/3fhqE8IcEb84RzdqE/yEX&#43;14o8n18Vp3G3q4bfF2F4w&#43;egzM4DMzA7Ns/VKXzyO0Os7Ns/VKXzyO0MPp92lxeK3f8A6xdPbB&#43;XmcC91w0hunLpbcfeHrfTMFwlCjkpBPC/QtI5AA6W3H3h6224&#43;8PW7BI0lWaKthq4kpMkKwtORuy9ZkSVKUQMqJJdLbj7w9bbcfeHraC7ppfmkgnOBl09unhHrbbjh/u0F3TRjGGMiSMHkdLbjhHrbbj7zQXRIByMJQOR0tun7zbcfe/u0F7a58rg/nBVpLs5/kf99TvbYfeHrcbr0dJNmPDRf76nncGJszPAMzMDMzA5CyfHF&#43;bPaHHuQsnxxfmz2hhRl&#43;mX&#43;Ivl9S/TL/EXywPZTVElJVRVMJAkiWFpJGcEHIetmGTr19uMkipF0FrK1klRNGneX518uHN9r4ml4yz1RkvXqv5vtfE0t16r&#43;b7XxNLxpnKMl69V/N9r4mluvVfzfa&#43;JpeNM1GS9eq/m&#43;18TS3Xqv5vtfE0vGmajJevVfzfa&#43;JpbrzX832viaXjTNRkvXqv5vtfE0t16r&#43;b7XxNLxpmoyU681xGPk618TS4q83qqvlUioqxEkxxiNCYkBCUpHIMBx7NQZmcBmZgZmYbaSploquKphIEkSgtJIzvDyJevVwkkVIugtilrOkomkTvLxhnc0ZN14rub7XxNLdeK7m&#43;18TS8ZZ2jJuvFdzfa&#43;JpbrxXc32viaXjL30dDV3CoTT0VNLUTK5ERJKifyDUT/Xiu5vtfE0t14rub7XxNLjrhqxfbVBt6&#43;01VPF99cRCfW&#43;0apaxS0qaqOy1i4FJ00rTESCnhai914rub7XxNLdeK7m&#43;18TS4JNvrF0s1UmmkMECgmWTR3IJ5AeB80dFVXCoTTUcC55lAkIQMk43lqJ/rxXc32viaW68V3N9r4ml4yoFKiCMEHBZqMm68V3N9r4mluvFfzfa&#43;KJeMs1F&#43;83mqvlWmpqkxJUiMRpTEgISlI5AAHQZnkGZmBmZgfcMqoJkSoOFIUFJ9IfDMMnk1&#43;uc0ipZaK2rkWcqUqkTlR4S&#43;evNfzfbOKJeNM7RkvXmv5vtnFEt15r&#43;b7ZxRLxpmoyXrzX832ziiW681/N9s4ol40zUZ3ZNaZ66luUk9ttilU1KZIyKUDCsgOJ69XDxC2cUS9WrO6hvfwI/tB4&#43;7yGS9erh4hbOKJbr1cPELZxRLxpnKMl69XDxC2cUS3Xq4eIWziiXjTNRkvXq4eIWziiXGXq&#43;1d9lhkqkQo2EezjTDGEJCck8g9pLjWagzM4DMzAzMwOQsnxxfmz2hx7kLJ8cX5s9oYUZfpl/iL5fUv0y/xF8sDMzAzMwMzMDMzAzMwMzMDMzAzMwMzMDMzAzMwMzMDMzA8/7um1S&#43;bi3VFoUIay8SSGerQPfShJwEA&#43;R4A8rsOs9vTZVav6xUclVbdptIZIVYlp1&#43;Upzyg8DCL6033uWelXc6mSCoSUyRySFQUPQX9MudNV6erlcjWintNNBboCuNc6kqwOUhA5ch4PWSajUlBOKCK5VtXIgiJVQUoREeEgcrq6232lvarWaVKx3JQR08mmMe8nOcexhl11uNHdtVtdK23J0aWaugKN2NLhOPJnlcB81f7&#43;Unmpf/ANZdHVbWOktdPW2u60q6m2XBIEyY1YWhQ5FJPCHK0l81U1WTNV2BFdWXKSJUcMtUEpTBpDBOBynDDDKj4zL&#43;M9r1v1SipRUeUnJfjAzMwMzMDMzAzMwMzMDMzAzMwMzMMg1Z&#43;I3v4Ef2g8feQas/Eb38CP7QePsDMzAzMwMzMDMzAzMwMzMDkLJ8cX5s9oce5CyfHF&#43;bPaGFGX6Zf4i&#43;X1L9Mv8AEXywMzu2ya3QyLNxpZahBHupjk0MH1MKTO5cpaCaoCrfTSU8WN6ZJNM59LuorNXxRBC7XUGo0MGQVGBpcOMMIZnZoJaSKrSuup1zwb8oQvRJ/N77nUWuco&#43;TqKWmAzp7STTz/ZhHs5egq7FFShNdbJ55snK0T6I9WHHxLp01iVyQqVBp5MYVglPBlhoZytyq7LPThNvts1NLpZK1zaYI4MYfNsqrRBEsXG3S1SyfdUibQwPUwjGdiqkppK1UlNCqKAqymNSskDgy5GsrrFLRLjpbTLDUEDRlM&#43;kAfRhhDM71rqLdTyrNxol1SCMJSiTQ0S&#43;LlNQz1OnQUq6aLH2Fr0zn0sKjOZTXWAUOzVaJTUaGNqKg40uHGHQt81HBVhdbSqqYcHMaV6J9bCqzkLpVWupVGbdQLpAB7wVLp6TsUFfY4aRKKy0SVEwzmRNQUg/lhhDs98MlOmtTJLAVwBeTGFYJHBl3bnW2eogSmgta6WQKyVqmK8jgwwi2cnbKy0U8Kk3C2Lq1k5CkzFGBwOpUy00lauSCAxQFWUxFWSBwZYV2cxWXCxzUao6WzrgmIGjIZyrH5OrbKq30y1m4UBq0ke6BIUaJ/JhRZ27jPRVFTp0NIaWLAGzKyvf6S7ouNkFFsjZlGfQxtduftcOGEOztW&#43;akgqgutpTUxYP8MLKd/pD23Sqt1SqM0FvNGEj3gZCvS9bCgxcvQ3CzQUiY6uzmomGcybcpz&#43;Tj4JYEViZZoNpCFZMWljI4MsNDOTuVbaqmBKKG1dySBWSvbFeRwb2ttda6aFSa61d2LJyFbYowODcwjGe&#43;eWCStVLFT7OEqyItLOBwZd&#43;suNnno1RU1m7nmOMS7dSsfkWESzv2yroKVUhrreKwKHugyFGj6nquE9LUVRko6TuWLA/hhZVv9JYVWcwblZ&#43;4dj8hp2&#43;hjbbdXLw4dG31FLTVW0q6MVcWCNmVlO/0hhVZ3rnV0NWuM0VvFElIwpIkK9L1uxR3G1Q0iYqmyIqJQN8pnUkn8huYRLPfTzQR1iZZacSxBWTEVEZHBkO3ca&#43;3VUSUUdqTRqByVCVS8jg3sI1nJW6vt1LCpFZaUViychapVJwODc6c0sK6xUscAjiKsiLSJAHBlhpZytdcrXUUhiprLHTSnGJRMtRH5Hc9FsrKKkMhrLaitCh7oVIpGj6mFFnZr6inqaoyU1ImljIH8JKyoD8y7yrpajRGEWKITaGjttsvOeHGcMIhnZt9TTUtTtKqjTVx4I2allIzw5D2XKro6uRCqS3ookpGClMil6Xt3sJPVn4he/gR/aDx95hqrX0CLPdY12iKRaKJWnIZVgr94coBeLU00MNWmWWmTPGDkxKUQCODI3sNDORudwoKyJCaS0RUSknJUiVatL2e8X1brlb6SAoqrNDWr0sha5VpIHBgFhGM90s0UlYZkU6Y4ivSEIUSAODPK5CuultqqQxU9jgpJCRiVEy1EfkThhEs79trqOiK&#43;67XFXBX2RJIpOj/APEh6a6op6qrMtNRopIzjESFFQH5newrM5dd1tqqLYCwUyZdDR24lk0s8OM4cQwMzMDMzA5CyfHF&#43;bPaHHuQsnxxfmz2hhRl&#43;mX&#43;Ivl9S/TL/EXywMzMDMzAzMwMzMDMzAzMwMzMDMzAzMwMzMDMzAzMwMzMDM84pKS1ao6sUV4uFBHcrncsrpoZidlFGN2kQOUngYYOzyi6a1Ud4ts0NTq3QU9QcbGppEGLQOfKOQvK5M2yy6vR2/VGkugrKXTnUqnUtSlaRGNIcm5h8sZ/TtY9XLRa7JrQmkpo9KnmpjGSdJUBWMqRn2F41829HTV&#43;ulLT1cCJ4VRykoWMg4QSGGLM9lQAmplSBgBZAH5vWwMzMDMzA2WZgZmYGZmBmZgZmYGZmGQas/p97&#43;An9oPH3kGrPxC9/AT&#43;0Hj55WBmZgZmYGZmDLMzAzMwMzMDkLJ8cX5s9oce5CyfHF&#43;bPaGFGX6Zf4i&#43;X1L9Mv8AEXywMzMDMzAzMwMzMDMzAzMwMzMDMzAzMwMzMDMzAzMwMzMDz6FNFrxqtbremup6O8WpBijRUL0ETxk5GFHcCHgLMPqK4quzfN/c7dfam1HEKUUKIVRrlKtLJOU7/W47WXWW423VzVuC1XaWBPcH8ZEE2MK0jy45Dh/P8k8pZhmmqVbTXSxXnV2tr0U1TcVIlgnqFe6paT9lSvJnhcjq3Yuo9wXf73cKJKaeGQQQQTplXOtSSABo8g38r&#43;dZYknlLDqRe0kUv7xJfLMwMzMDMzAzMwMzMDMzAzMwMzMDMzDINWfiF7&#43;An9oPHzyvIdWUqNvvWEk5oiNw/wC8Hjx5WBmZgZmYGZmBmZgZmYGZmByFk&#43;OL82e0OPchZPji/NntDCjL9Mv8RfL6l&#43;mX&#43;Ivlgdi30vd1xpqTT0NvKmPSxnGTjLruQsH7w274VH&#43;0GGZTfNzaYJ5IVX2o0o1FJxSDlH/ufHg&#43;s/PtRxQdJ5NXj/Eanzy&#43;0vSwx/wfWfn2o4oOk3g&#43;s/PtRxQdJ5AzDH/B9Z&#43;fajig6TeD6z8&#43;1HFB0nkDMMf8H1n59qOKDpN4PrPz7UcUHSeQMwx/wfWfn2o4oOk3g&#43;s/PtRxQdJ5AzDH/B9Z&#43;fajig6TeD6z8&#43;1HFB0nkDMMf8H1n58qOKDpPG9atX49XblHTQ1RqY5YUypWpGid/kxkv6Gr7J9DxH5yP1ei&#43;BR9jDD2ZmBmZgZmYWbbR/KFypqPT0NvIEaWM4yeV5xL83VohmXEu&#43;VGkhRScUo5R/7niOrX7y274Qjtf1Kt/UKnzyu1hjPg&#43;s/PlTxQdJvB9Z&#43;fKnig6Tn8NgMIDwfWfnyp4oOk3g&#43;s/PlTxQdJz&#43;A2AwgPB9Z&#43;fKnig6TeD6z8&#43;VPFB0nP4DYDCA8H1n58qeKDpN4PrPz5U8UHSc/gNgMIDwfWfnyp4oOk3g&#43;s/PlTxQdJz&#43;A2AwgPB9Z&#43;fKnig6TeD6z8&#43;VPFB0nP4DYDD53rVYY9XrpHSw1SqmOSFEyVqRonCvJjJcK8v&#43;cn9dpPgEXYXiDAzMwMzMD2U0PdFVFBnG0WE54MnD1u1a/1Sl88ntDDOJ/m4tVPOuBd9n04zhWKQYz/APJ8eD6z8&#43;1HFP8AmeU3P9WqvOF1mGP&#43;D6z8&#43;1HFP&#43;ZvB9Z&#43;fajin/M8gZhj/g&#43;s/PtRxT/mbwfWfn2o4p/zPIVxrjShS0FKZBpIJ/4hwhpI5IlaMiChWAcKG/B5GGvV&#43;1UertFcaWnvE0ia&#43;HZ5NIP4Z&#43;8Pe4MhwR&#43;b&#43;zk5N8qeKDpOfZhj/g&#43;s/PlTxQdJvB9Z&#43;fKnig6TyBsBhj/g&#43;s/PlTxQdJvB9Z&#43;fKnig6TyF&#43;YYY/wCD6z8&#43;VPFB0nj&#43;tmrcWrtVSxwViqqOpg2oUqPQI94jGMngf0DAeLfOR8YtPwH/AOxTDCmZmBmZgZmYHIWX44vzZ7Q49yFl&#43;OL82e0MKMv0y/xF8vqX6Zf4i&#43;WByGr/AO8Vu&#43;FR/tBx7kLB&#43;8Nu&#43;FR/tBh9Vrz/AIjU&#43;eX2l6Ac7gMl9V0g&#43;Uanzy&#43;0vXAvNVBj/wBVHaHYN8tNUwIC5qeWJJOAVpIBevLma4UdfrTJRGSuOlULEgkkygYBPujyOtaoKG41CU9xzRwrWIdqZx7qjnBAxvJ4GgjicMDlyVHQUUncEE6JlSVm2BkSvGhoE43fk/aSho65NNUITLDGuGZa4yvJUYz5Djy&#43;hoIwnD2Lp6iOJMslPKiNXItSSAfzfNxNKlSFUalFC49JSTn3FeUAkDI9ryKrWJZamjiXV7eW3IOJRmnSAkKJ9h3crQY3kcL2CnqCARTykKSVg6BwUjlPoduSggjXUnQkVHDQIqBv5ScZ3uWrpYKhdxpkJlhK5qaASbY4QlQG4DyD2eVoMaBBGfIxIDl/k&#43;2S3OKkjVKjFQqKRAJJKQCQrJAwcjkcNPPTrWO54VxpAwQtekSc8vsaD0qGifQ8S&#43;cj9XovgMfY8nMm4vXrVRar1VOJ7pcqiG4IootnEiPSGjwjeMn2OD5Yzne49Vedq/iaem3ceqvO9w4mnpsIJnO9x6q873Diaem3ceqvO9w4mnpsIJnO9x6q873Diaem3ceqvO9w4mnpsKmrf7y274Qjtf1KtOK&#43;p88rteD2Kl1ZTfqFUN1rlSCdGiFUgAJzw6bzKvWTXVJ8u2V2sNstNUQISuanljSrcFKQQC9WXP3S4QR3mrokyVcstUuKJSZFDZRDd7yRw8DrU9rp6uSuUsVGaKdYVjBNSBk6Kf8Avbt7ois43llhUatFaSlXAdzvyUdvRbULlWtMtRTKnQsFRCTk4RgDfybzl6b7IflYE8uyh/ZDDVLTVECQuanljSrcFKQQC9bnrtX06bvWW9KquZdYuKKRMqv4UQ3b0jhdA01u29cI6eoWi3Z0kCTKpvewPJ7oHlaCgzkhQUoi7tMVQqEUndApNL&#43;JnS0cZx9ny5w/KSmt0lGa2pTJFFJUbERlRJiGM53DeeANBHM7ZpaY2uWWmRLNNAs7ZRJSUo0sJUEkbwR/d2ZLdRyVCZKdEqqMQrlSpC8rnKRvTgj3VA8oaCLfh5HJ09BSVIgqdlUQQzQzKMKlZUCgZyDjeC4mWoikk04IVRRkDCFq0iD5d7QYn85H65R/AIewvEH9PvHVdesMXWQ1O&#43;3R7DZ/Y0sH7XleIEao5OTdP6HBj7PIMaocN0/obGp/DdP6GGPs8gxqfw3T&#43;hsan8N0/oYY&#43;7Vr/VKXzye0OWxqfw3T&#43;h76DqkLhT6BumltU4zocLD6Bczi7VXnC62k9l0k/wAWq/Ol1dMOjdpB&#43;aT1aYfakSoSFrikSg8ilJIB/NhMWtMVxpO5alYSmgX3QCeVUP8AxpH5get7qhNJU0ya6oRKuWtiXNtEJUdmofZQMbsADfl49pcBI3YODjIfaKieOFUEdRKiJf2o0rISfSGgmTHRQ3SgozRle2TCta1SHGVDeMcD7TS0il11VNQmPZTiJNNlRwkk5Xu3&#43;T0OBMiicqWokAAEneAOR7O7qsTbcVtQJdHR2gkOljgzwNBN01so50zrEU&#43;KeRQiQr3VVYxkJAPIR5ceRwoVnJxo5PJwex6lTSqWhap5FKjJKCVnKSeUjgLbUkkqJJJySfK0G3LaT07RtNoNxU8V&#43;cc/9TaPgX&#43;&#43;p5JtHjXzjnNRaPgP&#43;&#43;poMMZmcBmZgZmYHIWX44vzZ7Q49yFl&#43;OL82e0MKMv0y/xF8vqX6Zf4i&#43;WByFg/eG3fCY/2g49yFg/eG3/CY/2gw&#43;j3CXFzqh/4y&#43;0uuJSCCDgg5BHkL1XGX/FKsf8Ajr/aLr7V9MwX&#43;65xUGpE6xMSSZM&#43;8SeU5fUFdU0oIpqmSEEhRCFYyRyH0uO2rbV2CR7uqdoiTumTTQSUq0t6SeXHpfiKyePZbOokRsSVRFKsaBPKQ4/attWgkJ6yerk2lTOuZeMaSzk4eyW6181N3NLXTrh0QnZle7HA4vattmgkxX1ppxSJqahcRGgIUnII4McD1LrJpkyadRIsSkKXlX2iOQn0PVbrn8nXKmrdnte55UyaGcaWDyPivuPd90nq0QR06JiFbOMEAEjfy&#43;1oLq7rcJVRqkrp1mP7BK/s7sdj07UAOkZn5ti0F0y7i8d&#43;cM5ulAR4jE5Uy7i4jX45r7cf5CP/AGvO5BirMzwDMzAzMwktXP3jt3whHa/olwl/xGqAP&#43;svtfzvVz947d8IR2vOLhL/AInV&#43;fX2vXkbl1c0k&#43;3XMtU2QraE&#43;9kchy&#43;jXVClIUamUqiWZEHS&#43;yo8qh7XH7Ztq9wSYudcmGSFNZMIpCStGluOeX1vVJUyTL05ZFLVgDSJ34HI6O19rbVoL6qqZc5nXMtUpIVtCd&#43;RyHL9jraiGp7pinkROSSZEq9455XH7Vtq0EkLjWCrNX3XN3Sf9bS97HB6H1HdbhFNJNHXTokm&#43;kUFb1&#43;lxe1batBIm4Viqfuc1cxhJyUaW7Oc9r9Xca6WaOZdbOqSL6NenvT6HG7Vtq0Eku4Vks5nkqpVylBRpqVv0Tyj0PSF4HsdPavwy7uVoIr5wzm70XwCLsLxN5Rr6dK5UB4bfF2F4u&#43;WgzMwMzMDtWz9UpfPJ7XVdq2fqlL55PaGH1C7SYvNYOCUuptGvMuL1W&#43;eLo7V9MwXJJPcO/yPK7vdIKaqmppKmqqJKimiiFIpIEMeQPezw&#43;h4QZcjBeyaunqZ9vPKqSQAAKPLu5HYMjlt1vTcKykjNWRb0qkmVuJkSMbkjyHJ9T8gt1LUxRVyDUIpFQSTKhODL7hAIHCDnlcAm51aK01qKmRNSSSZQd5PtfZvNwVWorVVshqIxhCxgaI4AOTDQTNJT22qpJrirbQ0yJURJjXIApJIyVE43hjRUaqCrVTLlq6inWr7B0cRjkXon7Q4eBxCL7co6mSpRWKTLKkJWQkYUBybsYfIvVwFPLT92SbOYkrG7Jzy7&#43;VoJ8WmjqJqXuSWZVMtClrnyFaRSnKkBPKlXsL5orfRXE0c8CqmGmnkXEtEuCsFKdLIPlDgpL1cZTCV1smYDpRlICdE8O7lL9lvdxmqI6iStkVLECEK3DRB5cADG9oN81RTSLBpUSoj0d4lUCc8O7yPXtXREoAAy22aC7tfa4H5wjpS2c/yP&#43;&#43;pyO1cXr4dIWU/yP8A9inN/BiTMz5gzMwMzMDkLL8cX5s9oce5Cy/HF&#43;bPaGFGX6Zf4i&#43;X1L9Mv8RfLA7Fuqu4bjTVZRp7CVMmjnGcHOHXZhmk&#43;ttgnqJZ1Weu0pFlZ/6xPlOfuvX1o1e5nruOJ6Dw9nqjMOtGr3M9dxxPQbrRq9zPXccT0Hh7NyGYdaNXuZ67jieg3WjV7meu44noPD2bkMw60avcz13HE9ButGr3M9dxxPQeHs3IZh1o1e5nruOJ6DdaNXuZ67jieg8PZuQzDrRq9zPXccT0G60avcz13HE9B4ezchmHWjV7meu44noOI1lvcF7rIJaalXTRQQJhShcmmSB5ScBwzOUGZnAZmYGZylt1eq7pTGeCWmSkK0SJZkoPqLCpbKz5PudNWFGnsJEr0c4zg5w8qn1tsNRUSzqs9aFSrKyBVjGSc/deJrpJEVppCpGmF6GQoaOfS79fq3W26lNRNLSqQDjEc6VH1B3NEz1o1f5oreNjot1o1f5oreNjouAtdlqbsFmnkgRocu1lCO16K6hlt9WqmmVGpafLGsKT6w1GT9aNX&#43;aK3jY6LdaNX&#43;aK3jY6LiJdWK6GhNYuWk2YTpYFQkqx6MulbbZPdKgwwLiSoDOZZAgestRknWjV/mit42Oi52zR2u9WO5XWC1ViY6BIVoGsTmThA93yDe/n9ztU9qlTHOuFSlDI2UgWP7PJtXrJXL1Uu0qJYAiWFBSDUAFOFb93kajnrRq9zNX8cHRbrTq9zNXccHReL0dHJW1iaWJSAtRwCtQSn1l2rnZKq0pQqoXTqCzgbKZK&#43;xqJ7rTq9zNXccHRbrTq9zNXccHRcJb9Xqu50&#43;3glpkozjEs6UH1F0TSrTWGlJRphehnSGjn08DUZT1p1e5mruODosdaNXj/AOTV3HB0XC3DV2sttL3RPLSqRnGI50rPqD1Wyy1N2Ehp1wJ2eM7WUI9WWo3ay3mC910M1PTLp4oYEQpQtemcJ8pOA4d2a6hloKtVNKqNS04yULCh6w5CbVeugolVapqQoSnSITUJKsejLghmdy22ue6TmGBcSFJGSZZAgestc7XPapkxTrhWpQyDFIFj1hhTZzEGrFdUUYqkTUoQU6WFTpCvVlx9FQy19YmliVGlauQrWEp9ZYV3tpZ&#43;5qqKfR0tmsKxw4LuXSx1NoTGqokgXtM42UoXj04ey3auVlzphUQS0yUk4xJOlB9RYZBVa32KsqpamS0VoXKrSUE1Yxn2e69fWnV/miu44Oi8W7kk7r7l0kaenoZ0ho59PA7tw1erLbTd0Ty0yk5xiOdKj6g9chOdadX&#43;aK7jg6LdadX&#43;aK7jg6Lx&#43;12OquyFqp5IEBBwdrKEdrrVtFLQ1iqWVUalpOCULCk&#43;sNyGU9adX&#43;aK7jg6LdadX&#43;aK7jg6LhqjViupqE1kktIYwkKwmoSVep07Za57rMqKBcKVJGSZZAgestyH0GwItusNFcKqmtVYlNDDtMKrE/xD90e7wZcH1psA3fI9dxwdF6rXbqm1U16gnkjKu4dMGKQKA94eUeVxkGrNdU0QrETUoQpOnhVQkKx6Mty0S/WnV/miu44Oi3WnV/miu44Oi8XoqKWvq000So0rVyGRYSn1l2bpZam0iM1EkC9pybKUL9eG5Cf606v80V3HB0W606v80V3HB0XC2/VutuVKKiGWlSgnGJJ0pPqLjxSSKre5Mo2mnoZ0vdz6W5DK&#43;tOr/M9dxwdFxOs18p73LSdy0q6aKlg2QTJJpk&#43;8TnOBwvTcdXay2UoqJ5aZSM4xHOlZ9Qeu12SquyVqp5IEhBwdrKEdrm7RHM7NVQT0taqkVoySp/8ASOkD6CHWcBmZgZmYHIWX44vzZ7Q49yFl&#43;OL82e0MKMv0y/xF8vqX6Zf4i&#43;WBmZgZmYGZmBmZgZmYGZmBmZgZmYGZmBmZgcxdV0xsdmTAY9smKTbaGNLOmcaX5OHduqt01JRUdXIUmOsSpUeDvASrBz&#43;YYVGyeF9IQqRaUISVKUcAAZJLkurN95nre8K&#43;phF5PC2XJ9Wr5zPW94V9TdWr5zPW94V9TCMyeFsuT6tXzmet7wr6m6tXzmet7wr6mEZl5BY9&#43;rd&#43;PBFH&#43;26XVq&#43;cz1veFfU5qz2S6w2G8wyWyrTJNGgRpMCsqIVngYYk2SeUuT6tX3meu7wr6m6tX3meu4ur6mEZktlyfVq&#43;8z13F1fU3Vq&#43;8z13F1fUwjMnhbJ4XJ9Wr7zPXcXV9TdWr7zPXcXV9TCMyWyeF7qqjqaGbY1dPJBIBnQkSUn1F6WDLZZmDJ4WZmDJbJZkpKlBKQSScABgyWyeFyY1bvhGfketwf8AwFfU3Vq&#43;cz1veFfUwjMlnJ9Wr3zRW94V9TdWr5zRW94V9TCMyeFgSOQuT6tXvmit7wr6m6tXzmit7wr6mF3VnJt98yf&#43;wn9oPH8nheW6v2a6UtHd0TW2sQqajKIwYFe8rSG7kcL1bvnNFb3hX1MIxsnhcn1avnNFb3hX1N1avnNFb3hX1MIzJ4Wy5Pq1fOaK3vCvqbq1fOaK3vCvqYRmS2cOT6tXzmit7wr6nTq6CroJBHWU0tOsjITKgpJHDvYXtWa6C3awUtXUrKIoyrSUBnGUkOLUcrJHlLu2a2/K91hoRJstrn3yM4wCf9joqGiojgLAzMwMzMDkLL8cX5s9oce5Cy/HF&#43;bPaGFGX6Zf4i&#43;X1L9Mv8RfLAzMwMzMDM8w1d1Al1gsguSKsRgyFGiRwObuZl1N3M/WHs83uPzZ3CmtdRW0sndHc5GmgDfh4QUlKilQII5QWzb&#43;KM9iKeeRBWiGRSRyqSkkB8FCgnSKTok4zjc6PGZmBn6I1qSVJQopTykDkfjAzMwM9qaSpWkKRTyqB5CEEgvWULC9ApOlnGMb8sPGfqkqSopUCCOUF&#43;MDu1lzXWW&#43;ho1RpSmiQpKVA71aStLf63ScvdaSnhslmniQlMs8UhlIO9RCyBn8mGvVv95Ld8JR2v6vXVdV8oVWKmYfxl/8Z4X8o1b/AHlt3wlHa/qVb&#43;o1Xnl9rDnuuq8am74W7qqvGpu&#43;F62Yd91VXjU3fC/e6qrxqbvhetmHfdVV41N3wv0VdWP&#43;0zd8L1sw292VnjU3fC3dlZ41N3wvUzDb3ZWeNTd8Ld2VnjU3fC9TMNvdlZ41N3wvzuys8bn74XqyGywxD5y1KXf6RS1FSjQQ5JOSdxeIPLvnJ/XaP4BD2F4iwMzMDMzA7Nt/U6Xzqe11nZtn6pS&#43;dT2sPsdyqqoXSqAqZgBJuAkPA6/ddX41N3wvZcv1Sq86XWYbe66vxqbvhbuur8am74XqZht7rq/Gpu&#43;Fu66vxqbvherLMNvddX41N3wt3XV&#43;NTd8L1Mw2911fjU3fC3ddX41N3wvU/MsN3ddX41N3wt3XV&#43;NTd8L05frDb3XV&#43;NTd8LxL5zFrkq7Spa1LUaEb1HJ&#43;2p5O8V&#43;cn41afgI/bUwxO3189srY6ymUEyx50SRnlGP9rrk5JJ8rltVlUqNYqVVaYxACrTMmNH7J5c&#43;1xSvtH0sPGZmBmZgchZfji/NntDj3IWX44vzZ7Qwoy/TL/EXy&#43;pfpl/iL5YGZmBmZgf1nUa8U1r1Kp0ywy1E01RJoRRcqsYy/kz&#43;k6sRIm1Gi/gIqSidf8NMoRInON4JevPXnZs1j31b25xxn1OqpVSqrLdUmGOo3yRLSCfQ/iWt6BHrRWp0Eo9/eEjAf2OyIkp7XFFXXGnVLvONoPdHkB9ofyHXfR63V2gsLTp7lJOQdz6dnTnXmQ8dHb1Z/f4zVFfeFar0FXqVURGlo6cCuoEpSZAsfaUpJ3qBcdFQQ3j5uaRdVXUtujN0lMksoO4lI3AAZL06t9WbPX0V/p9ZZqY04Cp6IwkyLUBvSCNxSfa6N7vtvuOqKaeHEdQq6TVGwA&#43;whQ3Pi2rq1Jlpr3UUFwudHRwQRpmNVIvKVoV9kpA3nL1Vmpdygv8ASWimXFWKrkiSmmiPuSIP/Fv5OTe8llu&#43;rdyvgqKipi04rVFFSyVEZVEiZI36SfL7Pa9tbrZaqO92C7IuCa8QUiqSrRHEY1JByCoDk8u70MOKGxUlm1P1pRBeaS4yimjRIiAK/hnTHlIwR7Q4OD5v6iWCGKS50kN0qI9rDbl6W0WkjI34wCRyByMStXrJq5f46PWCOtXcIkJgi2KkLGFhXvZ3cjlp9aqK7qgusOtirOpMKEzUpptNaVJGP4aseVhiFq1MqLjaF3Satp6Kmhqe551zkjZnHL7eDDhbrQottympI6uGrTGrAmhOUrHCHkFTeKOTUSot4qlSVUt0M4ChgqRokaR8jxTysPsZTrMNUdWjq/c6WhQaL&#43;IJpkRlStI7/e5Xi0FJcQbZWVqqSXTvRQuVCQZFrBGcq8qeBxutV2pK&#43;yauU9JPpyUdCYp0jI0VaROHbt98t8GrFjpJJ8TUt1M8qcfZRu3/ANmHd51bkvWu2sEyqmGhoaSqUZ6mbOijKtwAG8k8DgNYNXprFJAruiKrpKpGnT1MOdGQch5d4IPkeaUut1skuusdCbiaKG5VW3pq4RaYSQTgKHAQXjeuNcmoFJTjWFV5MIVlSYdnHHnyJ4WGMPfPS1MFNTzTIUmKdJMRJ3KAODj83ocjcLnHWWq20aY1JVRRrSpRO5Wksq3eth1q3&#43;8lu&#43;Eo7X9QrV/4jVeeX2v5fq3&#43;8lu&#43;Eo7Q/o9dJ/iNVv8A9Zfa7mDrTc7BaaWWko1SUkyUT0ypZa7a4RERnlB5eR4yZPa91dXd2QUkIStIpqfZHKtyjknOPzdguroqgpC4oFqCY0LUMgq97kIA8hfQtdcqRcYjRpIVoHMgGV4zojhPsfkWsKaapRW09Oe64qeOnjMisoAAwokDlz5H1FfKWKI06IauGFM5nhMUidJKlD3gSfJnkPK0GqqhFPQ0MoBEk6FlYPkIVh2aqCmgtUE8VKucSoGatEvuxyZ3oKfI42quHdVNSxaK0qgC8qUrOlpKy90d0o6aimjp6adNRURCOUKkBi5QdIDlzuaC7crVNTVkogQFQCRKE&#43;&#43;CUlQ3aXBl6V2ytRUR0&#43;yStcqSpBQsKSQOU6XJu8r1yXqFdRXyKpVLjrFxEoKsbkHeCfa9y9YKYpiQikl2SUyxLQSlP8NfkTjkIaDuqtckfcUcWiuWWBUsixICgAKIzpcmHoTbK1UskWzSDFolSisBOFchzyYL6ivtJTiGCCnqBSppVU69JSdoQVaWR5HoqLtHLT1dOlFQtM6Y0pXMsEgJOcHHk9jQalgxyKQrGkgkHBy/NJ19oOQFjJ7Wgxr5yP1yj&#43;AQ9heIvLPnEObzRn&#43;Qh7C8TeQZmYGZmB2bZ&#43;qUvnU9rrOzbP1Sl88ntDD67dDi61fnT2PyCGOot1WpIPdNNiTGftR8h3cIL0XVf&#43;L1fnS&#43;bdcVW24Q1aUhYQcLQeRaTyh7gkprRN/BigQDKmNJnUtYSNoreEDPKcYdUUFUaY1BjSiMaW9awkkp5QAfK&#43;qa/wCY5o6vujMlSahMlOoBQUfIc&#43;TkdOtr01dHTwFC9KJciypaslWkc&#43;tyC/LaK2KaOEiJS5I9phMgOinGcq4A9S6CsRtBsdIxJSpQQdLKTyKGOUe0Pai/UyKhNQKacLlphTVASsAaIGAUe3d5XxFfkUlYaymRUS1EcYjp1VSgQgeXIHs5A0GmeJdLUbCoIjUCAvfnRy5ddvpPlemoRRSojlUdnUibSTUJ0ScjgOfI8fqKmnkqlS08C0RLOkY1qyQTyjPA5KnvtFRphipKOpEKZzMpM0gVoHRIwjgG92Dj5OqhIhBEY2iSpKzKnQIBwfe5NzC21hnmgMaUKgxtFSKCUpzyb&#43;Tf5HoprjTR0NPSz0ypBCZVAjG5SuQgHgdmsvdJXLqUVFNUGnqdkpWioaaVoGMjyEFyDfV2iUXKop6VA2cJQkqWsAaSkg4yeUl1UW6rXEqXZhCEqUgmRYT7yeUb/K969YoZZ6oLiqY6eaREiDEtO0QUpxvzudCsuSaujjpyiQqRUSTFcislWlw&#43;1oOdIYG94v8AOQc1Vp&#43;Aj9tTyDaPHPnE3zWj4CP21ODGbZb5rrcIqKn0drKTo6RwNwz/ALHVIwSOB3LRcpLRc4a&#43;KNMi4SSEq5DkEf7XTJyonhLgMzMDMzA5Cy/HF&#43;bPaHHuQsvxxfmz2hhRl&#43;mX&#43;Ivl9S/TL/EXywMzMDMzA&#43;hItIwFEegvlmo62q/vH1vkqKjknJZnat0bLM4gzMwZbLMwMzMDMzAzMwOUuVugpLPaquMq2lZHIqTJ3ZSspGPyDi3vmVVKp4EzGQwpB2IVnAGd&#43;PzYXNW/3kt3wlHaHndfKRcqvf8A66&#43;14Fq8tMesNvWtQQlNQglSjgDe8&#43;rLXWSV9StCqVSFzKUkirj3gnd/xPfkV9s22ffyTX/yvG4&#43;k/Pkmv4aXjcfSexztg22fXyTX/yvG4&#43;k3yTX/wArxuPpMOdsOFtsOF9fJNf/ACvG4&#43;k3yTX/AMrxuPpMPNsOFtsOF&#43;/JNfw0vG4&#43;k3yTX/yvG4&#43;kw82w4X5thwvr5Jr/AOV43H0m&#43;Sa/&#43;V43H0mHO29rbYPr5Jr/AOV43H0mNor/AOV43H0nBAfOAc3ahPDQRdheKvKNfSBdaOPaRrXHQxJXs1hQBGd2RueLvnoMzOAzMwO1a/1Wl88ntDquzbVBNzplKIAEqSSfJvYfSrvLi81oz/rF09s7l1oKqe7VU0K6VcUkpUhXdUe8et1Pkqu4aXjcfSfTFebUcLbYcL9&#43;Sq7hpeNx9Jvkmu4aXjcfSdR5tRwttRwv35IrvvUvG4&#43;k3yRXfepeNx9JoPNqG2r9&#43;Sa771LxuPpP35JrvvUvHI/rdVztW2ofXyTXfepeOR/W3yTXfepeNx/W0HO1DbUPr5JrvvUvG4/rb5JrvvUvG4/raDnahw2vytJVnP8AI/76nN/JNd96l43H9bgtfRs5LTCqSJckdHorEcgWEnTUcZBxyF49IiNV6WnrdYaWnq0BcKyrSSTgH3S4te5ZA4Xto6WorKpFPSoUuZedFKeU7svSRg4LwDMzAzMwOQsvxxfmz2hx7kLL8cX5s9oYUZfpl/iL5fUv0y/xF8sDMzAzMwMzMDMzAzMwMzMDMzAzMwMzMDMzA5W518FVZrTTRKUZKSORMgI3AlZIx&#43;RcU5ao1fmjsFLd4pEywyhW1AIzEQrABGc7xvYRLZLvWyy113KxRRCQx/ayoDHreqvt1TbKk01UgIkAzgKB7GFbLZcurVa7pou7DTp2Ohp6W0TyejLpW621V0qe56SMLkxnBUBu/NhVy2XdudnrbRIhFbEI1LGUgKB7HZpNWLtXUiaunp0qiUMhW0SP7ZYROWy99PRT1VYmkhQFTKOiE5A3&#43;l2rlYLjaYky1kIjSs4BCwewsI7LZcnbtXrndYDNRwBaAcElYG/8y6UtHPDWGkkSBMFaBTny&#43;lhpy2XK12rN1t1KamqpwiJOMnaJPL6C9Fts1ddysUUQkMf2sqAx62FHLZdmut9Tbao01UgIlGMgEHsd5eq13jojWKp07EI09LaJ5PRlhEM7VvttVdKgwUkYXIBnBUBu/N93K0VtokRHWxiNSxkAKB3fkwpM5ak1Xu1bRprIKdKoVAkK2iR/bLoUtFPW1aaWBAVKs4Ccgb2GhnI3Kw3G0RokrYRGlZwkhYO/8n1btXbndYDPRwBaAdHJWBv/ADLCMZ7l0k0dYaRacTJXoEZ8vpd&#43;v1auttpjU1VOlEYOCRIk9hYRTZd622Wvu&#43;07iiEmz&#43;1lYGPW9Ndb6m21SqWqRoSpxkZB7HaK&#43;WcvJqtd4qI1i6dIhCNPO0TyejLp262Vd1nMFHGJJAnSwVAbvzcFRncuVprbTKmKtiEaljIAUDu/J26bVe7VdGmrhp0qhUnSCtokbvRlhEM99JRT1tWmlgSFSqOACQP7u1c7DcbRGhdbCI0rOEkLCs&#43;osI5nKW7Vy6XWnM9HAlcYOMmRKd/5l0VUkyKw0ik/xgvQ0cjl9LDSzlK/Vu6W2lNTVQJREDjIkSewvVbLJX3cLNFCJNn9rKwMethQZ2K2gqLfVqpalARKnGU5B7Hfm1Wu8FEaySnSIQnTKtonk9GWGiw3JFpvNPXSRqkTETlKTgnII/2ugo5UTwlyurVoReLuinnOjTpSpcqgsJ0UgE5yfa4lQwojgLAzMwMzMDkLL8cX5s9oce5Cy/HF&#43;bPaGFGX6Zf4i&#43;X1L9Mv8RfLAzMwMzMDMzAzMwMzMDMzAzMwMzMDMzAzMwP3SVo6OkccGX4zD1K1I&#43;yoj0FlKKjkkk&#43;1&#43;Mw72q8aOkrHBl8hRScpJB9j8Zh6palfaUTjhL9EqwMBah&#43;b5Zh6FEHSyc8L9VItQ95RPpL5Zh6FrSMBSgPYX5k5zk54WZh0ZFqGCtRHtL8StSfsqI9BfjMPSoqOVEk8Jfu1kxjTVj0vlmHoUpJykkH2FlKUr7SifSX4zDoSLAwFqA4MvkEg5BweFmYeqWpYwpRPpL9TItIwlah6C&#43;WYe6RznO/hfpkWoYKyR7S&#43;WYepWpH2VEegsVKUcqJPpfjMOjIsjBWrHBl&#43;BRScpJB9hfjMPVLUr7SifSX6JJAMBagPS&#43;WYASk5BIL9UtSvtKJ9JfjMOkyLSMJWoD2F85Oc5OeFmYemRahhS1Ee0slak/ZUR6C/GYCoqOSST7X1tFkYK1Y4MvlmAKKeQkehmZgZmYGZmByFl&#43;OL82e0OPchZfji/NntDD6Mv5sLGVqPdNdyn/UR0X54L7H4zX98R0WZg8F9j8Zr&#43;&#43;I6LeC&#43;x&#43;M1/fEdFmYPBfY/Ga/viOi3gvsfjNf3xHRZmDwX2Pxmv74jot4L7H4zX98R0WZg8F9j8Zr&#43;&#43;I6LeC&#43;x&#43;M1/fEdFmYPBfY/Ga/viOi3gvsfjNf3xHRZmDwX2Pxmv74jot4L7H4zX98R0WZg8F9j8Zr&#43;&#43;I6LeC&#43;x&#43;M1/fEdFmYPBfY/Ga/viOi3gvsfjNf3xHRZmDwX2Pxmv74jot4L7H4zX98R0WZg8F9j8Zr&#43;&#43;I6LeC&#43;x&#43;M1/fEdFmYPBfY/Ga/viOi3gvsfjNf3xHRZmDwX2Pxmv74jot4L7H4zX98R0WZg8F9j8Zr&#43;&#43;I6LeC&#43;x&#43;M1/fEdFmYPBfY/Ga/viOi3gvsfjNf3xHRZmDwX2Pxmv74jot4L7H4zX98R0WZg8F9j8Zr&#43;&#43;I6LeC&#43;x&#43;M1/fEdFmYPBfY/Ga/viOi3gvsfjNf3xHRZmDwX2Pxmv74jot4L7H4zX98R0WZg8F9j8Zr&#43;&#43;I6LeC&#43;x&#43;M1/fEdFmYPBfY/Ga/viOi3gvsfjNf3xHRZmDwX2Pxmv74jot4L7H4zX98R0WZg8F9j8Zr&#43;&#43;I6LeC&#43;x&#43;M1/fEdFmYPBfY/Ga/viOi3gvsfjNf3xHRZmDwX2Pxmv74jot4L7H4zX98R0WZg8F9j8Zr&#43;&#43;I6LeC&#43;x&#43;M1/fEdFmYPBfY/Ga/viOi3gvsfjNf3xHRZmDwX2Pxmv74jot4L7H4zX98R0WZg8F9j8Zr&#43;&#43;I6LeC&#43;x&#43;M1/fEdFmYPBfY/Ga/viOi3gvsfjNf3xHRZmDwX2Pxmv74jot4L7H4zX98R0WZg8F9j8Zr&#43;&#43;I6LeC&#43;x&#43;M1/fEdFmYPBfY/Ga/viOi3gvsfjNf3xHRZmA/NhYx/2mv74jou1bvm2ssMylJqK0kpxvkTwj/uszD//Z" alt="ShaderProcessing.png"  />
+</p>
+<p><img loading="lazy" src="data:image/webp;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4&#43;JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCACfAeMDASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAUGBAEHAwL/xABSEAABAwICAwcQBwcBBgcBAAABAgMABAURBhIhMROUFVGyQRST0VXSFlZUUjR1NnF0IjUykRdhsbMHcyOBkjdyM0LBQ4VTYqGiJCVEY2SCg8L/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/EABgRAQEBAQEAAAAAAAAAAAAAAAABESFB/9oADAMBAAIRAxEAPwDs0REBETWIgbiaxEYiBuJrERiIG4msRGIgbiaxEYwNxNTcBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBIPMtxqqSjZbonwy8/VNMhwpCtEKVgTgZNmVLNKz0igTjq4QY5YgSHBF&#43;75l7zbjge/d8qt5tzNvd0VaKAVDdOahxbqGkN6QTipSgBr5tswzccx977O/k9rA1wPfu&#43;VW8244Hv3fKrebc3wjmPvfZ38ntY4RzH3vs7&#43;T2sDXA9&#43;75Vbzbjge/d8qt5tzfCOY&#43;99nfye1jhHMfe&#43;zv5PawNcD37vlVvNuOB793yq3m3N8I5j732d/J7WOEsx977O/k9rA1wPfu&#43;VW825h3MXyyNU9Uu&#43;dJQalppbSqVCQpKlhJ1jZtmS7frxRuU5rrIhpl59DJWirCykqOAOGE&#43;c8fAmjxVlP&#43;IIE&#43;24F7DPSYVuUVM4mZsBERAREQEREBERAREQNSAvdZXLuttt1vrRSGpU5ujm5BZwSnHYZPL1JMqlQsnOtnGP/AB&#43;RAkOCL/3zK3m3HBF/75lbzbntc7xV0tzYt9DbhVvOsqdOk8GwlIIHONe2eXCWY&#43;95rfyetA1wRf8AvmVvNuOCL/3zK3m3N8JZj732t/J60cJZj73mt/J60DXBF&#43;75lbzbjgi/d8yt5txwjmPvea38nrRwjmPvea38nrQHBF&#43;75lbzbjgi/wDfMrebccI5j73mt/J600q55iQkqOX2sAMT/wCOT1oGNc6TMFvtdVWpzGVmnZU4EmjRgcBjhJu21Rq6Fh5RxUtpKlesgGRtdX8KZEqq8NlrpFAtegTjo4oOqfWWVlVppcf&#43;Cj7hAnIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiIGjslQzT5Vb/ADgxy5bzslQzT5VbvODHLECTzb8Npfb6f8QTFzvQoetzVTu1Q04l9psFp5SBoqWAdQPEZl5s&#43;HUnt9N&#43;IJLv07NS3ubzaXE4g6KhiMQcQYFPqrrXWd24UtK&#43;03SUAaaa3VKnXVrc2aydeHNPOlzJfLhRhNO4w080Xt0W61rVoYYe6DgCcdeuSNzu9oTcnbVV2Orfcqj72FLpJeCcNeOOsDGSNBT2BpJFA3RJClFshop1qI1p1c&#43;A2QKzV5quyn30bozTtOMlLJDemNPc9L5gcQrHHURsnzbb9dKKgaxqGHG6IssutLBLlQVgEqBJ1fNq9RkzX1GXaK4pW3axWVqmiT0SnDikoGrE/ZzTLaRlyoVRXLcaRLriQmmW4kJX6gDzjihFdGZMxOUbT6XaJJdpXqvDcycEoOATt2nnMnsv3SuqVutXJ1hSyltxstp0dS046P24TNQ1ZlvdDbTSKdS0pG5DRKggn3hhxcc9l2ujW405uCUqaUFJKRhsGA/6QqPzT5FR&#43;cKflieGePR9v2yn/EE981eRUXnCn5Ynhnn4Aj2xj8QQJW1&#43;TiZ0wbX5OJnQEREBERAREQEREBERA&#43;V/IZUn/Tez/wD78iW1fymVJ/03s/rf5ECTe9OKTze7y0SSrbnQW0JNdWMUwV8pdcCcfpka96c0nm93loms5UiarLFYno4ecCBoDQ0jtGyBLUtZS1zAfpKht9onALbUFD6RPYqA2kDm1zndS5dWM1qZbWunYS6gNttoXgWdHFeCUjR49ZOOMxkcJ1bGN1Xcf2NZTrpvdUnGn09SlYbVceP2SyDpuInylxC1KSlaVKQcFAHWPXKAbpdK2nRRMu1zdQ1TvB9W5qGiouAJ1kYE4YzJfoK566ooBUVzdMC4VrbUQV4NjRxUPtkvBeJ8P&#43;Tuf0H7pzepudwZFMaytr260LpkMoSCELQSAsq1YYnXjjOjv&#43;Tuf0H7oFZpv5XHzYvkGZuV/hNN&#43;ijkiYVL/K//AHarkmZuV/hNN&#43;ijkiBPREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQNHZKhmnyq3ecGOXLedkqGafKrd5wY5cCTzZ8OpPOFP&#43;IJOyCzZ8OpPOFP&#43;IJOwK/mC0VtyuDDlKoNhFLUNFzHApUsAJ&#43;6VVrJl3ctz1MGDTuvBptLy3kEtFOJLiQgDXzDn1y7dMf7qFUel&#43;wFGHQnD/LTIx&#43;iQ9RmqqpV1LdPRGsVThx50qcCNFtJwwHGYGGxZrvbmjoWwOoqaRDDrdPVbmttSCfeCjzKxx45G1GUb&#43;&#43;in6Qhb61MbkoB9H7L3ycSpQJOrDWNeqTDOaromqqAqjQ5TrqSww4peBSothSQRhs24mKDNNzdp2SaRD9W&#43;hn9kFhLaSoKOOOGPNLnoUeXKi2Lar&#43;iIXUMVdQ&#43;tSVe&#43;4gpOiMefHVLbTOrepmnVtltS0BRQdqSRslWczpUhkut2oqFO2ldUC6BoFSikBPjawT6pbEnSSDxiQQuavIqLzhT8sTwzz8AR7Yx&#43;IJ75r8hovOFPyxPDPPwBv2yn/EECVtfk4mdMG1&#43;Tie1ZU9GpnHNWKUFQx&#43;wYwMialYtZzRc7XTVwutC0KhpLmh0MnRxGOGOnMroOaOzNDvI9vAnYkF0HNHZmh3ke3joOaOzNDvI9vAnYkF0HNHZmh3ke3joOaOzNDvI9vAnYkF0HNHZmh3ke3joOaOzNDvI9vAncYkF0HNPZmg3ke3mrNcLjwvX225PMPrpg2pDjTZQCFAnZieKBOr&#43;UypP&#43;m9n9b/IlsV8hlTf9N7P63&#43;RAk3vTmk83u8tEnJBvenNJ5vd5aJOQPkiVVnNVU/eqijwtjTNPUKaUHaoh4pG1QThxS1mQ9NlylZRXbolDq6x5xzdC2NJAUMMAfsgeTecLQ6064FPI0AChKmiC6CcAUD/ACBMz7VdaS8UyqikUopQstrC0lKkqG0EGVqqytcqembqOl9MqaNLbdIGmgnQSk7VAn3jht2SVyhQ19FbH13LyiqqnH1agDgcMMQNmzZAkHbNb369Nc7TJW&#43;kg6R4xsOGzVMt/wAnc/pP3T7nw/5O5/QfugVml/lf/u1fJMzMr/Cab9FHJEw6X&#43;V3&#43;7VcgzMyv8Jpv0UckQJ6J8k4CQas2UxeebZoLjUBlxTSls0pUnSGogGBPRIDupR2Hu&#43;81R3Uo7D3feaoE/EgO6lHYe77zVHdSjsPd95qgT8SA7qUdh7vvNUd1KOw933mqBPxIDupR2Hu&#43;81TYzSjsPd95qgT0SIocx01dXihNLW0zymy4kVLBQFJBAOBPrElsdWMDc1Kdn7PwyVT0i00PTF1S1JSnT0QMMPXxyp/XReSMRk9/wDiX2sDrsTkX10XrvOf/iX2sfXReu85/wDiX2sDrsTkX10XrvOf/iX2sfXReu85/wDiX2sDrsTkX10XrvOf/iX2sfXReu85/wDiX2sDrs3OQ/XReu85/wDiX2s&#43;V/nXeG0KWvKDqUpGJUpSgAP4YHYIlcyXmxGb7Ai5in6MouKQpvS0sCPtliEDcREDR2SoZp8qt3nBjly3nZKhmnyq3ecGOXAks3LS3a6Za1BKU19OSpRwAG6CSHDdq7JUnV09eZLzDNS0Wn2kOtnalaQQf3GYvAdp7F0fUE9aBGXJnL1zrEVjl3DLyEbnpMV254pxxwOB165D32y2u4AIorxRsIW2pDq1VR01aRxOJCveH2GWzgO09i6PqCetHAdp7F0fUE9aBFIYy2ltCTX0xKHg/j0kDFYTo47eLmnzRUmWaAtlmvYJb0dErqwojRxw2nmxMluA7T2Lo&#43;oJ60cB2nsXR9QT1o0xUrzY7XX1IFLeKKnYWlIdwqfeVgvS1gKwV9mOyW0Xq1AAcJUmr/309eOA7T2Lo&#43;oJ60cB2nsZR9QT1oETmS50FTTULbFbTurNwpyEodSSffHMDPrPPwBHtlP&#43;IJLN2e1tOJcbt1KhaTilSWUgg/YcJD5&#43;cDOWg4oKUEVTBISnEn9oNg54Eva/JxMXMCyi3vEH/Zq&#43;6QFbnRu1Zeqqunoa4vMtlSN1o3Eox&#43;04ahIS2fmYxm6jcpVWypp6jclErSnTa2cfNAvmVfRS1eyN8kSWkRlT0TtXsjfJEkX6qnpgDUPttA7CtYTj9MCPv9zqLfT06KNtC6mreSw1uh91JPOfVhPOkr7lR1AprwGHC44lDL1OCArEHHFJOrDDjmTdrWxe6JDe7raUhaXWX2jrQobCJGqymtaFuru9UquU4lfSiE4p0cQAE4YAazAxa3N76LjuNM0jcdJlOksHH3lqSrn/AOWezOdKcPIZdpX1gKbS9UIR&#43;zbK/l2nGaZyXRN7mk1r7jje5kklOKtFSlAn1lRn2uwWqiZeYfrtzD623CHHEpx0AAB6tUDKtuZ6a5XBFGilqWt1QpxlxxGCXUpOBI/fJuU7LljuDV5ar36jSpKZhbLCA6lacFKx90gbMBtMuGMDcqbThRnq64c7dPyVS2Si1dyat&#43;fLkHWalzSaYI3BhTn&#43;KtuGyBdv9l&#43;6VR/03s/rf5EhMzfmuMv3elpk2p92ldaxXuramnAceYEaxMq03pi/5lsldTsVDCFF/wBx9Gir5IE/XVVPSZ2pF1L7bKTQOgFxYSMdNPHJThq1dkqTq6evPWpoKOsKTVUjD5T8u6thWH0zw4DtHYuj6gnrQPrhq1dkqTq6evHDVq7JUnV09efPAdo7F0fUE9aOA7R2Lo&#43;oJ60DfDVq7JUnV09eOGrV2SpOrp681wHaOxdH1BPWjgO0di6PqCetA3w1auyVJ1dPXnw9ebUWHALlSfKf9uni9c&#43;uA7R2Lo&#43;oJ60cBWjsVR73T1oEJSkH8rsQcf8AyxXIMzMr/CqX9FH3CZN/bQ1la4ttoShCaRwJSkYADRPNK9YMzUtNaGcaO4qUhhOyjWQcE8eEC2VrhQyVDmkRkxWnba1XHcKg/wDfKRZ/zfbvLxoK20voeKylK6ZJWnbzjaJdMj/CKr29/lwLJNTBvdxFqs1VW4EqabOgkDEqVsAA59cpFszHckUNLT1FS&#43;uqp63RdLzZbU6gtqUMQebEYfugdGiUZeZL3UN07OhTN1FQhmoZLajohKlYFKuP922buGcrnQUiQpqnVUs7oX0toWvSCThiAPlB4zsgXiJXc1tu1GWXa5mrqqR1lkup6O7o4kjYeOQlHmett1xTbWWaitp2XUNOuP6S1qUpIVpafygDEajAvsSit5pvlWWWgKamfNWylTa21AhtRII16js&#43;YS8wK1enS1nK1kHbSPj/ALkSwtq/Yg/ZjKlmyrRRZqtLrjby0mneGDLZWdqOYSDzJ&#43;bBy7eKWkTan3qV1rSXuramnAccNQI1iBCfnK4V1VlB5qhX/wDM7KyBuKNQ&#43;UTgn5iX1jMDVkraenqGEGoV7r7eif8AH6Z3tj&#43;wj&#43;kfdA&#43;ikcQjRHEJD5tqH6XLNY7TLcQ8EgJLatFWsgajzGVFm73O23MUj7tay3u7DiWql4OrUghWn7w5iQNRiDo2j9gjRHEJR6HO91rGXFJtyQp1CXGCtC0JGKwnRJPzbccRqntV5jvam37ehujbrGGXnHXdJQTooww0RtB1jbswgXLAcQjR&#43;wSlU2Ybot5FJRpbcqHloRp1CyUp/YhZOA&#43;2fVNnK41rCapilpkMs7kioS4s6SlLOvR&#43;wf8AWMFz0fsEhM6jDJV51f8Ao3OSZOA4iQmdfQq8&#43;xuckwKT&#43;TDpGUkoHhC/9J1EbJyr8mPRdPtC/wDSdVGyBuIiBoyoZp8qt3nBjly3mVDNPlVu84McuBN5huNVbbah2jS0X3H22U7riUjTUE4nD1zw3LNfhdq6g5201mz4bS&#43;30/4gk5Ag9yzX4XauoOdtN7lmvwu1dQc7aStbWMW&#43;kcq6legy0NJasMcBxzzVc6NNW3Sl9IdcaLqU/wDJx/ZAjtyzX4XauoOdtG5Zr8LtXUHO2ks9V09OwX3n222kp0itSgBhxzaKhlYSUOoVpp0k4KGsccCI3LNfhdq6g520blmvwu1dQc7aTQUknAKBOGO2fUCtVdbmO1qpXat22usu1LbK0ttLSrBSsMQSqfeePR9HtbH4gntmvyKi84U/LE8M7&#43;j6Pa2PxEwM9mkYuFscpKppLrDqSlaFbFDimFeKKloLQ4xR0zTDYbVgltASNn2STtn9iYeY/h736avugfeVPRO1eyN8kSKzSu1tZitK7uGjShD2JeRpIBwGH75K5U9E7V7I3yRJRaEq&#43;YA&#43;sQOXvXK6UFOhugdcora4t52kU4st840E6wSRtITziZ4vNwqLqpg3V7pvSW2TRtpwSGlNgrVhhzE44806CW0EDEA4bMRsnkxRU1O68600lK316biuM4AfcJYObW81rNEu401xqyuko2Dt0t1VuigQvjwHNLXnK3UlbQ0jr9I084KthOkpsKISVjEeqWMISBgAAPVPrAHbFstHNWrpeaa8VNLTvt0rbK3kCnAJDbSUkpUGwnVrw146592qvqKyqtqqi5VSks3AJKw9ptr0mycNLAYjHmOzZOilCdLSwGPOcIDaAMAlIHFhIPqVFBPd7dP0mOSqW6VFHp5df0mPuMCfes9tq6puuqaJl6oaRooccQFFI26sZA1HptZ/W/yJah/a/dKrUem1n9b/ACIElda&#43;7C&#43;U9tthpEFynW8tdQlStigMBgRxzW5Zs8LtPUHO2m3vTmk83u8tEyLpmG32d9pirU7urySpCGmVOEgbT7oPGIGNuObPC7T1Bzto3HNnhdp6g520lmKxh&#43;nQ&#43;leihadIaY0SB9oOsT0LzYSlRcTgr5Tjt9UCF3HNnhdp6g520bjmzwu09Qc7aTKnmkkhTiQQMTiZvdWwpKStOKtgx2wIXcs2eF2nqDnbTS0ZsQhSul2n3Rj/AGXO2ku7WUzDbjjr7aENDSWSoDRHGZt1aV0q1oIKVIJBHPqgQj9e5c/y/frnkpS4/b1rUE7ASg7J95X12imSdYLCRgfUJh038rj5sVyDMzK3wul/RT9wgeptFutFEpu30TNMk7dzQAT6ztMxMjfB6r29/lSYuIxpzKfl/NNrsNJVUdxW&#43;070x5eAp1qBBViDiBhAutVSMViEoqGw4lCwtIPMoHEGYtZZKCtfVUu06DUFGgHcNY1ED7zIj6xsteFvb2c6019Y2WfC3t7OdaBn2nKtptFI2yxTJKkhGk4oklRTsOs6vVPWryzZq9YXU0La1e9rxIxx244bZF/WPlnwt7eznWj6x8s&#43;Fvb2c60CwKoKVdD0FTQVT6GhuZ1jR4piry9aXK9NcuibL6QAFa8NQwGrZjhzyJ&#43;sfLPhb29nOtH1j5Z8Le3s51oEizlSyMNrQ1QICVrSs&#43;8TgUnEYa9WB4pMSrfWPlnwt7eznWj6x8s&#43;Fvb2c60D5zAT3ZWj2Z770SWXZrbWVDdwqqFl6qab0EOuI0ikbdWMrL16oswZrt79uLrjVPTuhxa2VIAJKcBrA4jLo2MKYeqBxn84vLbN7QrZ/wDWdpY/sI/pH3Ti35zIcQ7a30tKWlt5Sjoj1TPR&#43;fLCEJT3O1OoAf3h1oHVq2ip7hSOUlW0HWXRgtCthEwaXLNlo04MUDaffDmJxUdIbDieKc4&#43;vpjvcqerDrR9fVP3uVPVh1oHSKbLlopFOKYom0Fwgq1k7DiMMdgx5hFdly0XIEVdEhzFRUTiQSTt2Hn4pzf6&#43;qfvcqerDrR9fVP3uVPVh1oHTmrNbmHUutUjaVoOKVAbPd0eTqkNV5JpKm4MPIUhphkoIaS3rGicdR&#43;37ZSvr6Y73Knqw60fX0x3u1HVh1oHWxITOvoVefY3OSZz/wCvpjvcqerDrTBvn50s3ix1ttTYKho1TCmgsug6OIwxwwgSv5Mei6faF/6Tqo2Tln5NtON5XRpoUnF9ZGIwxGqdTGyBuIiBoyoZp8rt3nBjly3mVDNPlVu84McuBJZs&#43;HU3t9P&#43;IJOyCzZ8Opvb6f8AEEnYHlV0zdZSO0zoBQ6goUDxETnz2Xb67a3HKhle7NPNsBCMHFOUzeOvAkA6RIJBPNLXmm419uomV0KVAKdCXnUtbqWkYfMEc&#43;vCRFNmuvDFOtLaLoCl0rVTp3M4Iw1kK&#43;U4c0CLaylWVNGpNZSOvpTb3ksIeIGg4pZKRog4A4bOKfDeX7qL0y8aOqSyktLaCUIwbbSgAtlWliNYPugYHGWNzOlGzdGaNxkpbeCcHFOJ0sSnS&#43;TbhhzzCdz05TVm6VNA5T0aqQOshxSQp1RWEp144Dbrxge2TLXcbbU1ZuNO4ndQFU6lOaW4t4nBr1j/AFltlZt2dGrnVUtLTUDrjrylhzQWlSWgkjE6Q1EaxhhLNAhM1&#43;RUXnCn5Ynjnf4Aj2tj8RM9s1&#43;RUXnCn5Ynjnj4Aj2tj8RMCUtfk8&#43;bpTdIYUjDEEEET6thwpxMxSQoa4HL6vKrrBDdM/VNNpGCUoqXAAOIDGY3c1XeGV2&#43;XOvOpqo2lKxKZroTPiwOW9zVd4ZXb5c68dzVf4XXb5c686l0JnxZvoTPiwOWdzVf4XXb5c68dzVf4XXb5c686n0JnxY6Ez4sDlnc1X&#43;F12&#43;XOvHc1X&#43;F12&#43;XOvOp9CZ8WOhM&#43;LA5ajLVbpe9V1xHtLnXlry1Y0W9a3MFqccw01uLK1Kw2ayZZ&#43;hM&#43;LPRtlDYwSIAjBuVWo9N7P63&#43;RLYv5TKnUem9n9b/IgST/pzSeb3eWieF5sdRc8z0dQl&#43;qpmGqVxKnqZwJOkVJwB&#43;gz3f9OaTze7y0SbgUa72GtLl1qUULlU46&#43;yhtSjpqLISnSISSAdY2c8gXWKi20KmrvRPO4MuimZK0oLRK9SwAcAMCBq2bJZXMxXRrMCqeofbpW&#43;khtth6nOg63zKDo1aR4v3RR5pTVUiXbpacXEtLeZWdHBzRVgcMfl5tsuDBbyq7Vvs1FTQqWXa5SnVKX8zO5YDHXsx5pjOZcvfClPpN1BQkMhhSQlW4hJ94FROKf3Y4yebzwiqpEmjoFv1RLgLTbiVJSEAEnS2Eaxsnkxn&#43;kQukp6lr9q6hrdlBQGgpwagEnWRr14bJBGVOU6s0Hu0CnHqhmrTU4qxKyTi2Dr&#43;jil4pklFnbTuRa0WANzO1Pu7J52a6G70qqnojtOgOKQjdCMVgHDH1TMe8nc/pP3S6KzTfyuPmxXIMy8rfC6X9FH3CYdN/K8&#43;bFcgzMyt8Lpf0U/cJBNPNbqgplerrAiocOKThLNNaIgUw5UQTqRHcmjnQZc8BGA4oFM7k0eIY7k0eIZc8BxTWiOKBTe5NHiGO5NHiGXLRHFGiOKBTe5NHiGO5NvxT9EuWiOKb0RxQIK22VNJgcD&#43;&#43;TeGDeAn1gOKIEFdLQKsH3QrHjErzmT0LVjoJ&#43;iX7AcU0UJPMIFB7jkeIPojuOQP8E/RL7uafFEbmnxRAoJyejxB9Edx6PEH0S/bmnijc08QgUHuPR4g&#43;iO49HiD6JftzTxCNzTxCBQu49HiJ&#43;ifbOUktuBWgn6BL1uaeITe5p4oEVa7cKVGAA1SWGyAkCbgIiIGjKhmnyq3ecGOXLeZUM0&#43;VW7zgxy4Enmz4bTe30/4gk7IDOCw1aGnlBRQ1WMLWUpKiEhwEnAT77srB4arqDnawMu7Whq6pZUX3qd5hem08yrBSTz7cQR65i0eWKSjCiHn3XHAvdXHFDScK9pOA26hNd2dg8NV1BztZoZzsHhquoOdrAxjke3mqDwqapKQ4lzcwpOBUBo8WOsc013D0CtLdaysdwbDbOmsHcQFaQ0dXMePGZfdnYPDVdQc7Wa7s7B4arqDnawPS25cprdUtVKXn3n20LTpuEe9pEE6gAOYbJMSD7s7B4arqDnazfdnYPDVdQc7WAzX5FRecKflieGd/R9v2tj8RMw73mG2XVFDS0Ly3njXsK0QysagsEnWJm539H0e1sfiJgSdt8nEz5gWzycTOgbiIgIiICIiAiIgIiIHyv5TKnUem9n9b/IlsX8sqdR6b2f1v8AIgST/pzSeb3eWiTkrV2r6e15vo6qrUtDJonUaYbUoaWmk4ahMnuxsXhiuoOdrA&#43;F5Spl1anDWVfRlP7uaPTG5aeOOOzHbrwxioyfbqilZpy4&#43;kMNKbbUlQxAUoKJ2a9YE&#43;&#43;7KxeGK6g52sd2Vh8MV1BztYGIMj0iApTVwrW3lKUovJWkK94AKGzDA4Dm5p6M5Lt7D7LrT9SlLaWwtGkMHdAYJJOGP0bZ792Vh8MV1BztY7srD4YrqDnawJSipG6GlRTNFRQjHAqOvbjPR/8AsOf0n7pD92Vh8MV1BztZ8O5wsSmVpFWrEpIH7BztYGHTfyvPmxXIMzMrfC6X9FH3CYjCVJ/LApWkpULYrEKGBHuGZeVvhdL&#43;ij7hAn4iICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiIGjKhmnyq3ecGOXLeZXMyWkXFjQUpxOioLQttRSpKgcQQRAscYCcwetN7C/2d6ueHtKp58FX7szc98qgdTwEYCcrNqv3Zq575VHBV/7NXPfKoHVMBGAnK&#43;Cr/wBmrnvlUcFX/s1c98qgdUwEYCcr4Kv/AGaue&#43;VRwVf&#43;zVz3yqB1TAcQlezx8AR7Wx&#43;IJTOCr/2aue&#43;VTNorBXVLrYrrhXVKELSvQdqFFOIOIOHPrgXm2eTiZ0xqJrcmtGZUBERAREQEREBERAREQPhfyyqVHpvZ/W/yJbVDESp5isi6x1t5t15l5kqLbjLhQRiMDrEC2YRgOKctVaL5pEC8XTV/8lU0bRfuzNz3wYHU8BGAnK&#43;CL92Zue&#43;DHBF&#43;7M3PfBgdUwEYCcr4Iv3Zm574McEX7szc98GB1TARgJyvgi/dmbnvgxwRfuzNz3wYHQsx&#43;jNz9kd5JmHlb4XS/oo&#43;4Sns2K51CFNVl1uTjSxoqQalWCgdol9tFKKambbSnRShISB9ggSUREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBPNbSVjAjVPSIGMaJogApGqOhM&#43;IJkxAxehM&#43;II6Cz4gmVEDF6Cz4gjoLPiCZUQMXoLPiCOgs&#43;IJlRAxuhM&#43;IJ9JpW0nEJE94gfKU6M&#43;oiAiIgIiICIiAiIgIiICea2kuDBQnpEDH6Ez4omjRM&#43;KPomTEDF6Ez4o&#43;iOhM&#43;KPomVEDF6Ez4o&#43;iOhM&#43;KPomVEDF6Ez4o&#43;iOhM&#43;KPomVEDHFG0P8AET2QgIGAE&#43;ogIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiIH/9k=" alt="Screenshot 2022-12-04 at 7.47.50 PM.png"  />
+</p>
+<p>💡 所谓GPU的渲染管线，听起来好像很高深的样子，其实我们可以把它理解为一个流程，就是我们告诉GPU一堆数据，最后得出来一副二维图像，而这些数据就包括了”视点、三维物体、光源、照明模型、纹理”等元素。 在各种图形学的书中，渲染管线主要分为三个阶段：应用程序阶段、几何阶段、光栅阶段。</p>
+<h2 id="1应用程序阶段">1、应用程序阶段<a hidden class="anchor" aria-hidden="true" href="#1应用程序阶段">#</a></h2>
+<p>这个阶段相对比较好理解，就比如我们在Unity里开发了一个游戏，其实很多底层的东西Unity都帮我们实现好了，例如碰撞检测、视锥剪裁等等，这个阶段主要是和CPU、内存打交道，在把该计算的都计算完以后，在这个阶段的末端，这些计算好的数据（顶点坐标、法向量、纹理坐标、纹理）就会通过数据总线传给图形硬件，作为我们进一步处理的源数据。</p>
+<h2 id="2几何阶段">2、几何阶段<a hidden class="anchor" aria-hidden="true" href="#2几何阶段">#</a></h2>
+<p>主要负责顶点坐标变换、光照、裁剪、投影以及屏幕映射，改阶段基于GPU进行运算，在该阶段的末端得到了经过变换和投影之后的顶点坐标、颜色、以及纹理坐标。简而言之，几何阶段的主要工作就是“变换三维顶点坐标”和“光照计算”。 问题随之而来，为什么要变换顶点坐标？我是这么理解的，比如你有一个三维游戏场景，场景中的每个模型都可以用一个向量来确定它的位置，但如何让计算机根据这些坐标把模型正确的、有层次的画在屏幕上？这就是我们需要变换三维顶点坐标的原因，最终目的就是让GPU可以将这些三维数据绘制到二维屏幕上。 根据顶点坐标变换的先后顺序，主要有如下几个坐标空间：Object space，模型坐标空间；World space，世界坐标空间；Eye space，观察坐标空间；Clip and Project space，屏幕坐标空间。下图就是GPU的整个处理流程，深色区域就是顶点坐标空间的变换流程，大家了解一下即可，我们需要关注的是每个坐标空间的具体含义和坐标空间之间转换的方法。</p>
+<h3 id="21从object-space到world-space">2.1、从object space到world space<a hidden class="anchor" aria-hidden="true" href="#21从object-space到world-space">#</a></h3>
+<p>object space有两层核心含义，第一，object space中的坐标值就是模型文件中的顶点值，这些值是在建立模型时得到的，例如一个.max文件，里面包含的数据就是object space的坐标。第二，object space的坐标与其他物体没有任何参照关系，这是object space和world space区分的关键。world space坐标的实际意义就有有一个坐标原点，物体跟坐标原点相比较才能知道自己的确切位置。例如在unity中，我们将一个模型导入到场景中以后，它的transform就是世界坐标。</p>
+<h3 id="22从world-space到eye-space">2.2、从world space到eye space<a hidden class="anchor" aria-hidden="true" href="#22从world-space到eye-space">#</a></h3>
+<p>所谓eye space，就是以摄像机为原点，由视线方向、视角和远近平面，共同组成的一个梯形体，如下图，称之为视锥(viewing frustum)。近平面，是梯形体较小的矩形面，也是靠近摄像机的平面，远平面就是梯形体较大的矩形，作为投影平面。在这个梯形体的内的数据是可见的，超出的部分会被视点去除，也叫视锥剪裁。 例如在游戏中的漫游功能，屏幕的内容随摄像机的移动而变化，这是因为GPU将物体的顶点坐标从world space转换到了eye space。</p>
+<h3 id="23从eye-space到project-and-clip-space">2.3、从eye space到project and clip space<a hidden class="anchor" aria-hidden="true" href="#23从eye-space到project-and-clip-space">#</a></h3>
+<p>eye space坐标转换到project and clip space坐标的过程其实就是一个投影、剪裁、映射的过程。因为在不规则的视锥体内剪裁是一件非常困难的事，所以前人们将剪裁安排到一个单位立方体中进行，这个立方体被称为规范立方体（CCV），CVV的近平面（对应视锥体的近平面）的x、y坐标对应屏幕像素坐标（左下角0、0），z代表画面像素深度。所以这个转换过程事实上由三步组成： （1）、用透视变换矩阵把顶点从视锥体变换到CVV中； （2）、在CVV内进行剪裁； （3）、屏幕映射：将经过前两步得到的坐标映射到屏幕坐标系上。</p>
+<h3 id="24primitive-assembly图元装配和triangle-setup三角形处理">2.4、primitive assembly（图元装配）和triangle setup（三角形处理）<a hidden class="anchor" aria-hidden="true" href="#24primitive-assembly图元装配和triangle-setup三角形处理">#</a></h3>
+<p>到目前为止我们得到了一堆顶点的数据，这一步就是根据这些顶点的原始连接关系还原出网格结构。网格由顶点和索引组成，这个阶段就是根据索引将顶点链接到一起，组成线、面单元，然后进行剪裁，如果一个三角形超出屏幕以外，例如两个顶点在屏幕内，一个顶点在屏幕外，这时我们在屏幕上看到的就是一个四边形，然后把这个四边形切成两个小的三角形。 现在我们得到了一堆在屏幕坐标上的三角形面片，这些面片是用于光栅化的。</p>
+<h2 id="3光栅化阶段">3、光栅化阶段<a hidden class="anchor" aria-hidden="true" href="#3光栅化阶段">#</a></h2>
+<p>经过上面的步骤之后，我们得到了每个点的屏幕坐标值，和我们需要绘制的图元，但此时还有两个问题： （1）、屏幕坐标是浮点数，但像素是用整数来表示的，如何确定屏幕坐标值所对应的像素？ （2）、如何根据已确定位置的点，在屏幕上画出线段或者三角形？ 对于问题1，绘制的位置只能接近两指定端点间的实际线段位置，例如，一条线段的位置是（10.48， 20.51），转换为像素位置就是（10，21）。 问题2，涉及到具体的画线和填充算法，有兴趣的话可以研究。 这个过程结束后，顶点和图元已经对应到像素，之后的流程就是如何处理像素，即给像素赋予颜色值。 给像素赋予颜色的阶段称为Pixel Operation，是在更新帧缓存之前，执行最后一系列针对每个片段的操作，其目的是计算出每个像素的颜色值。在这个阶段，被遮挡的面通过一个被称为深度测试的过程消除。 pixel operation包含下面这些流程： （1）、消除遮挡面； （2）、Texture operation，纹理操作，根据像素的纹理坐标，查询对应的纹理值； （3）、Blending，通常称为alpha blending，根据目前已经画好的颜色，与正在计算的颜色的alpha值混合，形成新的颜色。 （4）、Filtering，将正在计算的颜色经过某种滤镜后输出。 该阶段之后，像素的颜色值被写入帧缓存中。</p>
+<h1 id="shader和材质贴图的关系">Shader和材质、贴图的关系<a hidden class="anchor" aria-hidden="true" href="#shader和材质贴图的关系">#</a></h1>
+<p>Shader(着色器)实际上就是一小段程序，它负责将输入的顶点数据以指定的方式和输入的贴图或者颜色等组合起来，然后输1.出。绘图单元可以依据这个输出来将图像绘制到屏幕上。输入的贴图或者颜色等，加上对应的Shader，以及对Shader的特定参数设置，将这些内容（Shader及输入参数）打包存储在一起得到的就是一个Material（材质）。 之后我们便可以将材质赋予三维物体来进行渲染输出 💡 材质好比是引擎最终使用的商品，Shader好比是生产这种商品的加工方法，而贴图就是原材料</p>
+<h1 id="shader-language">Shader Language<a hidden class="anchor" aria-hidden="true" href="#shader-language">#</a></h1>
+<p>Shader Language的发展方向是设计出在便携性方面可以和C++\Java相比的高级语言， 💡 “赋予程序员更灵活而方便的编程方式”，并“尽可能的控制渲染过程”同时“利用图形硬件的并行性，提高算法的效率”。 ShaderLanguage目前主要有3种语言</p>
+<ul>
+<li>
+<p>基于OpenGL的</p>
+<ul>
+<li>OpenGLShadingLanguage (GLSL)</li>
+</ul>
+</li>
+</ul>
+<p><img loading="lazy" src="https://en.wikipedia.org/wiki/OpenGL" alt="OpenGL - Wikipedia"  />
+</p>
+<ul>
+<li>
+<p>基于DirectX的</p>
+<ul>
+<li>High LevelShading Language（HLSL）</li>
+</ul>
+</li>
+</ul>
+<p><img loading="lazy" src="https://en.wikipedia.org/wiki/DirectX" alt="DirectX - Wikipedia"  />
+</p>
+<ul>
+<li>
+<p>NVIDIA公司的</p>
+<ul>
+<li>C for Graphic（Cg）</li>
+</ul>
+</li>
+</ul>
+<p><img loading="lazy" src="https://en.wikipedia.org/wiki/Cg_%28programming_language%29" alt="Cg (programming language) - Wikipedia"  />
+</p>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://EitanWong.github.io/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://EitanWong.github.io/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://EitanWong.github.io/posts/shader/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86%E5%99%A8gpu%E7%AE%80%E5%8F%B2/">
+    <span class="title">« 👈 Prev Page</span>
+    <br>
+    <span>图形处理器（GPU）简史</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Shader和渲染管线 on twitter"
+       href="https://twitter.com/intent/tweet/?text=Shader%e5%92%8c%e6%b8%b2%e6%9f%93%e7%ae%a1%e7%ba%bf&amp;url=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fshader%25E5%2592%258C%25E6%25B8%25B2%25E6%259F%2593%25E7%25AE%25A1%25E7%25BA%25BF%2f&amp;hashtags=">
+    <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Shader和渲染管线 on linkedin"
+       href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fshader%25E5%2592%258C%25E6%25B8%25B2%25E6%259F%2593%25E7%25AE%25A1%25E7%25BA%25BF%2f&amp;title=Shader%e5%92%8c%e6%b8%b2%e6%9f%93%e7%ae%a1%e7%ba%bf&amp;summary=Shader%e5%92%8c%e6%b8%b2%e6%9f%93%e7%ae%a1%e7%ba%bf&amp;source=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fshader%25E5%2592%258C%25E6%25B8%25B2%25E6%259F%2593%25E7%25AE%25A1%25E7%25BA%25BF%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Shader和渲染管线 on reddit"
+       href="https://reddit.com/submit?url=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fshader%25E5%2592%258C%25E6%25B8%25B2%25E6%259F%2593%25E7%25AE%25A1%25E7%25BA%25BF%2f&title=Shader%e5%92%8c%e6%b8%b2%e6%9f%93%e7%ae%a1%e7%ba%bf">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Shader和渲染管线 on facebook"
+       href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fshader%25E5%2592%258C%25E6%25B8%25B2%25E6%259F%2593%25E7%25AE%25A1%25E7%25BA%25BF%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Shader和渲染管线 on whatsapp"
+       href="https://api.whatsapp.com/send?text=Shader%e5%92%8c%e6%b8%b2%e6%9f%93%e7%ae%a1%e7%ba%bf%20-%20https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fshader%25E5%2592%258C%25E6%25B8%25B2%25E6%259F%2593%25E7%25AE%25A1%25E7%25BA%25BF%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Shader和渲染管线 on telegram"
+       href="https://telegram.me/share/url?text=Shader%e5%92%8c%e6%b8%b2%e6%9f%93%e7%ae%a1%e7%ba%bf&amp;url=https%3a%2f%2fEitanWong.github.io%2fposts%2fshader%2fshader%25E5%2592%258C%25E6%25B8%25B2%25E6%259F%2593%25E7%25AE%25A1%25E7%25BA%25BF%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28">
+            <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2023-2023
+        <a href="https://EitanWong.github.io/" style="color:#939393;">Eitan&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄copy';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻copied!';
+            setTimeout(() => {
+                copybutton.innerText = '📄copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+
+<script>
+    $("code[class^=language] ").on("mouseover", function () {
+        if (this.clientWidth < this.scrollWidth) {
+            $(this).css("width", "135%")
+            $(this).css("border-top-right-radius", "var(--radius)")
+        }
+    }).on("mouseout", function () {
+        $(this).css("width", "100%")
+        $(this).css("border-top-right-radius", "unset")
+    })
+</script>
+</body>
+
+</html>
