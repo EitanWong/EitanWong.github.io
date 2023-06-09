@@ -10,7 +10,7 @@
 <meta name="description" content="1.声明Properties，并使用其值 Shader &#34;Custom/vertex_shader&#34; { //必须位于SubShader之上 Properties{ _MainColor(&#34;Main Color&#34;,color) = (1,1,1,1) } SubShader{ pass { CGPROGRAM #pragma vertex vert #pragma fragment frag //必须将上面的Properties名称先进行声明，且名字必须与上面的一致 float4 _MainColor; struct v2f { float4 pos:POSITION; float2 objPos:TEXCOORDO; float4 col:COLOR; }; struct appdata_base { float2 pos:POSITION; float4 color:COLOR; }; //使用结构体的方式返回，此时不需要再指定一个具体的语">
 <meta name="author" content="Sulv">
 <link rel="canonical" href="https://EitanWong.github.io/posts/shader/uniform%E4%B8%8Eproperties/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.0dcd30655f684635e8d387636982f36d45e2607d9dde19da5180cecacb25b773.css" integrity="sha256-Dc0wZV9oRjXo04djaYLzbUXiYH2d3hnaUYDOysslt3M=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.f78680cb3c4426e2cd4b2cec3c3f9a0875d14c9b0fb7ed9bfeb42ec846e4235c.css" integrity="sha256-94aAyzxEJuLNSyzsPD&#43;aCHXRTJsPt&#43;2b/rQuyEbkI1w=" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
         onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://EitanWong.github.io/img/Avatar.png">

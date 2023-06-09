@@ -10,7 +10,7 @@
 <meta name="description" content="前言💬 在计算机图形学中，光照模型是非常重要的一部分。 为了模拟现实中的光照效果，我们需要理解一些基本的光学原理。 本文将介绍反射向量的概念以及如何在Unity引擎中使用Cg reflect函数实现反射效果 一、什么是反射向量 在图形学中，反射向量是一个描述光线如何反射的重要概念。当光线照射">
 <meta name="author" content="Sulv">
 <link rel="canonical" href="https://EitanWong.github.io/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%8F%8D%E5%B0%84%E5%90%91%E9%87%8F%E4%B8%8Ecg-reflect%E5%87%BD%E6%95%B0-2/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.0dcd30655f684635e8d387636982f36d45e2607d9dde19da5180cecacb25b773.css" integrity="sha256-Dc0wZV9oRjXo04djaYLzbUXiYH2d3hnaUYDOysslt3M=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.f78680cb3c4426e2cd4b2cec3c3f9a0875d14c9b0fb7ed9bfeb42ec846e4235c.css" integrity="sha256-94aAyzxEJuLNSyzsPD&#43;aCHXRTJsPt&#43;2b/rQuyEbkI1w=" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
         onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://EitanWong.github.io/img/Avatar.png">
@@ -122,8 +122,8 @@ var _hmt = _hmt || [];
   "keywords": [
     
   ],
-  "articleBody": "前言💬 在计算机图形学中，光照模型是非常重要的一部分。\n为了模拟现实中的光照效果，我们需要理解一些基本的光学原理。\n本文将介绍反射向量的概念以及如何在Unity引擎中使用Cg reflect函数实现反射效果\n一、什么是反射向量 在图形学中，反射向量是一个描述光线如何反射的重要概念。当光线照射到一个表面上，它会被反射到不同的方向。反射向量的计算是基于光线的入射角和法线向量的。通过计算反射向量，我们可以模拟出光线在表面上的反射效果，从而制作出逼真的光照效果。\n二、Cg reflect函数 Cg中的reflect函数可以帮助我们快速计算反射向量\n在Unity中改函数被定义在\n函数原型如下：\nfloat3 reflect(float3 incidentVector, float3 normalVector); 其中，incidentVector 是入射光线的方向，normalVector 是表面的法线向量。\n函数返回一个反射光线的方向向量。\n原理 CG当中reflect函数的实现\n// i为入射光线，n为法线 float3 reflect( float3 i, float3 n ) { return i - 2.0 \\* n \\* dot(n,i); } 推导过程 求反射向量OB\n$$\n\\vec{OB}=\\vec{AB}-\\vec{AO}\n$$\n$$\n\\vec{OB}=2\\vec{AP}-\\vec{AO}=2(\\vec{AO}+\\vec{OP})-\\vec{AO}=\\vec{AO}+2\\vec{OP}\n$$\n所以此时重点在于求向量OP\n那么如何求向量OP\n我们据下图举例模型进行推导\n根据点积的性质可知：\n$$\n\\vec{OA}\\cdot\\cosθ=\\vec{OA^{’}}\n$$\n$$\n\\vec{OA}\\cdot\\vec{n}=\\vec{OA}\\cdot\\vec{n}\\cdot\\cosθ\n$$\n所以就有\n$$\n\\vec{OA^{’}}=\\vec{OA}\\cdot\\cosθ\\cdot\\vec{n}\n$$\n$$\n\\vec{OA^{’}}=\\vec{OA}\\cdot\\frac{\\vec{OA}\\cdot\\vec{n}}{\\vec{OA}*\\vec{n}}\\cdot\\vec{n}\n$$\n$$\n设\\vec{n}=1,就有\\vec{OA^{’}}=(\\vec{OA}\\cdot\\vec{n})\\cdot\\vec{n}\n$$\n所以根据此推导的原理可知\n$$\n\\vec{OP}=-(\\vec{AO}\\cdot\\vec{n})\\cdot\\vec{n}\n$$\n即：\n$$\n\\vec{OB}=\\vec{AO}-2\\vec{n}\\cdot(\\vec{AO}\\cdot\\vec{n})\n$$\n所以Cg当中的reflect函数中的实现\ni - 2.0 * n * dot(n,i)\n就是这样推导来的\n更详细的推导过程可以看下图\n三、实现Specular高光 首先我们需要计算出反射光的向量，利用reflect函数\nfloat3 N=normalize(mul(unity_WorldToObject,v.normal));\nfloat3 L=normalize(_WorldSpaceLightPos0);\n// L也可以替换为WorldSpaceLightDir(v.vertex)\nfloat3 R= reflect(-L,N);//由于L是朝向光源方向的向量取反-L就示入射光的向量了\n计算出反射光向量后，用反射光向量和朝向摄像机视角向量进行点积，并且将值映射在0～1之间\nfloat3 V= normalize(WorldSpaceViewDir(v.vertex));\nfloat specularL= saturate(dot(V,R));\n为了实现指数级的衰减效果，可以使用pow函数,根据_Shininess调整衰减效果,_Shininess可以在Properties中定义暴露的参数\nspecularL=pow(specularL,_Shininess);\n最后将灯光颜色乘上Specular的亮度，附加到color上,即可\no.color+=_LightColor0*specularL;\n四、完整代码 Shader \"ShaderLearning/Diffuse/SpecularDiffuse\" { Properties { \\_Shininess(\"Shininess\",Range(1,64))=1 } SubShader { Tags { \"LightMode\"=\"ForwardBase\" } Pass { CGPROGRAM #pragma vertex vert #pragma fragment frag ​ #include \"UnityCG.cginc\" #include \"Lighting.cginc\" ​ ​ struct v2f { float4 vertex: POSITION; fixed4 color: COLOR; }; ​ float \\_Shininess; ​ v2f vert (appdata\\_full v) { v2f o; o.vertex = UnityObjectToClipPos(v.vertex); float3 N=normalize(mul(unity\\_WorldToObject,v.normal)); float3 L=normalize(\\_WorldSpaceLightPos0); float dotL=saturate(dot(N,L)); o.color=\\_LightColor0\\*dotL; ​ // L也可以替换为WorldSpaceLightDir(v.vertex) float3 R= reflect(-L,N); ​ float3 V= normalize(WorldSpaceViewDir(v.vertex)); ​ float specularL= saturate(dot(V,R)); ​ specularL=pow(specularL,\\_Shininess); o.color+=\\_LightColor0\\*specularL; ​ return o; } ​ fixed4 frag (v2f i) : COLOR { return i.color+UNITY\\_LIGHTMODEL\\_AMBIENT; } ENDCG } } } ​``` 效果如下图所示 实现了一个简单的Specular的效果 要注意的是，在使用reflect的函数的要注意，入射光和法线要在同一个坐标系空间 ![最终效果](https://raw.gitmirror.com/LONEStudio/Images/master/img/202304200110971.png) ",
-  "wordCount" : "1318",
+  "articleBody": "前言💬 在计算机图形学中，光照模型是非常重要的一部分。\n为了模拟现实中的光照效果，我们需要理解一些基本的光学原理。\n本文将介绍反射向量的概念以及如何在Unity引擎中使用Cg reflect函数实现反射效果\n一、什么是反射向量 在图形学中，反射向量是一个描述光线如何反射的重要概念。当光线照射到一个表面上，它会被反射到不同的方向。反射向量的计算是基于光线的入射角和法线向量的。通过计算反射向量，我们可以模拟出光线在表面上的反射效果，从而制作出逼真的光照效果。\n二、Cg reflect函数 Cg中的reflect函数可以帮助我们快速计算反射向量\n在Unity中改函数被定义在\n函数原型如下：\nfloat3 reflect(float3 incidentVector, float3 normalVector); 其中，incidentVector 是入射光线的方向，normalVector 是表面的法线向量。\n函数返回一个反射光线的方向向量。\n原理 CG当中reflect函数的实现\n// i为入射光线，n为法线 float3 reflect( float3 i, float3 n ) { return i - 2.0 \\* n \\* dot(n,i); } 推导过程 求反射向量OB\n$$ \\vec{OB}=\\vec{AB}-\\vec{AO} $$\n$$ \\vec{OB}=2\\vec{AP}-\\vec{AO}=2(\\vec{AO}+\\vec{OP})-\\vec{AO}=\\vec{AO}+2\\vec{OP} $$\n所以此时重点在于求向量OP\n那么如何求向量OP\n我们据下图举例模型进行推导\n根据点积的性质可知：\n$$ \\vec{OA}\\cdot\\cosθ=\\vec{OA^{’}}\n$$\n$$ \\vec{OA}\\cdot\\vec{n}=\\vec{OA}\\cdot\\vec{n}\\cdot\\cosθ\n$$\n所以就有\n$$ \\vec{OA^{’}}=\\vec{OA}\\cdot\\cosθ\\cdot\\vec{n}\n$$\n$$ \\vec{OA^{’}}=\\vec{OA}\\cdot\\frac{\\vec{OA}\\cdot\\vec{n}}{\\vec{OA}*\\vec{n}}\\cdot\\vec{n} $$\n$$ 设\\vec{n}=1,就有\\vec{OA^{’}}=(\\vec{OA}\\cdot\\vec{n})\\cdot\\vec{n} $$\n所以根据此推导的原理可知\n$$ \\vec{OP}=-(\\vec{AO}\\cdot\\vec{n})\\cdot\\vec{n} $$\n即：\n$$ \\vec{OB}=\\vec{AO}-2\\vec{n}\\cdot(\\vec{AO}\\cdot\\vec{n})\n$$\n所以Cg当中的reflect函数中的实现\ni - 2.0 * n * dot(n,i)\n就是这样推导来的\n更详细的推导过程可以看下图\n三、实现Specular高光 首先我们需要计算出反射光的向量，利用reflect函数\nfloat3 N=normalize(mul(unity_WorldToObject,v.normal));\nfloat3 L=normalize(_WorldSpaceLightPos0);\n// L也可以替换为WorldSpaceLightDir(v.vertex)\nfloat3 R= reflect(-L,N);//由于L是朝向光源方向的向量取反-L就示入射光的向量了\n计算出反射光向量后，用反射光向量和朝向摄像机视角向量进行点积，并且将值映射在0～1之间\nfloat3 V= normalize(WorldSpaceViewDir(v.vertex));\nfloat specularL= saturate(dot(V,R));\n为了实现指数级的衰减效果，可以使用pow函数,根据_Shininess调整衰减效果,_Shininess可以在Properties中定义暴露的参数\nspecularL=pow(specularL,_Shininess);\n最后将灯光颜色乘上Specular的亮度，附加到color上,即可\no.color+=_LightColor0*specularL;\n四、完整代码 Shader \"ShaderLearning/Diffuse/SpecularDiffuse\" { Properties { \\_Shininess(\"Shininess\",Range(1,64))=1 } SubShader { Tags { \"LightMode\"=\"ForwardBase\" } Pass { CGPROGRAM #pragma vertex vert #pragma fragment frag #include \"UnityCG.cginc\" #include \"Lighting.cginc\" struct v2f { float4 vertex: POSITION; fixed4 color: COLOR; }; float \\_Shininess; v2f vert (appdata\\_full v) { v2f o; o.vertex = UnityObjectToClipPos(v.vertex); float3 N=normalize(mul(unity\\_WorldToObject,v.normal)); float3 L=normalize(\\_WorldSpaceLightPos0); float dotL=saturate(dot(N,L)); o.color=\\_LightColor0\\*dotL; // L也可以替换为WorldSpaceLightDir(v.vertex) float3 R= reflect(-L,N); float3 V= normalize(WorldSpaceViewDir(v.vertex)); float specularL= saturate(dot(V,R)); specularL=pow(specularL,\\_Shininess); o.color+=\\_LightColor0\\*specularL; return o; } fixed4 frag (v2f i) : COLOR { return i.color+UNITY\\_LIGHTMODEL\\_AMBIENT; } ENDCG } } } 效果如下图所示\n实现了一个简单的Specular的效果\n要注意的是，在使用reflect的函数的要注意，入射光和法线要在同一个坐标系空间\n",
+  "wordCount" : "1220",
   "inLanguage": "en",
   "datePublished": "2023-04-21T01:17:33Z",
   "dateModified": "2023-04-21T01:17:33Z",
@@ -283,7 +283,7 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>1318字
+        <span>1220字
             &nbsp;&nbsp;
         </span>
     </span>
@@ -469,11 +469,11 @@ var _hmt = _hmt || [];
 <p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/202304210006211.jpg" alt="反射模型"  />
 </p>
 <p>求反射向量OB</p>
-<p>$$<br>
-\vec{OB}=\vec{AB}-\vec{AO}<br>
+<p>$$
+\vec{OB}=\vec{AB}-\vec{AO}
 $$</p>
-<p>$$<br>
-\vec{OB}=2\vec{AP}-\vec{AO}=2(\vec{AO}+\vec{OP})-\vec{AO}=\vec{AO}+2\vec{OP}<br>
+<p>$$
+\vec{OB}=2\vec{AP}-\vec{AO}=2(\vec{AO}+\vec{OP})-\vec{AO}=\vec{AO}+2\vec{OP}
 $$</p>
 <p>所以此时重点在于求向量OP</p>
 <p>那么如何求向量OP</p>
@@ -481,28 +481,28 @@ $$</p>
 <p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/202304210010675.jpg" alt="举例模型"  />
 </p>
 <p>根据点积的性质可知：</p>
-<p>$$<br>
+<p>$$
 \vec{OA}\cdot\cosθ=\vec{OA^{&rsquo;}}<br>
 $$</p>
-<p>$$<br>
+<p>$$
 \vec{OA}\cdot\vec{n}=\vec{OA}\cdot\vec{n}\cdot\cosθ<br>
 $$</p>
 <p>所以就有</p>
-<p>$$<br>
+<p>$$
 \vec{OA^{&rsquo;}}=\vec{OA}\cdot\cosθ\cdot\vec{n}<br>
 $$</p>
-<p>$$<br>
-\vec{OA^{&rsquo;}}=\vec{OA}\cdot\frac{\vec{OA}\cdot\vec{n}}{\vec{OA}*\vec{n}}\cdot\vec{n}<br>
+<p>$$
+\vec{OA^{&rsquo;}}=\vec{OA}\cdot\frac{\vec{OA}\cdot\vec{n}}{\vec{OA}*\vec{n}}\cdot\vec{n}
 $$</p>
-<p>$$<br>
-设\vec{n}=1,就有\vec{OA^{&rsquo;}}=(\vec{OA}\cdot\vec{n})\cdot\vec{n}<br>
+<p>$$
+设\vec{n}=1,就有\vec{OA^{&rsquo;}}=(\vec{OA}\cdot\vec{n})\cdot\vec{n}
 $$</p>
 <p>所以根据此推导的原理可知</p>
-<p>$$<br>
-\vec{OP}=-(\vec{AO}\cdot\vec{n})\cdot\vec{n}<br>
+<p>$$
+\vec{OP}=-(\vec{AO}\cdot\vec{n})\cdot\vec{n}
 $$</p>
 <p>即：</p>
-<p>$$<br>
+<p>$$
 \vec{OB}=\vec{AO}-2\vec{n}\cdot(\vec{AO}\cdot\vec{n})<br>
 $$</p>
 <p>所以Cg当中的reflect函数中的实现</p>
@@ -540,19 +540,18 @@ float specularL= saturate(dot(V,R));</p>
 </span></span><span style="display:flex;"><span>            CGPROGRAM  
 </span></span><span style="display:flex;"><span>            #pragma vertex vert  
 </span></span><span style="display:flex;"><span>            #pragma fragment frag  
-</span></span><span style="display:flex;"><span>​  
+</span></span><span style="display:flex;"><span> 
 </span></span><span style="display:flex;"><span>            #include &#34;UnityCG.cginc&#34;  
 </span></span><span style="display:flex;"><span>            #include &#34;Lighting.cginc&#34;  
-</span></span><span style="display:flex;"><span>​  
-</span></span><span style="display:flex;"><span>​  
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>            struct v2f  
 </span></span><span style="display:flex;"><span>            {  
 </span></span><span style="display:flex;"><span>               float4 vertex: POSITION;  
 </span></span><span style="display:flex;"><span>               fixed4 color: COLOR;  
 </span></span><span style="display:flex;"><span>            };  
-</span></span><span style="display:flex;"><span>​  
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>            float \_Shininess;  
-</span></span><span style="display:flex;"><span>​  
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>            v2f vert (appdata\_full v)  
 </span></span><span style="display:flex;"><span>            {  
 </span></span><span style="display:flex;"><span>                v2f o;  
@@ -562,21 +561,21 @@ float specularL= saturate(dot(V,R));</p>
 </span></span><span style="display:flex;"><span>                float3 L=normalize(\_WorldSpaceLightPos0);  
 </span></span><span style="display:flex;"><span>                float dotL=saturate(dot(N,L));  
 </span></span><span style="display:flex;"><span>                o.color=\_LightColor0\*dotL;  
-</span></span><span style="display:flex;"><span>​  
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>                // L也可以替换为WorldSpaceLightDir(v.vertex)  
 </span></span><span style="display:flex;"><span>                float3 R= reflect(-L,N);  
-</span></span><span style="display:flex;"><span>​  
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>                float3 V= normalize(WorldSpaceViewDir(v.vertex));  
-</span></span><span style="display:flex;"><span>​  
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>                float specularL= saturate(dot(V,R));  
-</span></span><span style="display:flex;"><span>​  
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>                specularL=pow(specularL,\_Shininess);  
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>                o.color+=\_LightColor0\*specularL;  
-</span></span><span style="display:flex;"><span>​  
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>                return o;  
 </span></span><span style="display:flex;"><span>            }  
-</span></span><span style="display:flex;"><span>​  
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>            fixed4 frag (v2f i) : COLOR  
 </span></span><span style="display:flex;"><span>            {  
 </span></span><span style="display:flex;"><span>
@@ -586,16 +585,12 @@ float specularL= saturate(dot(V,R));</p>
 </span></span><span style="display:flex;"><span>        }  
 </span></span><span style="display:flex;"><span>    }  
 </span></span><span style="display:flex;"><span>}  
-</span></span><span style="display:flex;"><span>​```
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>效果如下图所示
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>实现了一个简单的Specular的效果
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>要注意的是，在使用reflect的函数的要注意，入射光和法线要在同一个坐标系空间
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>![最终效果](https://raw.gitmirror.com/LONEStudio/Images/master/img/202304200110971.png)
-</span></span></code></pre></div>
+</span></span></code></pre></div><p>效果如下图所示</p>
+<p>实现了一个简单的Specular的效果</p>
+<p>要注意的是，在使用reflect的函数的要注意，入射光和法线要在同一个坐标系空间</p>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/202304200110971.png" alt="最终效果"  />
+</p>
+
 
         </div>
         <div class="post-reward">

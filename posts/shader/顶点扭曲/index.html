@@ -10,7 +10,7 @@
 <meta name="description" content="顶点扭曲Shader案例 💡 可以在Shader当中构建旋转矩阵，来实现顶点的旋转，从而达到模型的扭曲效果 Shader &#34;ShaderLeaning/VertexDistortion/vf1&#34; { Properties{ } SubShader{ Pass{ CGPROGRAM #pragma vertex vert #pragma fragment frag #include &#34;UnityCG.cginc&#34; struct v2f { float4 pos: POSITION; fixed4 col: COLOR; }; v2f vert(appdata_base v) { v2f o; float angle=length(v.vertex)*_SinTime.w;//计算顶点到中心点的模长，与SinTime">
 <meta name="author" content="Sulv">
 <link rel="canonical" href="https://EitanWong.github.io/posts/shader/%E9%A1%B6%E7%82%B9%E6%89%AD%E6%9B%B2/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.0dcd30655f684635e8d387636982f36d45e2607d9dde19da5180cecacb25b773.css" integrity="sha256-Dc0wZV9oRjXo04djaYLzbUXiYH2d3hnaUYDOysslt3M=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.f78680cb3c4426e2cd4b2cec3c3f9a0875d14c9b0fb7ed9bfeb42ec846e4235c.css" integrity="sha256-94aAyzxEJuLNSyzsPD&#43;aCHXRTJsPt&#43;2b/rQuyEbkI1w=" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
         onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://EitanWong.github.io/img/Avatar.png">

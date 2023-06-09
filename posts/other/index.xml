@@ -5,7 +5,7 @@
     <link>https://EitanWong.github.io/posts/other/</link>
     <description>Recent content in 💡 Other on Eitan&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <language>en</language>
     <lastBuildDate>Mon, 17 Apr 2023 00:35:49 +0000</lastBuildDate><atom:link href="https://EitanWong.github.io/posts/other/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>🤖 Auto-GPT：AI的自我驱动</title>
@@ -86,6 +86,15 @@
       
       <guid>https://EitanWong.github.io/posts/other/notion%E7%AC%94%E8%AE%B0%E5%AF%BC%E5%87%BA%EF%B8%8Fmarkdown%E5%B9%B6%E8%A7%A3%E5%86%B3%E5%9B%BE%E7%89%87%E8%B7%AF%E5%BE%84%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</guid>
       <description>💬前言 以前记录一些笔记文章，都用Notion这款软件🖊️📒 但是有一天我发现连不上🚫Notion的网站了(平时主要在线用网页写文章) 误以为Notion跑路🏃了&amp;hellip;.后来才发现是我的网络🛜问题 不过数据在别人那里，总归是有风险的，无论是信息安全🔐，还是数据安全🔐 所以我打算把</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://EitanWong.github.io/posts/other/%E6%88%91mac%E4%B8%8B%E7%9A%84%E9%85%8D%E7%BD%AE/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://EitanWong.github.io/posts/other/%E6%88%91mac%E4%B8%8B%E7%9A%84%E9%85%8D%E7%BD%AE/</guid>
+      <description>Joshuto 图片预览 brew install ueberzug</description>
     </item>
     
   </channel>
