@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>正则表达式(Regular Expression) | Eitan&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="正则表达式 什么是正则表达式 正则表达式（Regular Expression）是一种用于匹配和处理文本模式的字符序列。 它是一种强大的文本处理工具，常用于编程和文本处理任务中，可以用来搜索、替换、验证和提取符合特定模式的文本。 语法 正则表达式(regular expression)描述了一">
+<meta name="author" content="Sulv">
+<link rel="canonical" href="https://EitanWong.github.io/en/posts/other/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8Fregular-expression/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.0dcd30655f684635e8d387636982f36d45e2607d9dde19da5180cecacb25b773.css" integrity="sha256-Dc0wZV9oRjXo04djaYLzbUXiYH2d3hnaUYDOysslt3M=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="apple-touch-icon" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="mask-icon" href="https://EitanWong.github.io/img/Avatar.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://EitanWong.github.io/en/posts/other/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8Fregular-expression/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="正则表达式(Regular Expression)" />
+<meta property="og:description" content="正则表达式 什么是正则表达式 正则表达式（Regular Expression）是一种用于匹配和处理文本模式的字符序列。 它是一种强大的文本处理工具，常用于编程和文本处理任务中，可以用来搜索、替换、验证和提取符合特定模式的文本。 语法 正则表达式(regular expression)描述了一" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://EitanWong.github.io/en/posts/other/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8Fregular-expression/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-13T16:40:33+00:00" />
+<meta property="article:modified_time" content="2023-04-13T16:40:33+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="正则表达式(Regular Expression)"/>
+<meta name="twitter:description" content="正则表达式 什么是正则表达式 正则表达式（Regular Expression）是一种用于匹配和处理文本模式的字符序列。 它是一种强大的文本处理工具，常用于编程和文本处理任务中，可以用来搜索、替换、验证和提取符合特定模式的文本。 语法 正则表达式(regular expression)描述了一"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "Posts",
+          "item": "https://EitanWong.github.io/en/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "💡 Other",
+          "item": "https://EitanWong.github.io/en/posts/other/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "正则表达式(Regular Expression)",
+      "item": "https://EitanWong.github.io/en/posts/other/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8Fregular-expression/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "正则表达式(Regular Expression)",
+  "name": "正则表达式(Regular Expression)",
+  "description": "正则表达式 什么是正则表达式 正则表达式（Regular Expression）是一种用于匹配和处理文本模式的字符序列。 它是一种强大的文本处理工具，常用于编程和文本处理任务中，可以用来搜索、替换、验证和提取符合特定模式的文本。 语法 正则表达式(regular expression)描述了一",
+  "keywords": [
+    
+  ],
+  "articleBody": "正则表达式 什么是正则表达式 正则表达式（Regular Expression）是一种用于匹配和处理文本模式的字符序列。 它是一种强大的文本处理工具，常用于编程和文本处理任务中，可以用来搜索、替换、验证和提取符合特定模式的文本。\n语法 正则表达式(regular expression)描述了一种字符串匹配的模式（pattern），可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等\n普通字符 正则表达式中的普通字符是指与其本身字符一一匹配的字符，不具有特殊含义 普通字符包括没有显式指定为元字符的所有可打印和不可打印字符。这包括所有大写和小写字母、所有数字、所有标点符号和一些其他符号。 例如用jesson匹配dsjessonjkdfjsWRFDd jessonFFEEGsddeed\n字符\n描述\n效果\n[ABC]\n匹配 […] 中的所有字符，例如 [aeiou] 匹配字符串 “google runoob taobao” 中所有的 e o u a 字母\n[^ABC]\n匹配除了 […] 中字符的所有字符，例如 [^aeiou] 匹配字符串 “google runoob taobao” 中除了 e o u a 字母的所有字母\n[A-Z]\n[A-Z] 表示一个区间，匹配所有大写字母，[a-z] 表示所有小写字母\n.\n匹配除换行符（\\n、\\r）之外的任何单个字符，相等于 [^\\n\\r]\n[\\s\\S]\n匹配所有。\\s 是匹配所有空白符，包括换行，\\S 非空白符，不包括换行\n\\w\n匹配字母、数字、下划线。等价于 [A-Za-z0-9_]\n非打印字符 非打印字符也可以是正则表达式的组成部分。下表列出了表示非打印字符的转义序列：\n字符 描述 \\cx 匹配由x指明的控制字符。例如， \\cM 匹配一个 Control-M 或回车符。x 的值必须为 A-Z 或 a-z 之一。否则，将 c 视为一个原义的 ‘c’ 字符。 \\f 匹配一个换页符。等价于 \\x0c 和 \\cL。 \\n 匹配一个换行符。等价于 \\x0a 和 \\cJ。 \\r 匹配一个回车符。等价于 \\x0d 和 \\cM。 \\s 匹配任何空白字符，包括空格、制表符、换页符等等。等价于 [ \\f\\n\\r\\t\\v]。注意 Unicode 正则表达式会匹配全角空格符。 \\S 匹配任何非空白字符。等价于 [^ \\f\\n\\r\\t\\v]。 \\t 匹配一个制表符。等价于 \\x09 和 \\cI。 \\v 匹配一个垂直制表符。等价于 \\x0b 和 \\cK。 特殊字符 所谓特殊字符，就是一些有特殊含义的字符，简单的说就是表示任何字符串的意思。如果要查找字符串中的 ***** 符号，则需要对 ***** 进行转义，即在其前加一个 \\，runo\\*ob 匹配字符串 runo*ob。 许多元字符要求在试图匹配它们时特别对待。若要匹配这些特殊字符，必须首先使字符\"转义\"，即，将反斜杠字符\\ 放在它们前面。下表列出了正则表达式中的特殊字符：\n特别字符 描述 $ 匹配输入字符串的结尾位置。如果设置了 RegExp 对象的 Multiline 属性，则 $ 也匹配 ( ) 标记一个子表达式的开始和结束位置。子表达式可以获取供以后使用。要匹配这些字符，请使用 ( 和 )。 * 匹配前面的子表达式零次或多次。要匹配 * 字符，请使用 *。 + 匹配前面的子表达式一次或多次。要匹配 + 字符，请使用 +。 . 匹配除换行符 \\n 之外的任何单字符。要匹配 . ，请使用 . 。 [ 标记一个中括号表达式的开始。要匹配 [，请使用 [。 ? 匹配前面的子表达式零次或一次，或指明一个非贪婪限定符。要匹配 ? 字符，请使用 ?。 \\ 将下一个字符标记为或特殊字符、或原义字符、或向后引用、或八进制转义符。例如， ’n’ 匹配字符 ’n’。’\\n’ 匹配换行符。序列 ‘\\’ 匹配 “\"，而 ‘(’ 则匹配 “(\"。 ^ 匹配输入字符串的开始位置，除非在方括号表达式中使用，当该符号在方括号表达式中使用时，表示不接受该方括号表达式中的字符集合。要匹配 ^ 字符本身，请使用 ^。 { 标记限定符表达式的开始。要匹配 {，请使用 {。 | 指明两项之间的一个选择。要匹配 限定符 限定符用来指定正则表达式的一个给定组件必须要出现多少次才能满足匹配。有 ***** 或 + 或 ? 或 {n} 或 {n,} 或 {n,m} 共6种。 正则表达式的限定符有：\n字符 描述 * 匹配前面的子表达式零次或多次。例如，zo* 能匹配 “z” 以及 “zoo”。***** 等价于 {0,}。 + 匹配前面的子表达式一次或多次。例如，zo+ 能匹配 “zo” 以及 “zoo”，但不能匹配 “z”。+ 等价于 {1,}。 ? 匹配前面的子表达式零次或一次。例如，do(es)? 可以匹配 “do” 、 “does”、 “doxy” 中的 “do” 和 “does”。? 等价于 {0,1} {n} n 是一个非负整数。匹配确定的 n 次。例如，o{2} 不能匹配 “Bob” 中的 o，但是能匹配 “food” 中的两个 o。 {n,} n 是一个非负整数。至少匹配n 次。例如，o{2,} 不能匹配 “Bob” 中的 o，但能匹配 “foooood” 中的所有 o。o{1,} 等价于 o+。o{0,} 则等价于 o*。 {n,m} m 和 n 均为非负整数，其中 n \u003c= m。最少匹配 n 次且最多匹配 m 次。例如，o{1,3} 将匹配 “fooooood” 中的前三个 o。o{0,1} 等价于 o?。请注意在逗号和两个数之间不能有空格。 |\\* 和 \\+ 限定符都是贪婪的，因为它们会尽可能多的匹配文字，只有在它们的后面加上一个 ? 就可以实现非贪婪或最小匹配 例如，您可能搜索 HTML 文档，以查找在 h1 标签内的内容。HTML 代码如下：\nRUNOOB-菜鸟教程 **贪婪：**下面的表达式匹配从开始小于符号 (\u003c) 到关闭 h1 标记的大于符号 (\u003e) 之间的所有内容。\n/\u003c.*\u003e/ **非贪婪：**如果您只需要匹配开始和结束 h1 标签，下面的非贪婪表达式只匹配 h1\n/\u003c.*?\u003e/ 定位符 定位符使您能够将正则表达式固定到行首或行尾。它们还使您能够创建这样的正则表达式，这些正则表达式出现在一个单词内、在一个单词的开头或者一个单词的结尾。 定位符用来描述字符串或单词的边界，^ 和 $ 分别指字符串的开始与结束，\\b 描述单词的前或后边界，\\B 表示非单词边界。 正则表达式的定位符有：\n字符 描述 ^ 匹配输入字符串开始的位置。如果设置了 RegExp 对象的 Multiline 属性，^ 还会与 \\n 或 \\r 之后的位置匹配。 $ 匹配输入字符串结尾的位置。如果设置了 RegExp 对象的 Multiline 属性，$ 还会与 \\n 或 \\r 之前的位置匹配。 \\b 匹配一个单词边界，即字与空格间的位置。 \\B 非单词边界匹配。 注意：不能将限定符与定位符一起使用。由于在紧靠换行或者单词边界的前面或后面不能有一个以上位置，因此不允许诸如 ^* 之类的表达式。 若要匹配一行文本开始处的文本，请在正则表达式的开始使用 ^ 字符。不要将 ^ 的这种用法与中括号表达式内的用法混淆。 若要匹配一行文本的结束处的文本，请在正则表达式的结束处使用 $ 字符。 若要在搜索章节标题时使用定位点，下面的正则表达式匹配一个章节标题，该标题只包含两个尾随数字，并且出现在行首\n修饰符 标记也称为修饰符，正则表达式的标记用于指定额外的匹配策略。 标记不写在正则表达式里，标记位于表达式之外，格式如下：\n/pattern/flags 下表列出了正则表达式常用的修饰符：\n修饰符 含义 描述 i ignore - 不区分大小写 将匹配设置为不区分大小写，搜索时不区分大小写: A 和 a 没有区别。 g global - 全局匹配 查找所有的匹配项。 m multi line - 多行匹配 使边界字符 ^ 和 $ 匹配每一行的开头和结尾，记住是多行，而不是整个字符串的开头和结尾。 s 特殊字符圆点 . 中包含换行符 \\n 默认情况下的圆点 . 是匹配除换行符 \\n 之外的任何字符，加上 s 修饰符之后, . 中包含换行符 \\n。 元字符 下表包含了元字符的完整列表以及它们在正则表达式上下文中的行为：\n字符 描述 \\ ^ 匹配输入字符串的开始位置。如果设置了 RegExp 对象的 Multiline 属性，^ 也匹配 ‘\\n’ 或 ‘\\r’ 之后的位置。 $ 匹配输入字符串的结束位置。如果设置了RegExp 对象的 Multiline 属性，$ 也匹配 ‘\\n’ 或 ‘\\r’ 之前的位置。 * 匹配前面的子表达式零次或多次。例如，zo* 能匹配 “z” 以及 “zoo”。* 等价于{0,}。 + 匹配前面的子表达式一次或多次。例如，‘zo+’ 能匹配 “zo” 以及 “zoo”，但不能匹配 “z”。+ 等价于 {1,}。 ? 匹配前面的子表达式零次或一次。例如，“do(es)?” 可以匹配 “do” 或 “does” 。? 等价于 {0,1}。 {n} n 是一个非负整数。匹配确定的 n 次。例如，‘o{2}’ 不能匹配 “Bob” 中的 ‘o’，但是能匹配 “food” 中的两个 o。 {n,} n 是一个非负整数。至少匹配n 次。例如，‘o{2,}’ 不能匹配 “Bob” 中的 ‘o’，但能匹配 “foooood” 中的所有 o。‘o{1,}’ 等价于 ‘o+’。‘o{0,}’ 则等价于 ‘o*’。 {n,m} m 和 n 均为非负整数，其中n \u003c= m。最少匹配 n 次且最多匹配 m 次。例如，“o{1,3}” 将匹配 “fooooood” 中的前三个 o。‘o{0,1}’ 等价于 ‘o?’。请注意在逗号和两个数之间不能有空格。 ? 当该字符紧跟在任何一个其他限制符 (*, +, ?, {n}, {n,}, {n,m}) 后面时，匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。例如，对于字符串 “oooo”，‘o+?’ 将匹配单个 “o”，而 ‘o+’ 将匹配所有 ‘o’。 . 匹配除换行符（\\n、\\r）之外的任何单个字符。要匹配包括 ‘\\n’ 在内的任何字符，请使用像”(. (pattern) 匹配 pattern 并获取这一匹配。所获取的匹配可以从产生的 Matches 集合得到，在VBScript 中使用 SubMatches 集合，在JScript 中则使用 $0…$9 属性。要匹配圆括号字符，请使用 ‘(’ 或 ‘)’。 (?:pattern) 匹配 pattern 但不获取匹配结果，也就是说这是一个非获取匹配，不进行存储供以后使用。这在使用 “或” 字符 ( (?=pattern) 正向肯定预查（look ahead positive assert），在任何匹配pattern的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。例如，“Windows(?=95 (?!pattern) 正向否定预查(negative assert)，在任何不匹配pattern的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。例如\"Windows(?!95 (?\u003c=pattern) 反向(look behind)肯定预查，与正向肯定预查类似，只是方向相反。例如，”(?\u003c=95 (?\u003c!pattern) 反向否定预查，与正向否定预查类似，只是方向相反。例如”(?\u003c!95 x y [xyz] 字符集合。匹配所包含的任意一个字符。例如， ‘[abc]’ 可以匹配 “plain” 中的 ‘a’。 [^xyz] 负值字符集合。匹配未包含的任意字符。例如， ‘[^abc]’ 可以匹配 “plain” 中的’p’、’l’、‘i’、’n’。 [a-z] 字符范围。匹配指定范围内的任意字符。例如，’[a-z]’ 可以匹配 ‘a’ 到 ‘z’ 范围内的任意小写字母字符。 [^a-z] 负值字符范围。匹配任何不在指定范围内的任意字符。例如，’[^a-z]’ 可以匹配任何不在 ‘a’ 到 ‘z’ 范围内的任意字符。 \\b 匹配一个单词边界，也就是指单词和空格间的位置。例如， ’er\\b’ 可以匹配\"never\" 中的 ’er’，但不能匹配 “verb” 中的 ’er’。 \\B 匹配非单词边界。’er\\B’ 能匹配 “verb” 中的 ’er’，但不能匹配 “never” 中的 ’er’。 \\cx 匹配由 x 指明的控制字符。例如， \\cM 匹配一个 Control-M 或回车符。x 的值必须为 A-Z 或 a-z 之一。否则，将 c 视为一个原义的 ‘c’ 字符。 \\d 匹配一个数字字符。等价于 [0-9]。 \\D 匹配一个非数字字符。等价于 [^0-9]。 \\f 匹配一个换页符。等价于 \\x0c 和 \\cL。 \\n 匹配一个换行符。等价于 \\x0a 和 \\cJ。 \\r 匹配一个回车符。等价于 \\x0d 和 \\cM。 \\s 匹配任何空白字符，包括空格、制表符、换页符等等。等价于 [ \\f\\n\\r\\t\\v]。 \\S 匹配任何非空白字符。等价于 [^ \\f\\n\\r\\t\\v]。 \\t 匹配一个制表符。等价于 \\x09 和 \\cI。 \\v 匹配一个垂直制表符。等价于 \\x0b 和 \\cK。 \\w 匹配字母、数字、下划线。等价于’[A-Za-z0-9_]’。 \\W 匹配非字母、数字、下划线。等价于 ‘[^A-Za-z0-9_]’。 \\xn 匹配 n，其中 n 为十六进制转义值。十六进制转义值必须为确定的两个数字长。例如，’\\x41’ 匹配 “A”。’\\x041’ 则等价于 ‘\\x04’ \u0026 “1”。正则表达式中可以使用 ASCII 编码。 \\num 匹配 num，其中 num 是一个正整数。对所获取的匹配的引用。例如，’(.)\\1’ 匹配两个连续的相同字符。 \\n 标识一个八进制转义值或一个向后引用。如果 \\n 之前至少 n 个获取的子表达式，则 n 为向后引用。否则，如果 n 为八进制数字 (0-7)，则 n 为一个八进制转义值。 \\nm 标识一个八进制转义值或一个向后引用。如果 \\nm 之前至少有 nm 个获得子表达式，则 nm 为向后引用。如果 \\nm 之前至少有 n 个获取，则 n 为一个后跟文字 m 的向后引用。如果前面的条件都不满足，若 n 和 m 均为八进制数字 (0-7)，则 \\nm 将匹配八进制转义值 nm。 \\nml 如果 n 为八进制数字 (0-3)，且 m 和 l 均为八进制数字 (0-7)，则匹配八进制转义值 nml。 \\un 匹配 n，其中 n 是一个用四个十六进制数字表示的 Unicode 字符。例如， \\u00A9 匹配版权符号 (?)。 例子 下面是一些常用的正则表达式的例子：\n匹配邮箱地址：\n^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$ 匹配手机号码:\n^1[3456789]\\d{9}$ 匹配身份证号码（18位）：\n^\\d{17}[\\dXx]$ 匹配URL：\n^(httphttpsftp)://[^\\s/$.?#].[^\\s]*$ 匹配日期（yyyy-mm-dd）：\n^\\d{4}-\\d{2}-\\d{2}$ 匹配IP地址：\n^((25[0-5]2[0-4]\\d1\\d{2}[1-9]\\d\\d)\\.){3}(25[0-5]2[0-4]\\d1\\d{2}[1-9]\\d\\d)$ 匹配整数：\n^-?\\d+$ 匹配小数：\n^-?\\d+\\.\\d+$ 匹配中文字符：\n^[\\u4e00-\\u9fa5]+$ 匹配HTML标签：\n\u003c([a-zA-Z]+)(\\s*\\w*\\s*=\\s*\"[^\"]*\")*\\s*/?\u003e ",
+  "wordCount" : "5558",
+  "inLanguage": "en",
+  "datePublished": "2023-04-13T16:40:33Z",
+  "dateModified": "2023-04-13T16:40:33Z",
+  "author":{
+    "@type": "Person",
+    "name": "Sulv"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://EitanWong.github.io/en/posts/other/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8Fregular-expression/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Eitan's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://EitanWong.github.io/img/Avatar.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://EitanWong.github.io/en/" accesskey="h" title="Eitan&#39;s Blog (Alt + H)">
+            <img src="https://EitanWong.github.io/img/Avatar.png" alt="logo" aria-label="logo"
+                 height="35">Eitan&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://EitanWong.github.io/en/" title="🏠 Home">
+                <span>🏠 Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/search" title="🔍 Search (Alt &#43; /)" accesskey=/>
+                <span>🔍 Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/posts" title="📚 Posts">
+                <span>📚 Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/tags" title="🧩 Tags">
+                <span>🧩 Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/archives/" title="⏱️ Archives">
+                <span>⏱️ Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/about" title="🙋🏻‍♂️ About">
+                <span>🙋🏻‍♂️ About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://EitanWong.github.io/en/">🏠 Home</a>&nbsp;»&nbsp;<a href="https://EitanWong.github.io/en/posts/">Posts</a>&nbsp;»&nbsp;<a href="https://EitanWong.github.io/en/posts/other/">💡 Other</a></div>
+            <h1 class="post-title">
+                正则表达式(Regular Expression)
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-04-13
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>5558字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>12分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Sulv
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://EitanWong.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">📖 Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f" aria-label="正则表达式">正则表达式</a><ul>
+                        
+                <li>
+                    <a href="#%e4%bb%80%e4%b9%88%e6%98%af%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f" aria-label="什么是正则表达式">什么是正则表达式</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e8%af%ad%e6%b3%95" aria-label="语法">语法</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#%e6%99%ae%e9%80%9a%e5%ad%97%e7%ac%a6" aria-label="普通字符">普通字符</a></li>
+                <li>
+                    <a href="#%e9%9d%9e%e6%89%93%e5%8d%b0%e5%ad%97%e7%ac%a6" aria-label="非打印字符">非打印字符</a></li>
+                <li>
+                    <a href="#%e7%89%b9%e6%ae%8a%e5%ad%97%e7%ac%a6" aria-label="特殊字符">特殊字符</a></li>
+                <li>
+                    <a href="#%e9%99%90%e5%ae%9a%e7%ac%a6" aria-label="限定符">限定符</a></li>
+                <li>
+                    <a href="#%e5%ae%9a%e4%bd%8d%e7%ac%a6" aria-label="定位符">定位符</a></li></ul>
+                    
+                <li>
+                    <a href="#%e4%bf%ae%e9%a5%b0%e7%ac%a6" aria-label="修饰符">修饰符</a></li>
+                <li>
+                    <a href="#%e5%85%83%e5%ad%97%e7%ac%a6" aria-label="元字符">元字符</a></li>
+                <li>
+                    <a href="#%e4%be%8b%e5%ad%90" aria-label="例子">例子</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h1 id="正则表达式">正则表达式<a hidden class="anchor" aria-hidden="true" href="#正则表达式">#</a></h1>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/1653872837973704308.png" alt="正则表达式"  />
+</p>
+<h2 id="什么是正则表达式">什么是正则表达式<a hidden class="anchor" aria-hidden="true" href="#什么是正则表达式">#</a></h2>
+<p>正则表达式（Regular Expression）是一种用于匹配和处理文本模式的字符序列。 它是一种强大的文本处理工具，常用于编程和文本处理任务中，可以用来搜索、替换、验证和提取符合特定模式的文本。</p>
+<h1 id="语法">语法<a hidden class="anchor" aria-hidden="true" href="#语法">#</a></h1>
+<p>正则表达式(regular expression)描述了一种字符串匹配的模式（pattern），可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等</p>
+<h3 id="普通字符">普通字符<a hidden class="anchor" aria-hidden="true" href="#普通字符">#</a></h3>
+<p>正则表达式中的普通字符是指与其本身字符一一匹配的字符，不具有特殊含义 普通字符包括没有显式指定为元字符的所有可打印和不可打印字符。这包括所有大写和小写字母、所有数字、所有标点符号和一些其他符号。 例如用jesson匹配dsjessonjkdfjsWRFDd jessonFFEEGsddeed</p>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/image-20230413100946352.png" alt="image-20230413100946352"  />
+</p>
+<p>字符</p>
+<p>描述</p>
+<p>效果</p>
+<p><strong>[ABC]</strong></p>
+<p>匹配 <strong>[&hellip;]</strong> 中的所有字符，例如 <strong>[aeiou]</strong> 匹配字符串 &ldquo;google runoob taobao&rdquo; 中所有的 e o u a 字母</p>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/E691DDE1-E5CB-4EA8-8D16-759BD0D2B09D.jpg" alt="img"  />
+</p>
+<p><strong>[^ABC]</strong></p>
+<p>匹配除了 <strong>[&hellip;]</strong> 中字符的所有字符，例如 <strong>[^aeiou]</strong> 匹配字符串 &ldquo;google runoob taobao&rdquo; 中除了 e o u a 字母的所有字母</p>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/ED971D92-30F4-4768-A2C7-02A84A3A9DEB.jpg" alt="img"  />
+</p>
+<p><strong>[A-Z]</strong></p>
+<p>[A-Z] 表示一个区间，匹配所有大写字母，[a-z] 表示所有小写字母</p>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/C5E357BD-65E3-4EB3-9D80-10D096F19287.jpg" alt="img"  />
+</p>
+<p><strong>.</strong></p>
+<p>匹配除换行符（\n、\r）之外的任何单个字符，相等于 [^\n\r]</p>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/0FD7E77D-38A7-43BC-B51A-7DBA23A77756.jpg" alt="img"  />
+</p>
+<p><strong>[\s\S]</strong></p>
+<p>匹配所有。\s 是匹配所有空白符，包括换行，\S 非空白符，不包括换行</p>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/47CA6C59-64CF-433A-909E-1E342349A4E0.jpg" alt="img"  />
+</p>
+<p><strong>\w</strong></p>
+<p>匹配字母、数字、下划线。等价于 [A-Za-z0-9_]</p>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/F35A5971-3519-4CAE-8BEC-9DE8F4A55257.jpg" alt="img"  />
+</p>
+<h3 id="非打印字符">非打印字符<a hidden class="anchor" aria-hidden="true" href="#非打印字符">#</a></h3>
+<p>非打印字符也可以是正则表达式的组成部分。下表列出了表示非打印字符的转义序列：</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\cx</td>
+<td>匹配由x指明的控制字符。例如， \cM 匹配一个 Control-M 或回车符。x 的值必须为 A-Z 或 a-z 之一。否则，将 c 视为一个原义的 &lsquo;c&rsquo; 字符。</td>
+</tr>
+<tr>
+<td>\f</td>
+<td>匹配一个换页符。等价于 \x0c 和 \cL。</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>匹配一个换行符。等价于 \x0a 和 \cJ。</td>
+</tr>
+<tr>
+<td>\r</td>
+<td>匹配一个回车符。等价于 \x0d 和 \cM。</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>匹配任何空白字符，包括空格、制表符、换页符等等。等价于 [ \f\n\r\t\v]。注意 Unicode 正则表达式会匹配全角空格符。</td>
+</tr>
+<tr>
+<td>\S</td>
+<td>匹配任何非空白字符。等价于 [^ \f\n\r\t\v]。</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>匹配一个制表符。等价于 \x09 和 \cI。</td>
+</tr>
+<tr>
+<td>\v</td>
+<td>匹配一个垂直制表符。等价于 \x0b 和 \cK。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="特殊字符">特殊字符<a hidden class="anchor" aria-hidden="true" href="#特殊字符">#</a></h3>
+<p>所谓特殊字符，就是一些有特殊含义的字符，简单的说就是表示任何字符串的意思。如果要查找字符串中的 ***** 符号，则需要对 ***** 进行转义，即在其前加一个 \，<strong>runo\*ob</strong> 匹配字符串 <strong>runo*ob</strong>。 许多元字符要求在试图匹配它们时特别对待。若要匹配这些特殊字符，必须首先使字符&quot;转义&quot;，即，将反斜杠字符\ 放在它们前面。下表列出了正则表达式中的特殊字符：</p>
+<table>
+<thead>
+<tr>
+<th>特别字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$</td>
+<td>匹配输入字符串的结尾位置。如果设置了 RegExp 对象的 Multiline 属性，则 $ 也匹配</td>
+</tr>
+<tr>
+<td>( )</td>
+<td>标记一个子表达式的开始和结束位置。子表达式可以获取供以后使用。要匹配这些字符，请使用 ( 和 )。</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配前面的子表达式零次或多次。要匹配 * 字符，请使用 *。</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配前面的子表达式一次或多次。要匹配 + 字符，请使用 +。</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配除换行符 \n 之外的任何单字符。要匹配 . ，请使用 . 。</td>
+</tr>
+<tr>
+<td>[</td>
+<td>标记一个中括号表达式的开始。要匹配 [，请使用 [。</td>
+</tr>
+<tr>
+<td>?</td>
+<td>匹配前面的子表达式零次或一次，或指明一个非贪婪限定符。要匹配 ? 字符，请使用 ?。</td>
+</tr>
+<tr>
+<td>\</td>
+<td>将下一个字符标记为或特殊字符、或原义字符、或向后引用、或八进制转义符。例如， &rsquo;n&rsquo; 匹配字符 &rsquo;n&rsquo;。&rsquo;\n&rsquo; 匹配换行符。序列 &lsquo;\&rsquo; 匹配 &ldquo;&quot;，而 &lsquo;(&rsquo; 则匹配 &ldquo;(&quot;。</td>
+</tr>
+<tr>
+<td>^</td>
+<td>匹配输入字符串的开始位置，除非在方括号表达式中使用，当该符号在方括号表达式中使用时，表示不接受该方括号表达式中的字符集合。要匹配 ^ 字符本身，请使用 ^。</td>
+</tr>
+<tr>
+<td>{</td>
+<td>标记限定符表达式的开始。要匹配 {，请使用 {。</td>
+</tr>
+<tr>
+<td>|</td>
+<td>指明两项之间的一个选择。要匹配</td>
+</tr>
+</tbody>
+</table>
+<h3 id="限定符">限定符<a hidden class="anchor" aria-hidden="true" href="#限定符">#</a></h3>
+<p>限定符用来指定正则表达式的一个给定组件必须要出现多少次才能满足匹配。有 ***** 或 <strong>+</strong> 或 <strong>?</strong> 或 <strong>{n}</strong> 或 <strong>{n,}</strong> 或 <strong>{n,m}</strong> 共6种。 正则表达式的限定符有：</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*</td>
+<td>匹配前面的子表达式零次或多次。例如，<strong>zo*</strong> 能匹配 <strong>&ldquo;z&rdquo;</strong> 以及 <strong>&ldquo;zoo&rdquo;</strong>。***** 等价于 <strong>{0,}</strong>。</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配前面的子表达式一次或多次。例如，<strong>zo+</strong> 能匹配 <strong>&ldquo;zo&rdquo;</strong> 以及 &ldquo;<strong>zoo&rdquo;</strong>，但不能匹配 <strong>&ldquo;z&rdquo;</strong>。<strong>+</strong> 等价于 <strong>{1,}</strong>。</td>
+</tr>
+<tr>
+<td>?</td>
+<td>匹配前面的子表达式零次或一次。例如，<strong>do(es)?</strong> 可以匹配 <strong>&ldquo;do&rdquo;</strong> 、 <strong>&ldquo;does&rdquo;</strong>、 <strong>&ldquo;doxy&rdquo;</strong> 中的 <strong>&ldquo;do&rdquo;</strong> 和 <strong>&ldquo;does&rdquo;</strong>。<strong>?</strong> 等价于 <strong>{0,1}</strong> <img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/CA742DA3-826D-463B-85F5-316DAB3515C1.jpeg" alt="img"  />
+</td>
+</tr>
+<tr>
+<td>{n}</td>
+<td>n 是一个非负整数。匹配确定的 <strong>n</strong> 次。例如，<strong>o{2}</strong> 不能匹配 <strong>&ldquo;Bob&rdquo;</strong> 中的 <strong>o</strong>，但是能匹配 <strong>&ldquo;food&rdquo;</strong> 中的两个 <strong>o</strong>。</td>
+</tr>
+<tr>
+<td>{n,}</td>
+<td>n 是一个非负整数。至少匹配n 次。例如，<strong>o{2,}</strong> 不能匹配 <strong>&ldquo;Bob&rdquo;</strong> 中的 <strong>o</strong>，但能匹配 <strong>&ldquo;foooood&rdquo;</strong> 中的所有 <strong>o</strong>。<strong>o{1,}</strong> 等价于 <strong>o+</strong>。<strong>o{0,}</strong> 则等价于 <strong>o*</strong>。</td>
+</tr>
+<tr>
+<td>{n,m}</td>
+<td>m 和 n 均为非负整数，其中 n &lt;= m。最少匹配 n 次且最多匹配 m 次。例如，<strong>o{1,3}</strong> 将匹配 <strong>&ldquo;fooooood&rdquo;</strong> 中的前三个 <strong>o</strong>。<strong>o{0,1}</strong> 等价于 <strong>o?</strong>。请注意在逗号和两个数之间不能有空格。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>|\* 和 \+ 限定符都是贪婪的，因为它们会尽可能多的匹配文字，只有在它们的后面加上一个 ? 就可以实现非贪婪或最小匹配 例如，您可能搜索 HTML 文档，以查找在 <strong>h1</strong> 标签内的内容。HTML 代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>&lt;h1&gt;RUNOOB-菜鸟教程&lt;/h1&gt;
+</span></span></code></pre></div><p>**贪婪：**下面的表达式匹配从开始小于符号 (&lt;) 到关闭 h1 标记的大于符号 (&gt;) 之间的所有内容。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>/&lt;.*&gt;/
+</span></span></code></pre></div><p>**非贪婪：**如果您只需要匹配开始和结束 h1 标签，下面的非贪婪表达式只匹配 h1</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>/&lt;.*?&gt;/
+</span></span></code></pre></div><h3 id="定位符">定位符<a hidden class="anchor" aria-hidden="true" href="#定位符">#</a></h3>
+<p>定位符使您能够将正则表达式固定到行首或行尾。它们还使您能够创建这样的正则表达式，这些正则表达式出现在一个单词内、在一个单词的开头或者一个单词的结尾。 定位符用来描述字符串或单词的边界，<strong>^</strong> 和 <strong>$</strong> 分别指字符串的开始与结束，<strong>\b</strong> 描述单词的前或后边界，<strong>\B</strong> 表示非单词边界。 正则表达式的定位符有：</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>^</td>
+<td>匹配输入字符串开始的位置。如果设置了 RegExp 对象的 Multiline 属性，^ 还会与 \n 或 \r 之后的位置匹配。</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配输入字符串结尾的位置。如果设置了 RegExp 对象的 Multiline 属性，$ 还会与 \n 或 \r 之前的位置匹配。</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>匹配一个单词边界，即字与空格间的位置。</td>
+</tr>
+<tr>
+<td>\B</td>
+<td>非单词边界匹配。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注意</strong>：不能将限定符与定位符一起使用。由于在紧靠换行或者单词边界的前面或后面不能有一个以上位置，因此不允许诸如 <strong>^*</strong> 之类的表达式。 若要匹配一行文本开始处的文本，请在正则表达式的开始使用 <strong>^</strong> 字符。不要将 <strong>^</strong> 的这种用法与中括号表达式内的用法混淆。 若要匹配一行文本的结束处的文本，请在正则表达式的结束处使用 <strong>$</strong> 字符。 若要在搜索章节标题时使用定位点，下面的正则表达式匹配一个章节标题，该标题只包含两个尾随数字，并且出现在行首</p>
+<h2 id="修饰符">修饰符<a hidden class="anchor" aria-hidden="true" href="#修饰符">#</a></h2>
+<p>标记也称为修饰符，正则表达式的标记用于指定额外的匹配策略。 标记不写在正则表达式里，标记位于表达式之外，格式如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>/pattern/flags
+</span></span></code></pre></div><p>下表列出了正则表达式常用的修饰符：</p>
+<table>
+<thead>
+<tr>
+<th>修饰符</th>
+<th>含义</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>i</td>
+<td>ignore - 不区分大小写</td>
+<td>将匹配设置为不区分大小写，搜索时不区分大小写: A 和 a 没有区别。</td>
+</tr>
+<tr>
+<td>g</td>
+<td>global - 全局匹配</td>
+<td>查找所有的匹配项。</td>
+</tr>
+<tr>
+<td>m</td>
+<td>multi line - 多行匹配</td>
+<td>使边界字符 <strong>^</strong> 和 <strong>$</strong> 匹配每一行的开头和结尾，记住是多行，而不是整个字符串的开头和结尾。</td>
+</tr>
+<tr>
+<td>s</td>
+<td>特殊字符圆点 <strong>.</strong> 中包含换行符 <strong>\n</strong></td>
+<td>默认情况下的圆点 <strong>.</strong> 是匹配除换行符 <strong>\n</strong> 之外的任何字符，加上 <strong>s</strong> 修饰符之后, <strong>.</strong> 中包含换行符 \n。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="元字符">元字符<a hidden class="anchor" aria-hidden="true" href="#元字符">#</a></h2>
+<p>下表包含了元字符的完整列表以及它们在正则表达式上下文中的行为：</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\</td>
+<td></td>
+</tr>
+<tr>
+<td>^</td>
+<td>匹配输入字符串的开始位置。如果设置了 RegExp 对象的 Multiline 属性，^ 也匹配 &lsquo;\n&rsquo; 或 &lsquo;\r&rsquo; 之后的位置。</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配输入字符串的结束位置。如果设置了RegExp 对象的 Multiline 属性，$ 也匹配 &lsquo;\n&rsquo; 或 &lsquo;\r&rsquo; 之前的位置。</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配前面的子表达式零次或多次。例如，zo* 能匹配 &ldquo;z&rdquo; 以及 &ldquo;zoo&rdquo;。* 等价于{0,}。</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配前面的子表达式一次或多次。例如，&lsquo;zo+&rsquo; 能匹配 &ldquo;zo&rdquo; 以及 &ldquo;zoo&rdquo;，但不能匹配 &ldquo;z&rdquo;。+ 等价于 {1,}。</td>
+</tr>
+<tr>
+<td>?</td>
+<td>匹配前面的子表达式零次或一次。例如，&ldquo;do(es)?&rdquo; 可以匹配 &ldquo;do&rdquo; 或 &ldquo;does&rdquo; 。? 等价于 {0,1}。</td>
+</tr>
+<tr>
+<td>{n}</td>
+<td>n 是一个非负整数。匹配确定的 n 次。例如，&lsquo;o{2}&rsquo; 不能匹配 &ldquo;Bob&rdquo; 中的 &lsquo;o&rsquo;，但是能匹配 &ldquo;food&rdquo; 中的两个 o。</td>
+</tr>
+<tr>
+<td>{n,}</td>
+<td>n 是一个非负整数。至少匹配n 次。例如，&lsquo;o{2,}&rsquo; 不能匹配 &ldquo;Bob&rdquo; 中的 &lsquo;o&rsquo;，但能匹配 &ldquo;foooood&rdquo; 中的所有 o。&lsquo;o{1,}&rsquo; 等价于 &lsquo;o+&rsquo;。&lsquo;o{0,}&rsquo; 则等价于 &lsquo;o*&rsquo;。</td>
+</tr>
+<tr>
+<td>{n,m}</td>
+<td>m 和 n 均为非负整数，其中n &lt;= m。最少匹配 n 次且最多匹配 m 次。例如，&ldquo;o{1,3}&rdquo; 将匹配 &ldquo;fooooood&rdquo; 中的前三个 o。&lsquo;o{0,1}&rsquo; 等价于 &lsquo;o?&rsquo;。请注意在逗号和两个数之间不能有空格。</td>
+</tr>
+<tr>
+<td>?</td>
+<td>当该字符紧跟在任何一个其他限制符 (*, +, ?, {n}, {n,}, {n,m}) 后面时，匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。例如，对于字符串 &ldquo;oooo&rdquo;，&lsquo;o+?&rsquo; 将匹配单个 &ldquo;o&rdquo;，而 &lsquo;o+&rsquo; 将匹配所有 &lsquo;o&rsquo;。</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配除换行符（\n、\r）之外的任何单个字符。要匹配包括 &lsquo;\n&rsquo; 在内的任何字符，请使用像&rdquo;(.</td>
+</tr>
+<tr>
+<td>(pattern)</td>
+<td>匹配 pattern 并获取这一匹配。所获取的匹配可以从产生的 Matches 集合得到，在VBScript 中使用 SubMatches 集合，在JScript 中则使用 $0…$9 属性。要匹配圆括号字符，请使用 &lsquo;(&rsquo; 或 &lsquo;)&rsquo;。</td>
+</tr>
+<tr>
+<td>(?:pattern)</td>
+<td>匹配 pattern 但不获取匹配结果，也就是说这是一个非获取匹配，不进行存储供以后使用。这在使用 &ldquo;或&rdquo; 字符 (</td>
+</tr>
+<tr>
+<td>(?=pattern)</td>
+<td>正向肯定预查（look ahead positive assert），在任何匹配pattern的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。例如，&ldquo;Windows(?=95</td>
+</tr>
+<tr>
+<td>(?!pattern)</td>
+<td>正向否定预查(negative assert)，在任何不匹配pattern的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。例如&quot;Windows(?!95</td>
+</tr>
+<tr>
+<td>(?&lt;=pattern)</td>
+<td>反向(look behind)肯定预查，与正向肯定预查类似，只是方向相反。例如，&rdquo;(?&lt;=95</td>
+</tr>
+<tr>
+<td>(?&lt;!pattern)</td>
+<td>反向否定预查，与正向否定预查类似，只是方向相反。例如&rdquo;(?&lt;!95</td>
+</tr>
+<tr>
+<td>x</td>
+<td>y</td>
+</tr>
+<tr>
+<td>[xyz]</td>
+<td>字符集合。匹配所包含的任意一个字符。例如， &lsquo;[abc]&rsquo; 可以匹配 &ldquo;plain&rdquo; 中的 &lsquo;a&rsquo;。</td>
+</tr>
+<tr>
+<td>[^xyz]</td>
+<td>负值字符集合。匹配未包含的任意字符。例如， &lsquo;[^abc]&rsquo; 可以匹配 &ldquo;plain&rdquo; 中的&rsquo;p&rsquo;、&rsquo;l&rsquo;、&lsquo;i&rsquo;、&rsquo;n&rsquo;。</td>
+</tr>
+<tr>
+<td>[a-z]</td>
+<td>字符范围。匹配指定范围内的任意字符。例如，&rsquo;[a-z]&rsquo; 可以匹配 &lsquo;a&rsquo; 到 &lsquo;z&rsquo; 范围内的任意小写字母字符。</td>
+</tr>
+<tr>
+<td>[^a-z]</td>
+<td>负值字符范围。匹配任何不在指定范围内的任意字符。例如，&rsquo;[^a-z]&rsquo; 可以匹配任何不在 &lsquo;a&rsquo; 到 &lsquo;z&rsquo; 范围内的任意字符。</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>匹配一个单词边界，也就是指单词和空格间的位置。例如， &rsquo;er\b&rsquo; 可以匹配&quot;never&quot; 中的 &rsquo;er&rsquo;，但不能匹配 &ldquo;verb&rdquo; 中的 &rsquo;er&rsquo;。</td>
+</tr>
+<tr>
+<td>\B</td>
+<td>匹配非单词边界。&rsquo;er\B&rsquo; 能匹配 &ldquo;verb&rdquo; 中的 &rsquo;er&rsquo;，但不能匹配 &ldquo;never&rdquo; 中的 &rsquo;er&rsquo;。</td>
+</tr>
+<tr>
+<td>\cx</td>
+<td>匹配由 x 指明的控制字符。例如， \cM 匹配一个 Control-M 或回车符。x 的值必须为 A-Z 或 a-z 之一。否则，将 c 视为一个原义的 &lsquo;c&rsquo; 字符。</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>匹配一个数字字符。等价于 [0-9]。</td>
+</tr>
+<tr>
+<td>\D</td>
+<td>匹配一个非数字字符。等价于 [^0-9]。</td>
+</tr>
+<tr>
+<td>\f</td>
+<td>匹配一个换页符。等价于 \x0c 和 \cL。</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>匹配一个换行符。等价于 \x0a 和 \cJ。</td>
+</tr>
+<tr>
+<td>\r</td>
+<td>匹配一个回车符。等价于 \x0d 和 \cM。</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>匹配任何空白字符，包括空格、制表符、换页符等等。等价于 [ \f\n\r\t\v]。</td>
+</tr>
+<tr>
+<td>\S</td>
+<td>匹配任何非空白字符。等价于 [^ \f\n\r\t\v]。</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>匹配一个制表符。等价于 \x09 和 \cI。</td>
+</tr>
+<tr>
+<td>\v</td>
+<td>匹配一个垂直制表符。等价于 \x0b 和 \cK。</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>匹配字母、数字、下划线。等价于&rsquo;[A-Za-z0-9_]&rsquo;。</td>
+</tr>
+<tr>
+<td>\W</td>
+<td>匹配非字母、数字、下划线。等价于 &lsquo;[^A-Za-z0-9_]&rsquo;。</td>
+</tr>
+<tr>
+<td>\xn</td>
+<td>匹配 n，其中 n 为十六进制转义值。十六进制转义值必须为确定的两个数字长。例如，&rsquo;\x41&rsquo; 匹配 &ldquo;A&rdquo;。&rsquo;\x041&rsquo; 则等价于 &lsquo;\x04&rsquo; &amp; &ldquo;1&rdquo;。正则表达式中可以使用 ASCII 编码。</td>
+</tr>
+<tr>
+<td>\num</td>
+<td>匹配 num，其中 num 是一个正整数。对所获取的匹配的引用。例如，&rsquo;(.)\1&rsquo; 匹配两个连续的相同字符。</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>标识一个八进制转义值或一个向后引用。如果 \n 之前至少 n 个获取的子表达式，则 n 为向后引用。否则，如果 n 为八进制数字 (0-7)，则 n 为一个八进制转义值。</td>
+</tr>
+<tr>
+<td>\nm</td>
+<td>标识一个八进制转义值或一个向后引用。如果 \nm 之前至少有 nm 个获得子表达式，则 nm 为向后引用。如果 \nm 之前至少有 n 个获取，则 n 为一个后跟文字 m 的向后引用。如果前面的条件都不满足，若 n 和 m 均为八进制数字 (0-7)，则 \nm 将匹配八进制转义值 nm。</td>
+</tr>
+<tr>
+<td>\nml</td>
+<td>如果 n 为八进制数字 (0-3)，且 m 和 l 均为八进制数字 (0-7)，则匹配八进制转义值 nml。</td>
+</tr>
+<tr>
+<td>\un</td>
+<td>匹配 n，其中 n 是一个用四个十六进制数字表示的 Unicode 字符。例如， \u00A9 匹配版权符号 (?)。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="例子">例子<a hidden class="anchor" aria-hidden="true" href="#例子">#</a></h2>
+<p>下面是一些常用的正则表达式的例子：</p>
+<ol>
+<li>
+<p>匹配邮箱地址：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+</span></span></code></pre></div></li>
+<li>
+<p>匹配手机号码:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>^1[3456789]\d{9}$
+</span></span></code></pre></div></li>
+<li>
+<p>匹配身份证号码（18位）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>^\d{17}[\dXx]$
+</span></span></code></pre></div></li>
+<li>
+<p>匹配URL：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>^(httphttpsftp)://[^\s/$.?#].[^\s]*$
+</span></span></code></pre></div></li>
+<li>
+<p>匹配日期（yyyy-mm-dd）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>^\d{4}-\d{2}-\d{2}$
+</span></span></code></pre></div></li>
+<li>
+<p>匹配IP地址：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>^((25[0-5]2[0-4]\d1\d{2}[1-9]\d\d)\.){3}(25[0-5]2[0-4]\d1\d{2}[1-9]\d\d)$
+</span></span></code></pre></div></li>
+<li>
+<p>匹配整数：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>^-?\d+$
+</span></span></code></pre></div></li>
+<li>
+<p>匹配小数：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>^-?\d+\.\d+$
+</span></span></code></pre></div></li>
+<li>
+<p>匹配中文字符：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>^[\u4e00-\u9fa5]+$
+</span></span></code></pre></div></li>
+<li>
+<p>匹配HTML标签：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>&lt;([a-zA-Z]+)(\s*\w*\s*=\s*&#34;[^&#34;]*&#34;)*\s*/?&gt;
+</span></span></code></pre></div></li>
+</ol>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://EitanWong.github.io/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://EitanWong.github.io/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://EitanWong.github.io/en/posts/other/macosvscodeunity%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%8F%8A%E8%B0%83%E8%AF%95/">
+    <span class="title">« 👈 Prev Page</span>
+    <br>
+    <span>macOS&#43;VSCode&#43;Unity的开发环境配置及调试</span>
+  </a>
+  <a class="next" href="https://EitanWong.github.io/en/posts/other/macos%E4%B8%8B%E9%80%9A%E8%BF%87homebrew%E5%AE%89%E8%A3%85anacond%E5%B9%B6%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/">
+    <span class="title">Next Page 👉 »</span>
+    <br>
+    <span>macOS🍎💻下通过Homebrew🍺安装Anacond🐍并配置环境变量</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share 正则表达式(Regular Expression) on twitter"
+       href="https://twitter.com/intent/tweet/?text=%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%28Regular%20Expression%29&amp;url=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fother%2f%25E6%25AD%25A3%25E5%2588%2599%25E8%25A1%25A8%25E8%25BE%25BE%25E5%25BC%258Fregular-expression%2f&amp;hashtags=">
+    <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share 正则表达式(Regular Expression) on linkedin"
+       href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fother%2f%25E6%25AD%25A3%25E5%2588%2599%25E8%25A1%25A8%25E8%25BE%25BE%25E5%25BC%258Fregular-expression%2f&amp;title=%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%28Regular%20Expression%29&amp;summary=%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%28Regular%20Expression%29&amp;source=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fother%2f%25E6%25AD%25A3%25E5%2588%2599%25E8%25A1%25A8%25E8%25BE%25BE%25E5%25BC%258Fregular-expression%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share 正则表达式(Regular Expression) on reddit"
+       href="https://reddit.com/submit?url=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fother%2f%25E6%25AD%25A3%25E5%2588%2599%25E8%25A1%25A8%25E8%25BE%25BE%25E5%25BC%258Fregular-expression%2f&title=%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%28Regular%20Expression%29">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share 正则表达式(Regular Expression) on facebook"
+       href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fother%2f%25E6%25AD%25A3%25E5%2588%2599%25E8%25A1%25A8%25E8%25BE%25BE%25E5%25BC%258Fregular-expression%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share 正则表达式(Regular Expression) on whatsapp"
+       href="https://api.whatsapp.com/send?text=%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%28Regular%20Expression%29%20-%20https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fother%2f%25E6%25AD%25A3%25E5%2588%2599%25E8%25A1%25A8%25E8%25BE%25BE%25E5%25BC%258Fregular-expression%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share 正则表达式(Regular Expression) on telegram"
+       href="https://telegram.me/share/url?text=%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%28Regular%20Expression%29&amp;url=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fother%2f%25E6%25AD%25A3%25E5%2588%2599%25E8%25A1%25A8%25E8%25BE%25BE%25E5%25BC%258Fregular-expression%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28">
+            <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2023-2024
+        <a href="https://EitanWong.github.io/en/" style="color:#939393;">Eitan&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄copy';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻copied!';
+            setTimeout(() => {
+                copybutton.innerText = '📄copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+
+<script>
+    $("code[class^=language] ").on("mouseover", function () {
+        if (this.clientWidth < this.scrollWidth) {
+            $(this).css("width", "135%")
+            $(this).css("border-top-right-radius", "var(--radius)")
+        }
+    }).on("mouseout", function () {
+        $(this).css("width", "100%")
+        $(this).css("border-top-right-radius", "unset")
+    })
+</script>
+</body>
+
+</html>

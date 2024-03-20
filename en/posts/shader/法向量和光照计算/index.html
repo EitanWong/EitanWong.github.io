@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>法向量和光照计算 | Eitan&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="1、法向量：垂直于平面的向量，包括两个方向 在真正的模型顶点数据就会存储法向量，在存储过后，它抛弃了在数学概念上的两个方向的法向量 只保留了正方向的法向量 2、这里有一个很简单的示意图，蓝色是从顶点引出垂直于平面的法向量， 黄色的是从外部射向表面的光向量 💡 光的方向是相反的，一定是从模型指">
+<meta name="author" content="Sulv">
+<link rel="canonical" href="https://EitanWong.github.io/en/posts/shader/%E6%B3%95%E5%90%91%E9%87%8F%E5%92%8C%E5%85%89%E7%85%A7%E8%AE%A1%E7%AE%97/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.0dcd30655f684635e8d387636982f36d45e2607d9dde19da5180cecacb25b773.css" integrity="sha256-Dc0wZV9oRjXo04djaYLzbUXiYH2d3hnaUYDOysslt3M=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="apple-touch-icon" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="mask-icon" href="https://EitanWong.github.io/img/Avatar.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://EitanWong.github.io/en/posts/shader/%E6%B3%95%E5%90%91%E9%87%8F%E5%92%8C%E5%85%89%E7%85%A7%E8%AE%A1%E7%AE%97/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="法向量和光照计算" />
+<meta property="og:description" content="1、法向量：垂直于平面的向量，包括两个方向 在真正的模型顶点数据就会存储法向量，在存储过后，它抛弃了在数学概念上的两个方向的法向量 只保留了正方向的法向量 2、这里有一个很简单的示意图，蓝色是从顶点引出垂直于平面的法向量， 黄色的是从外部射向表面的光向量 💡 光的方向是相反的，一定是从模型指" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://EitanWong.github.io/en/posts/shader/%E6%B3%95%E5%90%91%E9%87%8F%E5%92%8C%E5%85%89%E7%85%A7%E8%AE%A1%E7%AE%97/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-04-05T22:58:57+00:00" />
+<meta property="article:modified_time" content="2023-04-05T22:58:57+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="法向量和光照计算"/>
+<meta name="twitter:description" content="1、法向量：垂直于平面的向量，包括两个方向 在真正的模型顶点数据就会存储法向量，在存储过后，它抛弃了在数学概念上的两个方向的法向量 只保留了正方向的法向量 2、这里有一个很简单的示意图，蓝色是从顶点引出垂直于平面的法向量， 黄色的是从外部射向表面的光向量 💡 光的方向是相反的，一定是从模型指"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "Posts",
+          "item": "https://EitanWong.github.io/en/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "🖼️ Shader",
+          "item": "https://EitanWong.github.io/en/posts/shader/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "法向量和光照计算",
+      "item": "https://EitanWong.github.io/en/posts/shader/%E6%B3%95%E5%90%91%E9%87%8F%E5%92%8C%E5%85%89%E7%85%A7%E8%AE%A1%E7%AE%97/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "法向量和光照计算",
+  "name": "法向量和光照计算",
+  "description": "1、法向量：垂直于平面的向量，包括两个方向 在真正的模型顶点数据就会存储法向量，在存储过后，它抛弃了在数学概念上的两个方向的法向量 只保留了正方向的法向量 2、这里有一个很简单的示意图，蓝色是从顶点引出垂直于平面的法向量， 黄色的是从外部射向表面的光向量 💡 光的方向是相反的，一定是从模型指",
+  "keywords": [
+    
+  ],
+  "articleBody": "1、法向量：垂直于平面的向量，包括两个方向 在真正的模型顶点数据就会存储法向量，在存储过后，它抛弃了在数学概念上的两个方向的法向量 只保留了正方向的法向量 2、这里有一个很简单的示意图，蓝色是从顶点引出垂直于平面的法向量， 黄色的是从外部射向表面的光向量 💡 光的方向是相反的，一定是从模型指向光 光向量也会被形象理解为，光在距离顶点很远的位置，这个向量的长度很长\n那么它和我们的计算有没有关系呢 3、对于两个向量求点击，它们有一个很明显的几何意义，就是能够得到这两个向量之间夹角的大小 也就是求的余弦值cos 对于v1和v2求点积，其实就等于v1和v2的模长相乘再乘上它们之间夹角的余弦值 反过来说求夹角的余弦值其实，就是用点积的结果除以v1v2模长的乘积 结合上图，如果光向量的长度很长，那就必须求的它的模长，还要求的法向量的模长，只有两个向量模长得到之后，才能求得准确的余弦值 反三角函数求具体的角度在这里不需要应用，但是有些情况下可能会需要求解具体的角度 一般情况下角度如果大于90度，cos值是小于0的， 在这样的情况下，我们正好就可以考虑如果两个向量之间的夹角是小于90度的，它们点积的结果就应该是0～1之间的范围 如果能够让v1和v2能够把它们做到是一个单位向量，那么它们模长相乘结果就为1 也就是说两个这样的两个向量它们之间的夹角就是两个向量之间的点积\n💡 对于光的计算需要两个向量 1.关于法向量 2.关于顶点指向光源的光向量 3.再把这两个向量做到归一化的时候，夹角的余弦值就是两个向量点积的结果 💡 利用这个点积值0～1之间，就可以拿来进行着色 夹角越小光照亮度越亮\n法向量的计算 使用U和V两个向量，它们不一定要垂直，它们描述的是U和V所在的一个平面 用U和V进行一个左手方向的差积，就可以得到一个垂直于平面方向的法向量N\n5、根据左手坐标系，下方的向量计算，如果是V1*V2垂直的法向量是朝着屏幕里面的， 为了得到垂直于V1V2所在平面的正确的法向量，应该v2乘以v1，这样法向量的朝向是朝向屏幕外边的，也就是朝向观察者的方向，这样才可以通过夹角计算光照，并得到正确的光照效果\n6、所以对于下方的三角形，在计算法向量是，和顶点的顺序是密不可分的，例如要计算正确的法向量，那么就要计算V1和V2的向量，一个是B-A另一个是C-A， 如果ABC对于的顺序分别是0、1、2 V1和V2向量也就是\n[1]-[0]和[2]-[0] 那么这样子的话就必须要保证顶点遍历的顺序，如果是其他的顺序，就会得到错误的法线方向 ",
+  "wordCount" : "1029",
+  "inLanguage": "en",
+  "datePublished": "2023-04-05T22:58:57Z",
+  "dateModified": "2023-04-05T22:58:57Z",
+  "author":{
+    "@type": "Person",
+    "name": "Sulv"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://EitanWong.github.io/en/posts/shader/%E6%B3%95%E5%90%91%E9%87%8F%E5%92%8C%E5%85%89%E7%85%A7%E8%AE%A1%E7%AE%97/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Eitan's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://EitanWong.github.io/img/Avatar.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://EitanWong.github.io/en/" accesskey="h" title="Eitan&#39;s Blog (Alt + H)">
+            <img src="https://EitanWong.github.io/img/Avatar.png" alt="logo" aria-label="logo"
+                 height="35">Eitan&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://EitanWong.github.io/en/" title="🏠 Home">
+                <span>🏠 Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/search" title="🔍 Search (Alt &#43; /)" accesskey=/>
+                <span>🔍 Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/posts" title="📚 Posts">
+                <span>📚 Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/tags" title="🧩 Tags">
+                <span>🧩 Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/archives/" title="⏱️ Archives">
+                <span>⏱️ Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/about" title="🙋🏻‍♂️ About">
+                <span>🙋🏻‍♂️ About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://EitanWong.github.io/en/">🏠 Home</a>&nbsp;»&nbsp;<a href="https://EitanWong.github.io/en/posts/">Posts</a>&nbsp;»&nbsp;<a href="https://EitanWong.github.io/en/posts/shader/">🖼️ Shader</a></div>
+            <h1 class="post-title">
+                法向量和光照计算
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-04-05
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1029字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>3分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Sulv
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://EitanWong.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">📖 Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e6%b3%95%e5%90%91%e9%87%8f%e7%9a%84%e8%ae%a1%e7%ae%97" aria-label="法向量的计算">法向量的计算</a>
+                </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><p>1、法向量：垂直于平面的向量，包括两个方向 在真正的模型顶点数据就会存储法向量，在存储过后，它抛弃了在数学概念上的两个方向的法向量 只保留了正方向的法向量
+<img loading="lazy" src="https://img-blog.csdn.net/20180106022905579" alt="https://img-blog.csdn.net/20180106022905579"  />
+
+2、这里有一个很简单的示意图，蓝色是从顶点引出垂直于平面的法向量， 黄色的是从外部射向表面的光向量
+<img loading="lazy" src="https://img-blog.csdn.net/20180106023102478" alt="https://img-blog.csdn.net/20180106023102478"  />
+
+💡 光的方向是相反的，一定是从模型指向光 光向量也会被形象理解为，光在距离顶点很远的位置，这个向量的长度很长</p>
+<p><img loading="lazy" src="data:image/webp;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4&#43;JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAEoAn0DASIAAhEBAxEB/8QAGwABAQEBAQEBAQAAAAAAAAAAAAYFAQQDAgf/xABAEAEAAQMBAgoHBwMEAQUAAAAAAQIEAwUGEdEWVZQXVNIxIUGScTaTURITFLGywXJhgoEiMkLwkQfhIyR0oaL/xAAZAQEBAQEBAQAAAAAAAAAAAAAABAMBAgX/xAAsEQEAAgECBAYABwEBAAAAAAAAAQIDERIEUXEhM0ExodEiEzJhI2KB8MHh/9oADAMBAAIRAxEAPwD&#43;zAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMjVtocGk5qMNeHJkqqp&#43;bfTu3bmuxNqsdE6HlrmmJqiY3TMeMeKfibXrim1J7w34etbZa1vGsS8fHa187TN/zCit89NxgozUxMU5KYqiJjx8ULa2GoWljh1O0inNRXTvrxzTv/wDpSaVtHaX8U4q//Qzbv8Ku7&#43;kpeG4i8zpmnvPp2VcVw9IjdhjWI9e&#43;vs2xyJ3w6&#43;k&#43;cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPjc22K7wVYc9EV0Vd8S&#43;w5MRMaS7EzE6w&#43;OC3xW2CnBhoijHRG6KY8mVq&#43;zVrqETkxRGDP5VUx4T6225uZ3w0vXbaOz3TLfHbdWe6RttYv9CzRbarjryYe6nJ3z/z5qe1vLe8xRlt8tOSmY8p7n6uLXBdYpx58dNdM&#43;UwlrvQb3R803ekZKppjvx987vzTfu4P5V94&#43;VX7XEfxt7T8K51g6TtNgvJ&#43;hdbre4jw3Vd0/7&#43;DdiYlVjyVyRurOqXJjtjtttGjy4NUsbm8uLPDc0V3FrVTRmxxPjRMxviJ/o9bzTY283X2mMcRk75mI3b/W9LRmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOTG90Bj6ts9aalTNXyRjzeVdMff8WNi1HVNnMkYL7FOe237qa48o/afyWD557fFc4px5qIronviYSZOH&#43;2/HOk&#43;39qsfEaRsyRur7x0fGx1G21DDGW2yRVHnHnHrh60pfbNZ7DL9r0jLVTVT4zj3/wC9/qerStp6M1cW2oU/Z88eG&#43;Y3RM/k5TidLbMsaT7S7fh4mN&#43;KdY94UI5TVFUb4nfHxFiR0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHJZup6FZ6nTvy0/LliP7clPfHC0x4vjreNLRq9Uvak61nSUbRm1XZjLFGaKriz39/l/z5KXT9VtNTxRXb5ImfOie&#43;P6PVkx0ZaJoyUxVTPfExv3prUdl6sNc3ek5JxZaZ3/Jv7/Uj2ZeH/L9q8vOFe7Fn/P9bc/KeqndTOm7UTRl&#43;x6rROHLHh88x4T6/go6K6clMVUVRVTPdMTvVYs1Msa1lPlw3xTpaH7AasgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABx0B4NS0ez1Ojdnx/wB0d1dPhMJyaNW2Xy/Nj33NnM&#43;MeUR&#43;SyfmqmmumaaoiYnviUuXhq3ndWdLc1OLiJpG20a15fHJ4NN1q01PFE4q/lyf6sdU&#43;MNBOansvROSbrTapt88f3RTE7omf2&#43;D46dtJns8/wBi1iiaKqfCMkx9/C8V4i1LbM0afr5Pc8PW8TbDOv6ecfKqH4x5ceaiK8ddNdM900zvh&#43;lqN0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHk1DTLXUsU47nHFXwqjwmP6vYPNqxaNJh6raazrWdJRuWy1bZvJOazrnPa7980T47o9X5t3StftNUpimifp5fPHV3/ANPi1Jjf4TG&#43;GBqezGHPVNxYz9nuI8Y&#43;XwiZ/JH&#43;FkwTrj715fCv8XHn7Ze1ufy33UlZbQXul5os9Zx1bvLL3zHCqLe4xXOKMuHJTXRPdMSoxZ6ZY7evLzYZcN8U9/Tn5S&#43;oDZiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8t7p9tf4ZxXOKK6Z7p849UpnPpOp6Bkm407LVmwRO&#43;cfw9ceawcmN8bk&#43;Xh65J3ek84UYuItjjb6xyljaRtHa6juw1z9G486KvP1NnexNV2Zt76frYJjBnid/zUx4SzbfWdS0TP8AZtVx1ZcO/dTk8935sozXxTtzenP5azhpl&#43;2Ge/Lz/rmrh8LW8wXmCM2DJFdE/B9t6yJiY1hHMTE6S6A64AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPjc2mC7xVYs&#43;OmumqO6YfYcmItGkuxMxOsJG70G/0jJVdaRmrqojxnFv8f/LQ0nae3vaowXUfZ7jdumKvCJn8m6yNW2etdSia4iMWfyrpjv8AX8UU4b4p3YfTl8LIzUyxtzevOP8AvNrxO91H49Q1TZzNGG&#43;oquLXyr793qn8pU1jqFtqOH6tvkiqnzjzj1tsWeuTtPaeUscvD2x9/WOcej1AKGAAAAAAAAAAAAAAAAAAAOM3XNVp0nTa7j&#43;2cndjpq/1S9VrN7RWPWXm94pWbT6Q0xhbPbSYtYx/SyxGK6pjfNHlVHxhuO3pbHbbaO7lL1yV3VdAeHsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB8s9viucc482Omuie&#43;JhM3mzd1p&#43;WbrR89VM984t/&#43;96rcYZcFcvr6822LPfF2j05eSe0raijLXFrqFP2fPE7t8&#43;ETwKGmYqiJid8SzNV0K01SiZro&#43;TL5ZKY8f6/FhU59X2ZrjHm33Nnv8J&#43;Eft8GH4uTB2y945/KicWPP3xdp5T/AMlYjxadqtrqWL57fJE1RH91E99L2La2i0axKK1ZrOkugOuAAAAAAAAAAAAAAOT3IfbCx1O4uMtzkppiytqN9E/N37&#43;/w&#43;O9csfav2cu/wBMffCnhbzTLXRLxVIvinXy7pbT9nbi80iz1LTcsYrumZ3/ADTuid0z4r3DFcYaIyTE1xTHzTHnPmxdj/Zu2/l&#43;KW65xOS17zFvKZOGx1pSJjziHQE6oAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfjJioy0TRXTFVMxumJjvfscmIntIl7/ZnLb3E3mkZasWSPH6e/dv9U/k/enbUTTm&#43;yarj&#43;hlid3z7t0T61I8OpaPaanhmnNREVx/jXHhMI54e2Od2GdP08v8AxZXPXJG3NGv6&#43;cfL201010xVTVFUT3TEv0jYp1jZmvdH/ubPf64jgUOl61aapiirFX8uT/Vjqnxh7xcTW87LdrcnjLw9qRurOtecf7s0Rx1UmAAAAAAAAAAAAGPtX7N3f6Y&#43;&#43;Gwx9q/Zy7/TH3w2weLXrDHiPCt0fLY/2btvXV&#43;KW6wtj/Zu3/l&#43;KW45m8S3WTB4VekOgMmwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD81UxXE01RExPfEpzVNl9&#43;X7Xplc4M0eMU0zuiZ/b4KUY5cNMsaWhrizXxTrWUtY7TZ7TP9k1jFOOqPD6m77&#43;FTY8tGWiK8dcV0z4xMS81/plrqOGcdxjir4VeceqU1VZ6vs5lnJaVfaLXzpnxiPXCeL5cE6X&#43;1efn/AGo2Ys/5Prbl5T0WDrK0rX7TU4iimfp5vPHV3/0aqul63jWs6pL0tSdto0kAe3kAAAAAAAAY&#43;1fs5d/pj74bDG2s9nLv9MffDbB4tesMeI8K3R89j/Zu3/l&#43;KW4w9j/Zu3/l&#43;KW45m8S3WTB4VekOgMmwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5Mb43OgJ7VtmMVxM3FjP0LiJ&#43;aN3dM/k8lntDeaZmi11nFVujwjJu8f/Krea9sLe/wziz44qjynzj1I7cPNbb8U6T7SrpxEWjZmjWOfnD629zhusUZcOSmuirumJfVH5tL1XQM1VxptX1sHfNE&#43;O6P3jza2k7SW2oxGLJMYbiPCaKp75/Z6pxMTOy8aW/3o5k4fSN&#43;Od1f96toc3uqkoAAAAAAxtrPZy7/TH3w2WNtZ7OXf6Y&#43;&#43;G3D&#43;LXrDHP4Vuj57H&#43;zdt/L8Utxh7H&#43;zdt/L8UtxzN4lusmDw69IdAZNgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHJjew9X2Ztr6ZzYN2HP3/NT3TP7t1xnkxUyRpaGmPLfFbdSdElb63qOi5aLbVcNVeOf8cnfO71&#43;antLy3vcMZrbLTkonziXbm1w3eGcOfHFdE&#43;Upe40LUNHzzdaTkqro76sUz5fv8Usfi4J7/avvHyq/az/xt7T8K4YOlbUW97VGG5p&#43;z5/hV3TP7N3fEqqZKZI1rKTJjvjnbeNHQGjwAAMbaz2cu/0x98NljbWezl3&#43;mPvhtw/i16wxz&#43;Fbo&#43;ex/s3bfy/FLcYex/s3bfy/FLcczeJbrJg8OvSHQGTYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcdAY&#43;rbPWup0zXERhz&#43;WSmO/1/Fj4dU1PZ/J9DUaKs&#43;D/TX57v2n8lg&#43;WfBjuMdWPLRFdFUbpiYSZOH778c6W9p6qsfEaRsyRur7x0l8rHULbUMMZbbJFcececet6knfbPXWm5pvNHyVRu8Zxb/wDe/wBT1aXtTiz10299R9nz92&#43;fCmZ/JynE6TsyxpPtLt&#43;HiY34p1j3jqohymqKo3xMTH7OrEgxtrPZy7/TH3w2WNtX7OXf6Y&#43;&#43;G3D&#43;LXrDHP4Vuj57H&#43;zdt/L8Utxh7H&#43;zdt/L8UtxzN4lusu4PDr0h0Bk1AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcZuq6Ha6njmaqYozRH9uSnvaY8XpW8aWh7pe1J3VnSUdiutV2ayfSuqJuLTymPHd6p8lJp2q2upYort8kb9391E99L1ZMdGSiaK6YqpnviY3pnUdmctvl&#43;2aRkqx5I8fpxP3cCOa5eH71&#43;1eXnCrdiz/m&#43;tuflPXkqGPtX7OXf6Y&#43;&#43;Hj03andki11THODJHh9SY3R/X4PXtTXTk2auqqKoqiaYmJid&#43;/xh9Dg81MuSs1nzhDxmK&#43;LHaLR5Pxsf7N238vxS3GHsh7N23rq/FLcaZvEt1llg8KvSHQGTYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABlbSbQ2ey&#43;jZdVvoyVYcUxExjp31TMzuhEdOuzPVb70Ke0/o9za295gqwXOHHmxV/5UZKYqif6SzuK2gci2HNqOAET067M9Uv/Qp7R067M9Uv/Qp7S24raByLYc2o4HeK&#43;gci2HNqOAER067M9Uv/AEKe0dOuzPVL/wBCntLfivoHIthzajgOK&#43;gci2HNqOAER067M9Uv/Qp7R067M9Uv/Qp7S34r6ByLYc2o4DivoHIthzajgBEdOuzPVL/0Ke0dOuzPVL/0Ke0t&#43;K&#43;gci2HNqOA4r6ByLYc2o4ARHTrsz1S/wDQp7R067M9Uv8A0Ke0t&#43;K&#43;gci2HNqOA4r6ByLYc2o4ARHTrsz1S/8AQp7R067M9Uv/AEKe0t&#43;K&#43;gci2HNqOA4r6ByLYc2o4ARHTrsz1S/9CntHTrsz1S/9CntLfivoHIthzajgOK&#43;gci2HNqOAER067M9Uv/Qp7R067M9Uv/Qp7S34r6ByLYc2o4DivoHIthzajgBEdOuzPVL/ANCntHTrsz1S/wDQp7S34r6ByLYc2o4DivoHIthzajgBEdOuzPVL/wBCntHTrsz1S/8AQp7S34r6ByLYc2o4DivoHIthzajgBEdOuzPVL/0Ke0dOuzPVL/0Ke0t&#43;K&#43;gci2HNqOA4r6ByLYc2o4ARHTrsz1S/9CntHTrsz1S/9CntLfivoHIthzajgOK&#43;gci2HNqOAER067M9Uv8A0Ke0dOuzPVL/ANCntLfivoHIthzajgOK&#43;gci2HNqOAER067M9Uv/AEKe0dOuzPVL/wBCntLfivoHIthzajgOK&#43;gci2HNqOAER067M9Uv/Qp7R067M9Uv/Qp7S34r6ByLYc2o4DivoHIthzajgBEdOuzPVL/0Ke0dOuzPVL/0Ke0t&#43;K&#43;gci2HNqOA4r6ByLYc2o4ARHTrsz1S/wDQp7R067M9Uv8A0Ke0tuK2gci2HNqOA4raByLYc2o4AfzvUv8At3Y7U8XyZrG/iryrpop3x/8Ap4tN24s9StM&#43;m2l7VTiyeEYriPlnv3748X9S4r6ByLYc2o4CNl9Aid8aLYRP/wAejgYWwxvjJSdLR5t65vpOK8bqz5fHJ/PdN/7d2f0Gzp0y4w3eXLgqqpqqxUUzTM757vF6unXZnql/7untLjivoHIthzajgOK&#43;z/IlhzajgUTMzOsp61isaR6Ijp22Z6pf&#43;7p7R07bM9Uv/d09pb8V9n&#43;RLDm1HAcV9n&#43;RLDm1HA46iOnbZnql/wC7p7R07bM9Uv8A3dPaW/FfZ/kSw5tRwHFfZ/kSw5tRwAiOnbZnql/7untHTtsz1S/93T2lvxX2f5EsObUcBxX2f5EsObUcAIjp22Z6pf8Au6e0dO2zPVL/AN3T2lvxX2f5EsObUcBxX2f5EsObUcAIjp22Z6pf&#43;7p7R07bM9Uv/d09pb8V9n&#43;RLDm1HAcV9n&#43;RLDm1HACI6dtmeqX/ALuntHTtsz1S/wDd09pb8V9n&#43;RLDm1HAcV9n&#43;RLDm1HACI6dtmeqX/u6e0dO2zPVL/3dPaW/FfZ/kSw5tRwHFfZ/kSw5tRwAiOnbZnql/wC7p7R07bM9Uv8A3dPaW/FfZ/kSw5tRwHFfZ/kSw5tRwAiOnbZnql/7untHTtsz1S/93T2lvxX2f5EsObUcBxX2f5EsObUcAIjp22Z6pf8Au6e0dO2zPVL/AN3T2lvxX2f5EsObUcBxX2f5EsObUcAIjp22Z6pf&#43;7p7R07bM9Uv/d09pb8V9n&#43;RLDm1HAcV9n&#43;RbDm1HADM2Q2/0nbTJc49Ox3GOu2iKq4zURG&#43;J&#43;G6ZVDy2WmWGmxVFjZYLaK/8vo44p3&#43;vc9QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//Z" alt="Screenshot 2023-03-19 at 11.49.09 PM.png"  />
+</p>
+<p>那么它和我们的计算有没有关系呢 3、对于两个向量求点击，它们有一个很明显的几何意义，就是能够得到这两个向量之间夹角的大小 也就是求的余弦值cos 对于v1和v2求点积，其实就等于v1和v2的模长相乘再乘上它们之间夹角的余弦值 反过来说求夹角的余弦值其实，就是用点积的结果除以v1v2模长的乘积 结合上图，如果光向量的长度很长，那就必须求的它的模长，还要求的法向量的模长，只有两个向量模长得到之后，才能求得准确的余弦值 反三角函数求具体的角度在这里不需要应用，但是有些情况下可能会需要求解具体的角度 一般情况下角度如果大于90度，cos值是小于0的， 在这样的情况下，我们正好就可以考虑如果两个向量之间的夹角是小于90度的，它们点积的结果就应该是0～1之间的范围
+<img loading="lazy" src="https://img-blog.csdn.net/20180106023314454" alt="https://img-blog.csdn.net/20180106023314454"  />
+
+如果能够让v1和v2能够把它们做到是一个单位向量，那么它们模长相乘结果就为1 也就是说两个这样的两个向量它们之间的夹角就是两个向量之间的点积</p>
+<p><img loading="lazy" src="data:image/webp;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4&#43;JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAApAVQDASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAEFBgMEAgf/xABEEAABAwMDAQQFCQQHCQAAAAABAgMEBQARBhIhMRMUQVFhIhVxgZTTMlVCoRYHI5GxUmJDk6LBJDM0RFNUcoKjssLD/8QAFgEBAQEAAAAAAAAAAAAAAAAAAAEC/8QAHBEBAAICAwEAAAAAAAAAAAAAAAFB8JERMVGh/9oADAMBAAIRAxEAPwD7Na18lTqkKjwlTJz4ZZSQM4yVE9EgDkk&#43;AHNh13pkyo0NlT0qQ0w0n6S3VhKR8TdA2jU1eQHXH00GGvlLTaA5LUn&#43;ZSvVbPoAUR530RtG0Nl4SJEU1CSP9onrMhfw35CfgBYa1a2pDpKaYmXVlg4xAjKdT/WcI/tXHetWVPiNBiUZk/0kxfeHsehtBCR8Vn3XkIASAAAAOgF6lS4yJSIqpDSX3ElSGisb1AdSB1IsKP8ADNSfT/jdWVZxXj3cMsJ&#43;G1GfvvyNGpGcai1ACfH2go/vF38iSxEYU/JebZaRypxxQSlPvJv2haXEBaFBSVDIIOQRYUKdLSGx&#43;lqmuJ/5nWl/&#43;TZuTp6qg/p6vqwH8zMVX/yu/tYY6aBqD7Os5v8A1Q4x/wDS3sTUyTlOr1K9DlPaI&#43;7F3U6dFpsNyZNfQxHaGVuLOAkem9jD7UmO3IYcDjTqQtCx0UCMg2FF3HWDIy3XaW/6HqatP3pd/uuN2tkcdnQXvT2jzX3bVXkJUEgkkADqTeqTLjQ2u1lSGmG8gb3VhIyegybCj7XW/wDwNB&#43;WPfNXPedZg80uiqHonujP/avIL0O1CGxIbjuy2G3nTtbbU4ApZ8gOpsKc1LViOVabgrx/u6qcn9rQuBqiXGA9p6aqsUeK2UIkoH9Woq/s3kFrCrpup6JVnexhVJlb46sKOx0e9CsK&#43;67W6WcjTVeeVTpqqfNkIz&#43;ipaFOo9I53JPpF1SxModPcqtCqyqvTGApTsN93tiEp&#43;l2Tv0sgA&#43;qrd5cWGX2vQmbHVBTNLyEx1NhztVKwkJIzkk&#43;GL9svNSGUPMuJdbWNyVoIIUPMEdbDZa9MmZGhpSqTIaYStQQkuLCQpR6AZ8fReinVaFVhIMJ7tBGfUw76pG1aeo562Hba4UpKElSiAB1JvRHnxJaXFRpLL6WlFKy0sK2qHUHHQ&#43;iw6LXXQq9TJ9KRVWJaBDWcJec/TGc7ftY8eL2TavCp8uHFlPdm7OcLbCdpO9QGccdOPOw7bWvjk1amw5CI8qoRWHnPoNuPJSpXuBOTYdlrr5VcpsGotwJUpLL7jK3khYITsT9JRV0GPSb7WXmpDSXmXEuNrAUlaCCFDzBHWw92tawWtawWtawWtawWtawWtawhSghJUo4AGSfK8UpSPa&#43;7V9RQVthtS6bHV0ZZxkLx/Gsc58AQPO8qWkLQpChlKhgjzvE4FR/B0dFGrgUiAyOzhVDbubW39ltzH0Vgcc8Kx58WkVGntQ6oq9Kc1c/OiN0pAeX7NbYysoQDj9TqDkXWjWerolAgavlTIL1PmyEoNOQxgoSSRwvOSeL76exoqFUvaUGmVxG5SlhpEGUWCVDBOzbjob1x6PoiJObmNUSuK7NztW2FQZRaQrrkIKcXbE1TV2oIuuO5TJiaRTe3bRHLkIrblA9cu/ZJ5vbT6klqraz1JLkNMvQXO5sOPJKktISOOBycqIOB1uJETSUusmqyaVqF10vdt2a4Uotb/PZtxelxEF6tVhTlMqj9HrTSTJjmnSErS8ngKT6vQ&#43;8c3mhGkdV1Kvahf0/WHVT4cqEp0Lfgd1UBnBG3Jykg9b69JVuTTNAyR3iIk0uc5DadmuKS2UJXgZIBPQ4F8kSNRKC65UaHQ9QGpiOplpcqLIUnnpnIPA9F2WlqgxpugM01VGrkh0EuPuimrw44o5UefT&#43;66ju03qyTWap3V2bQ3k9mVbYMhxbnGPBSQMXlpvHRqtsDcjT1dPugEH7zcjVxVwNOV74wwP3qsr5/qKu6j1PpXUtQRKiR6RFdVFENTWXFhJHrb/A8j0Xawa5qCozaVpehSo1O7vSGZL0l5ntSrKUgJSk8eI&#43;&#43;/M6gabny5ch7RupAZhKnUNo2oKj9raHMZvpn02iVVMNL2kdSIchMhlp5pAbXsAwElQcGRYYzqjUNb1F&#43;X7i5MllhyBVO5yuxR6shQI2qBzwOuR43lUxubL1zpqjVWUiV3OK7OccS3sS66CUpO3oNvW/a4FFVps6e/BdbTAKt5QltAUVfxbu0zn03xTmn4syhTKPp&#43;upepClNkSGkr7Vhf0klW8nPlaM0NCdb6iVDVQTIa/EHtnuQc7FOAz17Tb06Z8Ol7dVUSDT/wAy9Kz47OJU6Y4qQ4VElZSlAHHQfC7BLdJGqjqX8Iag9olO3eWE7R6u3O3fjOOL4qvSaBXKqqpT9P6rD&#43;chSG1gIOAPVAVx08LRXIzqvGemgzVUpwImoZUpglIV6wGQMHjnp8bwuga0qep6np&#43;HEdQhKoSpFVPZgnIOzb/LlQPTwN7aVNapldl1F2JqBxlyO1HjR1091XZIQMEk85JPObmjfhOgvz3YNJrbDlQz2ylU6ScDk4T6vA5PS4KqXQqNU9XUynaUp7bKqTJD8&#43;osjhIH9GV/aUT&#43;z9t2kEppustW0pviG9DE0o8ELUkhePf1vgg0nQNIfafjO1uMppwOBCmpYSVA55GzB6XrbmsPt6hksyjNrtcT3eOzHju4ZbxsQCVIGMA7iTgcXYR7rrlQqGj9KaUgPtodq8VpL&#43;5BUUtJQklWQRgeB8/MXlbFP1dGYbYZqdFQ22kJSkU93AAGAP8ANuaVpTuWp3aw9IS6luI3DhspTjsG09efEk3kZOATjOPAeNlfM6gzqWpfmPT6dKn0xblPiKmMnujnZbiduSntMkjwOePK6WPU9VaeolZq0GZC7GPW3RLR3UkqyoBSuVcJ6cdfTeSVeqMO6opddYjVGFJibmJTUmnP4W0rqApCFAkHkYOD53x6eqlC9lV&#43;nVoyG2KhUX1hKojwK21YweE8fvuRmyXqC9qbXTlZhO1GmOUplaY/&#43;jXsePCiU4cCh4faPW&#43;L8t4Vdj06uR6XLp0dlioOoUh2KtfIAHqkODA9Bz77vIU3QtP04ugxJcpqG5ncUsvhZJOSd23Ob5KKjQWnZbkumzqgl1aVAhxMhSVE9SQU4J9NvRT0LSNc1RoGnMM1aLEjpW5tKWnQ4kdoSQSHNqvWA6ji&#43;2r0nUVMqOlITlRgLcTMX2K&#43;wdVhZQSpSypwlWefL&#43;67DQWqKPR9IQ4M&#43;Q6zIbLm9BiunGVqI5CcdDfnU2pqTP1BpyVFfdcahTFOPq7q6NiSgjPKeefK9T2lKZes9atvP0Y1CAaompphIHc/XKVchwetjbgfw/G9es6LKkTF0vs6PU67VCncWIKw80AAO0Ky4Q2AB5c&#43;V5KqZoNWqE6kU8/7RSnbv7u/t&#43;jtzt2Yzjxuvmwvy8nVWTU3J1SbkylbnVtd5Rn9ielxWtymaiia4odPdqVPffbpbrSHHIiykoG0HeN/rE&#43;eR7r36Cb1O1GqlHg1Gmoj0qe5HR20RxfHXCcODCeeAc&#43;&#43;9MuvUqPrGkS6e867Gg015gOOsvYC&#43;NgUdpUc464N2uiKpRqRCEJypKk1KoSlPSFpivJSt1Z6AlAwOg5u59Rd921l9a0b5A787bu2svrWjfIHfnbyAXNxWPd21l9a0b5A787bu2svrWjfIHfnbyG1hj3dtZfWtG&#43;QO/O27trL61o3yB3528htYY93bWX1rRvkDvztu7ay&#43;taN8gd&#43;dvIbWGtgPCO2JCkLeCR2ikJKUlWOSAScD43stawWtawX4dabfaU082lxtYwpCxkEeRF&#43;7WHFTqRTqQhxunQmIjbit6kMoCQT54F9trWC1rWC1rWC4xi5tYLWtYLWtYLWtYLWtYLjFzawjFrm1guLm1hFrm1hFza1guLm1hFza1gta1gta1gta1gta1gta1gta1h//9k=" alt="Screenshot 2023-03-20 at 12.07.11 AM.png"  />
+</p>
+<p>💡 对于光的计算需要两个向量 1.关于法向量 2.关于顶点指向光源的光向量 3.再把这两个向量做到归一化的时候，夹角的余弦值就是两个向量点积的结果 💡 利用这个点积值0～1之间，就可以拿来进行着色 夹角越小光照亮度越亮</p>
+<h2 id="法向量的计算">法向量的计算<a hidden class="anchor" aria-hidden="true" href="#法向量的计算">#</a></h2>
+<p>使用U和V两个向量，它们不一定要垂直，它们描述的是U和V所在的一个平面
+<img loading="lazy" src="https://img-blog.csdn.net/20180106023832606" alt="https://img-blog.csdn.net/20180106023832606"  />
+
+用U和V进行一个左手方向的差积，就可以得到一个垂直于平面方向的法向量N</p>
+<p><img loading="lazy" src="data:image/webp;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4&#43;JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAEtASMDASIAAhEBAxEB/8QAHAABAAIDAQEBAAAAAAAAAAAAAAYFAQcEAwII/8QAQhAAAQMDAQQGBwUFBwUAAAAAAAECAwQFEQYhMWESQQeBUXETIsE3FHMyFZFCsYKhYnIWJENSIzRTdLIzY5LC0eL/xAAYAQEBAQEBAAAAAAAAAAAAAAAABAIDAf/EACMRAQACAAcAAgMBAAAAAAAAAAABAhGxBANxMjFRIUESIhP/2gAMAwEAAhEDEQA/ANzAHnPMyngfM/PJG1XOx3IPSZw&#43;3oCsiv8AQTWl9zY9ywR55vR9JOwsIpGyxMkb8r2o5M9ymprMewzW9beS&#43;wAZaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOO67bTVp/wBF/wCCnYYVMntZwmJZtH7VmGv6ilmoNNMq4G5gradrKhifdcnyu9ROaH/AU/wm/gh5zLWsromxRQvo1YqPznna7KYVOjGM8c4OtEwh23d6dyMJhw2diNqcYn8MgFNqS8PtVE1tOxz6moXkhRG52nOlJvaKw7XvFKzaVnHVU8s8kEczHSx/OxHIqt8UPY1tS2&#43;7QX&#43;SOmmT3&#43;OPznKq/NnCqnH5uknFlraquofMrKV1NM1ytc1UxnHSmeg7b&#43;xG39xbGE&#43;xqP8AWcJjCViACZWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfKoi4ym4&#43;jCgRek9oVZ/p/UwlCEWpPaDW/6f1MJShRqO1eIyTabrbmc2QATqQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBkwoEXo/aFWfA9TCUIRej9oVZ8D1MJQhRqO1eIyTabrbmc2QATqQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADC7jJhdwEXo/aFWfA9TCUdJF6P2hVnwPUwlHSU6jtXiMk2m625nNkAEykAAAAAAAAAAAAAAAAAAAAAAAAAAAAqvqU66mW24Z5KUvm5x6XNzY&#43;w1FZnHD8MWvFcMfz9LUFTablPXV9xglaxG0syMZyouVTbvLYWrNZwl7S0XjGAAGWgAAAAAAAAwu4yYXcBF6P2hVnwPUwlHSRej9oVZ8D1MJQU6jtXiMk2m625nNkAEykAAAAAAAAAAAAAAAAAAAAAADwq6ymoKZ9TWVEdPDGmXSSORrU7VAq7nrLTlmrXUdxvFNTVDURXRvdtRF3ZOResfRqIq/xBSbO5V/9EB1PqGyatvrqTTGlae&#43;3J7Ua&#43;umjVI2onT0ZwnSqp2kNqer6q/iui097zBNdKpfMqmUyIkVIzeqLxxtxs6N&#43;QP0VabtQ3y2xXG3TpPSzIqskRFTOFVF2Lt3opX3C3XBl5jutuSGR/leTJFK5W5TOcopYWq2U1mtVNbaNnLBTRpGxOnCdK8V3nYaraazjDF6ReMJVFitlRQ&#43;9VFY5i1FXL5j2xr6LeCFuALWm04yUpFK/rAADLYAAAAAAAAYXcZMLuAi9H7Qqz4HqYSki1H7Qqz4HqYSgp1HteIyTabrbmc2QATKQAAAAAAAAAAAAAAAAAwqoiZVcIBk&#43;JJI4Y3SSvaxjUy5zlwiJ3qpCtTdaVpstQlutkbrzc3rysgpV5mo7uVyZ28EyvgUbdIaw19UMqtX1q2y27226mdhyp0ZTaieK5XwAsr/ANa9JFWNtWlqVb5cpF5WpFny2r4p83Zs4nBTdXmoNW1sdx15c1WJq5ZbaZcNbwVU2J2ZXiTyxaZs2m6VKe00EVOmPSeiZe/xcu1S1A4rZaLfZqRtLbKOGlhb9yJmM8V714qcFq0ja7Rfbjeqdj31lwdmR8jubk70b0oi&#43;pO4vAAAAAAAAAAAAAAAAAAMLuMmF3ARej9oVZ8D1MJQRej9oVZ8D1MJQU6jtXiMk2m625nNkAEykAAAAAAAAAAAAAAR/VGt7HpKn57jVIsy/JTxYdI7s6E4qQiSu171ir5dvp3adsz12zyKqSyt/FezCcQJXqrrGsWlv7iSVa2vcuG0lMqOfno5v7P48CKrbNedYr2Puj109ZVXK08aqksreKb12d&#43;E4Er0z1cae0wrZ4ab3qt3rVVPpvz3p0N7CVYAoNN6JsOlo0S20LUmxh1RJ6UjvzdHgmCQGDIAAAAAAAAAAAAAAAAAAAAAAMLuMmFAi9H7Qqz4HqYSgi9H7Qqz4HqYSgp1HteIyTabrbmc2QATKQAAAAAAAAHDdrzbrHROrbnVx0sDfvyLvXuRN6rwQ13WdYeodXyuoNCWqVI0dyvuNQ1Ea1OGdiduV4ATvUGqLPpij95u1YyBq/Ize969yNTapAZtVaz189KfSlBJabY5cPuFRsc5O9v/AM5XihaWPqnoYqz6pqaslvtxcvMqzqvltXwXf27OBP2MbGxGMajWtTCIiYREAgVr6n7DS08j7lLU3G4Spl1ZJIqOY7fzNToXPfkvrbc6623GOyXx7ZJJUX3Kua3lbUom9rk3NkRNuNyptTpQkJW360/WbW&#43;mZL5FQxzZaeZEysUrVy1327&#43;9FVALIFZp&#43;6uvFniqpY0iqEV0VREn9OViq16fai9mCzAAAAAAAAAAAAAAAAAAAAAAAAAGFMmF3ARek9oVZ8D1MJQRek9oNZ8D1MJQUajtXiMk2m625nNkAE6kAAAHnNNFTwumnlZFGxMue9yIjU4qpr&#43;/da9P7wtr0lRyXu5O2NWNirE1eza7s2cQJ7WVtLb6WSqraiOngjTL5JHI1re1TXV060au81Mlq0JbJrjVblrHsxFHxwv4uwnifFL1b3zVErK/Xd5llT5m2&#43;mdysZwVU2J2fabDtlqoLNRso7dSRU0DEwjI24&#43;3vXioECtnVZNdamO664uk11q12&#43;7I9Uij/Z2b&#43;zCeJsOmpaejp2U9LCyGGNMNjjajWtTgiHsAAAAAACPWhPp&#43;rLxbf6dSjLhEncrvQkT/uYi/mJCR6oTk6xKJyf1bXO1fyyRL/5EhAAAAAAAAAAAAAAAAAAAAAAAAAGFMgCLUntBrPgephcXm/WvT9E6sulZHTRN3cy7XL3Im9V8DWOvdbVelNY1TKCnb7zPC1rJ5v8AjZlG7cdKpg7NPaBob2j9S6pvkeoJlRXYhlzBHjemzf4YROCnffmJmMPiMk&#43;nrMVnH5nNsGw6gtupbY24WuoSaByq1dmHNVOhU6FLI1t1IQOj0pXT4RIpq96xqnSiNahd6o6ybBplHwLP77XpsbSUy8zuboRy7m/jwOChLVVGoqqqIib1Ug2pOtazWp60NpR15ubl5WQU3pNR3FyfgmVKNtq151jM8y7VP8P2WXdSxNXzZG8U37eOE4E501o2x6UpkitlG1smMPqHojpX&#43;LvUmwCEQ6N1frpW1Osbm630DsObbaVOVcb8O6E7cr4GwbHp206dom0lroo6diIiOciek/i529VLIAZAAAAAAAAAPlzmsYr3uRrWplVVcIiAUC/zHWGzlxiita83BZZEx&#43;kSkhI7pP8Ann3O/Ki8tyqP5dVTGYI05GL4LhzvzEiAAAAAAAAAAAAAAAAAAAAAAAAAAGAIbNa6C762rqS40kVVA6n2slaipuZtTuXiQTW&#43;nbLoVZKrT2ppLXWSNVHW7nWTzUXowmcJ&#43;9lDr11fbrbrrNIlQtifWTupveHtV39ymxXtwirtwi7NqZJDoPQ2ko6WO7QVUV/rHLzOrJF50R2/Y1c8q&#43;O0o3/Yw&#43;IyT6aJis4/M5tY6drtWNprVpFlRLZqC6yq6OoSFUfIjlwu3fjZ0Y3m59KdXlh0pG19NTpU1n3qudEc9V4f2U8PtUjmvkROs/ReP85f9zTZZOoZAAAAAAAAAAAAACO6rc&#43;4Oo9OQOVHXJ6rUubvZTMwsnhzZaz8yl9PPFTU8k88jY4omq973LhGtRMqqlDpmKS4VNVqSqjcx9ciR0kb0w6Kmb8mU6Fcqq9fFE6AJBHGyKNscbUYxiIjWtTCIibkPoAAAAAAAAAAAAAAAAAAAAAAAAAAAAOavt1FdKV9LX0sVTA/5o5WI5P1IDc&#43;qhaGqW5aKuk1mrP8lXq6J/DpVE8cpwNjgDQt5u2qaDV2n7jre3ughtk22rp4kc2VMovQvLnZ0Y8Dc9l1HZ9QwedabjBVtRMuRjvSb&#43;81dqdqHfNBDUwvhniZLE9MOY9qOa5O5UUgN56orZLOtw03Vz2K4NcrmOgcvl57sZy3sXHADYQNWJrbW2i3&#43;Rq2yLcqNm&#43;40adHeuEx2KjScaf1fYtT07ZbXXxyvVPShcvLI3xau3t3AXYAAAAAAAABT3&#43;9utjIqWihbVXSsVWUtOq4RV6Xu7mN3qvYm1UA4r&#43;v1q9UenGelBsq7hjd5TV9CNf339Hc1xJETCYQrLFZW2emkdJM6qrql3mVdU9MOmfjG7oaibEamxELQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMOajmq1yIqLsVF6SC6j6pbDeJkrLcr7NXI7mSakTDc9/Jsx2YJ2ANVfXOsDQCObe6NNQ2pibKuFV8xiftLjPjzJ2kw0zr/T2qkayhrEjqlTbSz&#43;hIngm5ezJJCI6n6s9Pale6pWBaGu3pVUvouVe9ybl8d/ECXg1UxnWL1fRphW6mtEf3Uz50beH3v8AcicCSaa60NN6kkSmbUOoaxdnu9Xhiqvc1dy/jwAmIIhqbUMclTNZ4bnDbqaJifUK90mHRI7dFH3yuTK/sphcKqoe0Fwu9fSR0enbYtBRMYkcddcUcio1EwishX0nbNyvVvaBZ3q/w2jy6eOJ9ZcKjPu1FEvpyr3r/ZanS5difoedisktHJNcrnKypu1WiedK1PRjam6KPO5ifaq7V4e1msFHZmySMV9RVz7aisnXmlmXivQnc1MInQhaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI1qLq/05qdrnV1AyOoduqYERkiL35Tf25JKANG3Dqtv2mKx1bQ0lJqWja7mWCdqpLjwzv4ovYXFh1BoKvlbRVUFbpyuzyyU61k8DObxa5E&#43;1ENtFHqDRtg1O1PqtujmkRMNmb6MjfzJt7NwFxAkbaeNInc8aNRGuVyuymNi5Xf4noarl0drXQ6Om0fdXXGgauVt9VhVRP2c7F7MKWdj62aGWq&#43;m6mo5bFcGrhUnavluXxXanbs4gbBB5QVEFVC2enmjmiemWvjcjmuTgqHqAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACsvenbRqKl93utDFUs&#43;6rkw5vg5NqdhZgDV83VxqDScy1uhb1Lyb32&#43;rcitf4LuXtRF4nta&#43;tp1FV/T9Z2iaz1PNypMjHLEvr7Uyhso47laqC8UjqS40kVVC7eyVuU7O5eIHpR11JcaZlTRVMVRC9Mtkiejmr2odBrGs6qa2y1j7lom9zW6bGfdZXKsb&#43;Ge7gqKKXrRuenqhlv1zZJqOXOEq6dvNG9O/HT2KvgBs4HDar1bb5SJVWythqol&#43;9G7OOCpvRfE7gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeNVSU1bA6CrgjniemHMkajkXsU9gBre8dUscNS646Quc1krN/lte7ynfZtT9U4HNDr/U&#43;j5WUmt7Q6anzytuVI3KLxXGxf0XgbRPOaCKohdDPEyWN6Ycx7UVFTiigVlh1RZtS0qT2qujn2elHnD2eLV2oW5Ab91T2qrn&#43;oWCeSx3Fu1slMqoxV4tTd2FSzVWvNEO5dVWz6tb0X/G0uFc1O9cetE8QNqAoNPa309qdqJbLgx0yplYJPQkT8q7&#43;zJ46&#43;vV009pSe6WmKGSaB7FekrVciMVcKuE8U/UCSg47RcYrvZ6S4wKix1ULZE4ZTOOzcdeQMgwZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGFRHIqKiKi70UyANf6t6utHz81e&#43;oisNX87amKVI25Tp5VXH2YIFX69u1gjqNP3K50Gp7bPE6JZopFWRGqmPm79vTnxNt6k0LYtV1tNVXeCSV9M3lajZVaipnOFwfND1e6StytWnsNJzNzh0rPMXb&#43;9kCL9SOoEuGmpbPJ5iy256qxzk2LG5cpt70Xm2eBMNQzz0NTQV7JXtgjmRk7EcvKrXbMqnAtqelp6SJIqaCKCNEwjI2I1E7EPO5UMdyoJqSVcNlbjONy9Cm9u0VtEz457tZtSYr6rbbUTV2oa&#43;bzn&#43;7U&#43;IGMRy8qu3uXHeXhwWi2MtVClM2RZF5lc6RUwrlVd53nu5MTb&#43;fHm1W1a/16AA5uoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//2Q==" alt="Screenshot 2023-03-20 at 12.21.26 AM.png"  />
+</p>
+<p>5、根据左手坐标系，下方的向量计算，如果是V1*V2垂直的法向量是朝着屏幕里面的， 为了得到垂直于V1V2所在平面的正确的法向量，应该v2乘以v1，这样法向量的朝向是朝向屏幕外边的，也就是朝向观察者的方向，这样才可以通过夹角计算光照，并得到正确的光照效果</p>
+<p><img loading="lazy" src="data:image/webp;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4&#43;JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAFQAW4DASIAAhEBAxEB/8QAGwABAAMBAQEBAAAAAAAAAAAAAAQBBgUHAwL/xABMEAABAwIBAwsRBwMCBwAAAAAAAQIDBAURBhJRIbIx0RVhNEET0jd0F1eSg3NxkfAiU5MUVJQysweBUrHBI0NVQqGiJDM2RWJyhOH/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAgEDBP/EAC0RAQACAAMHAwMEAwAAAAAAAAABAhEDEjEyIVEigdFBYbEToeEEQnHwI3LB/9oADAMBAAIRAxEAPwD2YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUDJ5YxRTTwU9M&#43;pW6VX7cLY6h7Gsamy9yIuGCY/eaG1UO51uhpeXknWNuDpZHKrnrxqv3kxOMy73yorl1vjxn0w&#43;6YZu15TzXDLi85PvpmMit0cT2So5c5&#43;ciKuKfeaQwGTfTHlX1PT61pTg34AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOVX5N2i51ftVZRtlmzUbnq5yLho1FJtFRU9vpWU1LGkcTMc1qKq4YrjxkgGREQucy9oiszwgMBk30x5V9T0&#43;tab8wGTfTHlX1PT61pqG/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwGTfTHlX1PT61pvzAZN9MeVfU9PrWgb8AAAAAAAAAAAAAAAAAAAAAAAAAAADg5UzzUDbbc45XthpK1iVDEcqI&#43;OTGNcdOCvR2roA7x8qmpho6WWpqJEjhhYr3vcuo1qJiqn1M1fHJf7xDk5F51NFm1FycmxmIuLIvC9UxVPwtXSBJyVbVz0M12rVkbLc5OXZC9y4QxYYRtROJc1EVd9VO4UiYJgWAAAAAAAAAAAAAAAAAAAAAAAAAPP8nFRPtiyrVVRE9np9a09APPLFTw1X2v5Vx1ELJWNgp1a17UciLmN0hsYer0HPb&#43;JPGM9v4k8ZF3Jt3uFN6pu0Nybd7hTeqbtBvSlZ7fxJ4xnt/EnjIu5Nu9wpvVN2i9ybd7hTeqbtA6UnPb&#43;JPGM9v4k8ZF3Jt3uFN6pu0Nybd7hTeqbtA6UrPb&#43;JPGM9v4k8ZF3Jt3uFN6pu0Nybd7hTeqbtA6UrPb&#43;JPGM9ulPGRdybd7hTeqbtBbVbcOAU3qm7QOlKzm6UGe3ShyrXbKB1GquoqdV5eZMVib6R28TNyrd7hTeqbtBsxWJwSs5ulCs9ulCNuVbvcKb1TdoblW73Cm9U3aDOlJzm6UGc3SnjI25Vu9wpvVN2huVbvcKb1TdoHSk5zdKDObpQjblW73Cm9U3aG5Vu9wpvVN2gdKTnN0oM5ulCNuVbvcKb1TdopbXbkTFaGmw703aB0peci8aHLyot8l0yYuNFDqzS070i/wDNExb/AJRDNTshvV1Saip4YbfQzMRXsYics9XomynFgvlibkittTlS8XjGNjOVGVGfk7b6m2sbPcLqxraSFy6meqYuV2hrNVXeDDZU6Vjs8dloOR5V09RK5Zampf8ANPIuy5fyROJERCJY8k6KyVtRWMllnllc/kuVVMKeNz1erGImwmcqrpXU0Id0tYDJ&#43;ywWXLagp7XLK1LgyeStpeWc9qIiYpLmuVc3zvNxTDHO3jWAAAAAAAAAAAAAAAAAAAAAAAAADAZN9MWVnU9PrUN&#43;YDJvpiys6np9agG/AAAAAAAAAAApdgspdgCHauBO7/N9VxNIVq4E7v8AN9VxNCr70gACQAAAABRm8oa&#43;etq2WC3Owmm1aiRP4mcf3&#43;XGT8oLylpok5NM&#43;qmXMgj0u0/cfjJ6zrbKZ0tQ7lKypXPnkXZxXi&#43;452nVOmO7zZkzmW&#43;nXv47v3LQwW2yxUtO3COOSJE3/wBxuKnVId04F3WLXtJpccOD1YRFYiA&#43;VTE&#43;emkijnfTve1UbLGjVcxdKZyKmPhRT6g1jIUv2eQ0tRPUNyjvqz1LsZpfaWNfJhsIrkYi4JxJjgnEdKmyUp6aeKZLreZHxPR6crcpXtdguOCtVc1UXY2DugAAAAAAAAAAAAAAAAAAAAAAAAAYDJvpiys6np9ahvzAZN9MWVnU9PrUA34AAAAAAAAAAFLsFlLsAQ7VwJ3f5vquJpCtXAnd/m&#43;q4mhV96QABIAABHrayGgpJKqodmxxpiqn3VUaiqq4IhlHquV145NqqtqonYuXimfo8HlxkXthwja45uZNYwrtnY&#43;tho57rXLlBcGKjnalLEv8bNJpimojWoiJgibCFm1rhCsukUrgh3XgXdYte0mkK68C7rFr2k031dp3YAAakAAAAAAAAAAAAAAAAAAAAAAAAAAAwGTfTFlZ1PT61DfmAyb6YsrOp6fWoBvwAAAAAAAAAAKXYLKXYAh2rgTu/wA31XE0hWrgTu/zfVcTQq&#43;9IAAkKLORlDeUtVG1sTeUq51zII043afAmJkzFYxlN7xSuqUDKGvmr6ttgtzv3pdWokTYjZ5eWqdy30MFsooqSnbhHGmG&#43;q8arvqQMnrMtrpXSVC8pWVC588i6urox0HYIpXjqnbLllUnHXfbP2jl5AgB0d0O68C7rFr2k0hXXgXdYte0mmeqp3YAAakAAAAAAAAAAAAAAAAAAAAAAAAAAAwGTfTFlZ1PT61DfnnVjqG0/wBsGVbnNkdjBTp&#43;3Grl&#43;RugNiJnY9FBDS5Rehqfh37Q3Si9DVfDv2hi3RbkmAh7pRehqvh37Q3Si9DVfDv2gaLckwEPdKL0NV8O/aG6UXoar4d&#43;0DRbkmAh7pRehqvh37Q3Si9DVfDv2gaLckwpdgibpRehqvh37QW5Rehqvhn7QxNFuSrVwJ3f5vquJpyLXcIm0bk5KoX9&#43;ZdSnf6R28TN0YvRVPw79oyJhV6W1TwSwQ90ovRVPw79oLcoURVWKpT/ANd&#43;0MYTotyfSvrYLfRyVVQ/NjjTFV/Q4Nhop7lXOv8AcW4OkTCliX&#43;Nmnw&#43;XGQp6puU93ZiyZ1ppVx8yJzuWfv4JqJ5cZpkuMKJgkFSiJopn7Ryidc4&#43;jzUpbOtrw6Y2e88/CYMCJulF6Gq&#43;GftDdKL0NT8O/aOuL1aLckssh7pxehqvhn7Q3Si9DVfDP2hizRbkq6cC7rFr2k05Fxr45KVGpFUIqyx7MD0/vbvHXHq20TERiAA1AAAAAAAAAAAAAAAAAAAAAAAAAAABgMm&#43;mLKzqen1rTfmAyb6YsrOp6fWtA3xYAAAAAAAAAApSylAhWngTu/zfVcTSFaeBO7/N9VxOEKvvSozd/rp6&#43;sbYLc7CSVP9zImxEzjTwqnlqk7KC87lUaJCnKVc65kEaaqqun7isn7NuXSukndylbULnzybOK6PAhztOqdMd3kzJnMt9Ovfx3&#43;E&#43;30MNuoo6Wnbmxxpgm/pVSQAdI4PREREYQAANAABCunAu6xa9pNIV14F3WLXtJo9VTuwsABIAAAAAAAAAAAAAAAAAAAAAAAAAABgMm&#43;mLKzqen1rTfmAyb6YsrOp6fWtA34AAAAAAAAAAFKWUoEK08Cd3&#43;b6rj7V1ZDb6OSqqH5scaYqv6HxtS4ULlXYSeb6rjguzsrbyrNXcmifiq8U79r9PCRa2EYRtc/wBReazhXbOx9rBRTXOtXKG4swe9MKWJf42afLw8ZpSmtRrUaiYImoiJxH6NrXTGBl0ilcFKCwU6AAAAACDdeBd1i17SaQrrwLusWvaTR6qndhYACQAAAAAAAAAAAAAAAAAAAAAAAAAADAZN9MWVnU9PrWm/MBk30xZWdT0&#43;taBvwAAAAAAAAAAKUs4&#43;UV53Ko0bCivq5/MgjRMVVdP3GTMRGMoveKVm0uNV1tRWtbYLc7CWaaZaiVP4mco7808tU09voILbRR0lO3NjjTDfVdK75zMlrclJQPqJfPrJ5X8vIuqquRypgi6NT/J3CKR&#43;6U0rabTe&#43;2ftHLysAHR1AAAAAAAoCFdeBd1i17SaQrpwLusWvaTQqd2FgAJAAAAAAAAAAAAAAAAAAAAAAAAAAAMBk30xZWdT0&#43;tab8wGTfTFlZ1PT61oG/AAAAAAAAAKcqNTFVwRAI9fXQW6jkqqh2bHGmK7&#43;8cCwUU1zrXZQXFmD5Ewpol/jZp2PEfJUXK68ce5NE/7pn7X6eE1bWtaiIiIiImCIhyjrnH0h5a/5rav2xs9/fwh2ngTu/zfVcTSFaeBO7/N9VxNOkPZfelYANSAAAAABRZQEK68C7rFr2k0hXTgXdYte0mhU7sLAASAAAAAAAAAAAAAAAAAAAAAAAAAAAYDJvpiys6np9a03553YpnQ/bBlWrKeWZVgp0wjzdTzG6VQNiMXogIft039NqvHHzx7dN/Tarxx88Yt0ymAh&#43;3Tf02q8cfPHt039NqvHHzxiaZTAQ/bpv6bVeOPnj26b&#43;m1Xjj54NMpZm7/AFs1yrG2C3r58iY1MibEbNH3/wDzjPvecoZKGnSOOhnSqn82Bjsxc53gRyqfLJ&#43;kmtNK501uqpaudc&#43;eXGNc5dGOdsHK06p0x3ebMi2Zb6de/ju7VBQwW6jjpadubHGmCaV313yQRPbpv6ZV&#43;OPnn5fcZGNV77dVNa1MVVVjwT/WdI5Q9EUwjAtPAnd/m&#43;q4mnFyZukNyop&#43;RjkakVRKiq9qYOxerkwVF1dRUJ1Tc4KW40VDIj&#43;UrVekSonm4tbnKir4MfEbhMcJLTEzMwmgg3i6Q2W1T3Cdr3shRMGRpi57lVEa1N9XKiJ4Sa1VVqKqKiqmwvEGLAAAAACiygIV14F3WLXtJpCunAu6xa9pNCp3YWAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAwGTfTFlZ1PT61pvzAZN9MWVnU9PrWgb4sACiwAKI9fWw26ikqp3ZscaYrv7yb5Ic5GtVzlwRNVVUymLsrbxhq7k0b/unf&#43;qfp4SLWw4Rtcc3MmvTXbOx9rDRT3GsXKC4t/ckTCmiXYiZxL4dvfNIU1qNRERMETUREPnV1UFDTvqKiRI42JiqqVSmHCG0rGVXb/MrqJ4qWB80z0ZGxMXOVdRDMq6pyvqc1Ekp7REuKrsOnVP08tnYRQVmVszaiqRae1MdjHFqo6bfXe8t81LI2QxNjjYjGNTBrWpgiIerhk/7fH5&#43;HLCc/bwr8/hCtNPFS0slPAxGRRyua1qcSYnNynXkK7J6twxSG6NY7wSxyRJ/qe061B8s/f3/AJn5utppr1QrSVSyIzlGSNfFIrHse1yOa5rk1UVFRDzPXaMJwhybi9t7yrorXH59Pa3e21ipsJJhhCxd/FVfh/2t0oaJr2vbnMcjk0ouJEtdpo7NSezUUSsYrle9znK58j12XOcuq5y6VOR9n/8AybSd9qPrvDGkAAAAACiygIV14F3WLXtJpCuvAu6xa9pNCp3YWAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAwGTfTFlZ1PT61pvzAZN9MWVnU9PrWgb8AAADkZQXncukRsKcpVzrmQRpqqqrx4GTOEYyi94pWbSg36umuNY2wW5/7kiY1MqbEbONPLTvncoaKG30kdLTtzY40wTf313yDk9Z9y6NXzu5SsnXPnkVcVVdGO8SLtdqe0Ujp51xXYYxNl66EMy6WtPvLjSNMTm5m2ftHJ9LjcaW2Uq1FVJmNTURNlXLoRDgUlBU5S1KXC6sdHRt4PSquGcml3lq&#43;DZ&#43;lutNZdqxl1vaJg3Vp6Xij31TT5bxpUTA9U2jKjCu3n48sits6dV930j/s&#43;FNa1jUa1ERETBETiBeBR53pRaH5Z&#43;/v/MloRKD5Z&#43;/v/MloZC7b0rIlrtlNaKBlDSNc2FjnOajnYri5yuXV8KqSwakAAAAACiygIV04F3WLXtJpCuvAu6xa9pNCp3YWAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAwGTfTFlZ1PT61pvzAZN9MWVnU9PrWgb8A/LnNY1XOVERExVV4gPhX10Fuo5Kqofmxxpiuld5N84Vgop7lWOv8AcW4Pk1KaJdiNmn7/AC2SPg7K29Y/9Kon6dSZ&#43;1&#43;nhOter2y1xsp6aPlqyXUhhan&#43;V3iaVnNtw/vu8c3i0/Utuxs95/ux9LzfKazwpn4yTyf8OJuy5dogWmxzVNSl3vPn1Tlxji/tiTi1NP5H2s1jlhqHXK5yJPXScfFEmhDuHqteKRpp3nx7fK60tmTrzO0efcAB53pAABFofln7&#43;/8AMlIRaH5Z&#43;/v/ADJSGQq28sAGpAAAAAAosoCFdOBd1i17SaQrrwLusWvaTQqd2FgAJAAAAAAAAAAAAAAAAAAAAAAAAAAAMBk30xZWdT0&#43;tab8wGTfTFlZ1PT61oG/Mzf62e5ViWC3OXPk1amVNiNmjy/UnZQ3nculbHA3lKyoXMgjTVVV0nCpnT2xNy7bhU3ip8&#43;pnXVSNd9d7y2TIpbNtor3eL9RmxM6I7&#43;I/n4dCruMNkp4rNaIuWrMEaxiaubj/c5f8kuy2BtvVauqf7RXSpjJK5ccMeJD62SyRWqFXPdy1VLqzTO2XLtHUO9r1rXRl7OfP8OmXlTMxa/aOX5AAcXpAgCAWUWUBFofln7&#43;/wDMlIRaH5Z&#43;/v8AzJSGQq28sAGpAAAAAAosoCFdOBd1i17SaQrrwLusWvaTQqd2FgAJAAAAAAAAAAAAAAAAAAAAAAAAAAAPN7XXQW37VssKqodmsjpqdd9VzW6ib5vbrWyW611FZDSS1kkMaubTw/PIqcSHjtfLV116uN3ZZbh7ZWcm6ShZGr5I2tajUzkw1NhVxXSMJnhDhn5k0r0xjM7Gmpamvv12fPTovtc3mtf/AG00elN9fLZ1NtaLNTWenVkKK579WSV2q56mDtmWtztVI2npvs6vSInzOVq4uXSvmkzrk3zse3rtV5p0m0RXRTZ8&#43;8ueR&#43;n0dV&#43;NnoCA8/65F87Ht67VeaOuRfOx7eu1XmnN63oAPP8ArkXzse3rtV5o65N87Ht67VeaB6ADz/rk3zse3rtV5o65N87Ht67VeaB6CUef9cm&#43;dj29dqvNHXJvnY9vXarzQNrQfLP39/5ktDzmD7Qr5Aj06396dnvV/wAqphjxfKfbrk3zse3rxLzQ23GXoIPPuuTfOx7eu1Xmjrk3zse3rtV5oY9BB591yb52Pb12q80dcm&#43;dj29dqvNA9BB591yb52Pb12q80dcm&#43;dj29dqvNA9BB591yb52Pb12q80dcm&#43;dj29dqvNA1OUNwgoqWNkjvPllbmN04ORfLwn0or1HU1fscsboZ1Znta7&#43;5NJhLjlndrokaSfZ9eGOjXFr1jVVbqoup5u8hGblXflvqXSbIe9yPZHybESJW4N2fw6TeCNVtWGHB6wDz7rkX3se3rtV5o65F97Ht67VeaYt6CDz7rkX3se3rtV5o65F97Ht67VeaB6CDz7rkX3se3rtV5o65F97Ht67VeaB6CDz7rkX3se3rtV5o65F97Ht67VeaB6CDz7rkX3se3rtV5pbPtHvjntav2fXtEVcMc1dT/SB6ACkXFNjAYoBYKxxLAAAAAAAAAAACj8pGxr1ejGo52y5E1VP2AKLAAAAAAAAAAAAAAAAAAAAAAAAAAoFgAAAAAAAAAAAAAAGYy1etPDQ1VK9UuMdQ1KWNv8AKq/M1U0YGnPhLRU01TFUywMfNDjyb3JirMdnDQTaMYwdsnMjLzItMY4ONkXyUlibUtmdNUVD3SVLnbKSKvnJhxYbBoCPTUNLRrItNAyJZXq&#43;TMbhnOXjXfJBscITm2i95tHqAA1zAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH//2Q==" alt="Screenshot 2023-03-20 at 12.22.45 AM.png"  />
+</p>
+<p><img loading="lazy" src="https://img-blog.csdn.net/20180106024119317" alt="https://img-blog.csdn.net/20180106024119317"  />
+
+6、所以对于下方的三角形，在计算法向量是，和顶点的顺序是密不可分的，例如要计算正确的法向量，那么就要计算V1和V2的向量，一个是B-A另一个是C-A， 如果ABC对于的顺序分别是0、1、2 V1和V2向量也就是<br>
+[1]-[0]和[2]-[0] 那么这样子的话就必须要保证顶点遍历的顺序，如果是其他的顺序，就会得到错误的法线方向
+<img loading="lazy" src="https://img-blog.csdn.net/20180106024522498" alt="https://img-blog.csdn.net/20180106024522498"  />
+</p>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://EitanWong.github.io/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://EitanWong.github.io/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://EitanWong.github.io/en/posts/shader/%E5%85%89%E7%85%A7%E6%B8%B2%E6%9F%93/">
+    <span class="title">« 👈 Prev Page</span>
+    <br>
+    <span>光照渲染</span>
+  </a>
+  <a class="next" href="https://EitanWong.github.io/en/posts/shader/%E9%A1%B6%E7%82%B9%E5%8F%98%E6%8D%A2-%E6%B3%A2%E7%BA%B9%E6%95%88%E6%9E%9C/">
+    <span class="title">Next Page 👉 »</span>
+    <br>
+    <span>顶点变换-波纹效果</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share 法向量和光照计算 on twitter"
+       href="https://twitter.com/intent/tweet/?text=%e6%b3%95%e5%90%91%e9%87%8f%e5%92%8c%e5%85%89%e7%85%a7%e8%ae%a1%e7%ae%97&amp;url=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2f%25E6%25B3%2595%25E5%2590%2591%25E9%2587%258F%25E5%2592%258C%25E5%2585%2589%25E7%2585%25A7%25E8%25AE%25A1%25E7%25AE%2597%2f&amp;hashtags=">
+    <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share 法向量和光照计算 on linkedin"
+       href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2f%25E6%25B3%2595%25E5%2590%2591%25E9%2587%258F%25E5%2592%258C%25E5%2585%2589%25E7%2585%25A7%25E8%25AE%25A1%25E7%25AE%2597%2f&amp;title=%e6%b3%95%e5%90%91%e9%87%8f%e5%92%8c%e5%85%89%e7%85%a7%e8%ae%a1%e7%ae%97&amp;summary=%e6%b3%95%e5%90%91%e9%87%8f%e5%92%8c%e5%85%89%e7%85%a7%e8%ae%a1%e7%ae%97&amp;source=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2f%25E6%25B3%2595%25E5%2590%2591%25E9%2587%258F%25E5%2592%258C%25E5%2585%2589%25E7%2585%25A7%25E8%25AE%25A1%25E7%25AE%2597%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share 法向量和光照计算 on reddit"
+       href="https://reddit.com/submit?url=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2f%25E6%25B3%2595%25E5%2590%2591%25E9%2587%258F%25E5%2592%258C%25E5%2585%2589%25E7%2585%25A7%25E8%25AE%25A1%25E7%25AE%2597%2f&title=%e6%b3%95%e5%90%91%e9%87%8f%e5%92%8c%e5%85%89%e7%85%a7%e8%ae%a1%e7%ae%97">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share 法向量和光照计算 on facebook"
+       href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2f%25E6%25B3%2595%25E5%2590%2591%25E9%2587%258F%25E5%2592%258C%25E5%2585%2589%25E7%2585%25A7%25E8%25AE%25A1%25E7%25AE%2597%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share 法向量和光照计算 on whatsapp"
+       href="https://api.whatsapp.com/send?text=%e6%b3%95%e5%90%91%e9%87%8f%e5%92%8c%e5%85%89%e7%85%a7%e8%ae%a1%e7%ae%97%20-%20https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2f%25E6%25B3%2595%25E5%2590%2591%25E9%2587%258F%25E5%2592%258C%25E5%2585%2589%25E7%2585%25A7%25E8%25AE%25A1%25E7%25AE%2597%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share 法向量和光照计算 on telegram"
+       href="https://telegram.me/share/url?text=%e6%b3%95%e5%90%91%e9%87%8f%e5%92%8c%e5%85%89%e7%85%a7%e8%ae%a1%e7%ae%97&amp;url=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2f%25E6%25B3%2595%25E5%2590%2591%25E9%2587%258F%25E5%2592%258C%25E5%2585%2589%25E7%2585%25A7%25E8%25AE%25A1%25E7%25AE%2597%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28">
+            <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2023-2024
+        <a href="https://EitanWong.github.io/en/" style="color:#939393;">Eitan&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄copy';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻copied!';
+            setTimeout(() => {
+                copybutton.innerText = '📄copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+
+<script>
+    $("code[class^=language] ").on("mouseover", function () {
+        if (this.clientWidth < this.scrollWidth) {
+            $(this).css("width", "135%")
+            $(this).css("border-top-right-radius", "var(--radius)")
+        }
+    }).on("mouseout", function () {
+        $(this).css("width", "100%")
+        $(this).css("border-top-right-radius", "unset")
+    })
+</script>
+</body>
+
+</html>

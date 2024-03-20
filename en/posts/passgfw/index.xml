@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>🧱 PassGFW on Eitan&#39;s Blog</title>
+    <link>https://EitanWong.github.io/en/posts/passgfw/</link>
+    <description>Recent content in 🧱 PassGFW on Eitan&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 08 Apr 2023 01:42:39 +0000</lastBuildDate><atom:link href="https://EitanWong.github.io/en/posts/passgfw/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>搭建🎠Trojan-go&#43;tls&#43;ws，绕过🔥GFW🧱审查👮</title>
+      <link>https://EitanWong.github.io/en/posts/passgfw/%E6%90%AD%E5%BB%BAtrojan-gotlsws%E7%BB%95%E8%BF%87gfw%E5%AE%A1%E6%9F%A5/</link>
+      <pubDate>Sat, 08 Apr 2023 01:42:39 +0000</pubDate>
+      
+      <guid>https://EitanWong.github.io/en/posts/passgfw/%E6%90%AD%E5%BB%BAtrojan-gotlsws%E7%BB%95%E8%BF%87gfw%E5%AE%A1%E6%9F%A5/</guid>
+      <description>🎠Trojan如何绕过🔥GFW🧱 与Shadowsocks相反，🎠Trojan不使用自定义的加密协议来隐藏自身。相反，使用特征明显的TLS协议(TLS/SSL)，使得流量看起来与正常的HTTPS网站相同。TLS是一个成熟的加密体系，HTTPS即使用TLS承载HTTP流量。使用正确配</description>
+    </item>
+    
+    <item>
+      <title>Naive Proxy节点搭建：消除TLS指纹与TLS-in-TLS特征，轻松绕过GFW封锁</title>
+      <link>https://EitanWong.github.io/en/posts/passgfw/naive-proxy%E8%8A%82%E7%82%B9%E6%90%AD%E5%BB%BA%E6%B6%88%E9%99%A4tls%E6%8C%87%E7%BA%B9%E4%B8%8Etls-in-tls%E7%89%B9%E5%BE%81%E8%BD%BB%E6%9D%BE%E7%BB%95%E8%BF%87gfw%E5%B0%81%E9%94%81/</link>
+      <pubDate>Fri, 07 Apr 2023 18:25:31 +0000</pubDate>
+      
+      <guid>https://EitanWong.github.io/en/posts/passgfw/naive-proxy%E8%8A%82%E7%82%B9%E6%90%AD%E5%BB%BA%E6%B6%88%E9%99%A4tls%E6%8C%87%E7%BA%B9%E4%B8%8Etls-in-tls%E7%89%B9%E5%BE%81%E8%BD%BB%E6%9D%BE%E7%BB%95%E8%BF%87gfw%E5%B0%81%E9%94%81/</guid>
+      <description>Naive Proxy 👍优点：Naive Proxy的原理和trojan很像，Naive协议消除了客户端的tls指纹和tls-in-tls特征，并且Naive协议基于http2，自带多路复用，对比ws需要频繁握手来讲延迟更低，前面也说过Naive客户端使用chrome浏览器内核作为网络协议栈，从防火</description>
+    </item>
+    
+    <item>
+      <title>使用X-UI面板搭建vmess&#43;ws&#43;tls&#43;web节点🪜</title>
+      <link>https://EitanWong.github.io/en/posts/passgfw/%E4%BD%BF%E7%94%A8x-ui%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BAvmesswstlsweb%E8%8A%82%E7%82%B9/</link>
+      <pubDate>Fri, 07 Apr 2023 18:00:58 +0000</pubDate>
+      
+      <guid>https://EitanWong.github.io/en/posts/passgfw/%E4%BD%BF%E7%94%A8x-ui%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BAvmesswstlsweb%E8%8A%82%E7%82%B9/</guid>
+      <description>使用X-UI面板搭建vmess+ws+tls+web或者vless+ws+tls+web的节点 这是目前相对安全的搭建方式并且为了更进一步的安全🔐，有些步骤甚至有点繁琐，这都是值得的 只有安全了才能实现省时省心，至于高速稳定只有靠钞💰能力解决了 作为电信用户的我，刨除高攀不起的专线， 个</description>
+    </item>
+    
+    <item>
+      <title>从GFW原理到翻墙实践</title>
+      <link>https://EitanWong.github.io/en/posts/passgfw/%E4%BB%8Egfw%E5%8E%9F%E7%90%86%E5%88%B0%E7%BF%BB%E5%A2%99%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Fri, 07 Apr 2023 17:27:32 +0000</pubDate>
+      
+      <guid>https://EitanWong.github.io/en/posts/passgfw/%E4%BB%8Egfw%E5%8E%9F%E7%90%86%E5%88%B0%E7%BF%BB%E5%A2%99%E5%AE%9E%E8%B7%B5/</guid>
+      <description>引言 GFW具有重大的社会意义。无论是正面的社会意义，还是负面的意义。无论你是讨厌，还是憎恨。它都在那里。在可以预见的将来，墙还会继续存在。我们要学会如何与其共存。 我们把翻墙看成一场我们与GFW之间的博弈，是一个不断对抗升级的动态过程。目前整体的博弈态势来讲是GFW占了绝对的上风。</description>
+    </item>
+    
+  </channel>
+</rss>

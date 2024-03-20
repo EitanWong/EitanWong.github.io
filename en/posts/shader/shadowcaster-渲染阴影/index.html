@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>ShadowCaster-渲染阴影 | Eitan&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="我们之前编写的基于Lambert、Phong、BlinnPhong光照模型的Shader 存在一个问题🙋 那就是: ** 不能接受阴影** 左图: 自己编写的Shader 右图: 官方内建的Shader 所以为了解决这个问题，我们要在自己的着色器当中实现ShadowCaster 关于不同渲染路径下的S">
+<meta name="author" content="Sulv">
+<link rel="canonical" href="https://EitanWong.github.io/en/posts/shader/shadowcaster-%E6%B8%B2%E6%9F%93%E9%98%B4%E5%BD%B1/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.0dcd30655f684635e8d387636982f36d45e2607d9dde19da5180cecacb25b773.css" integrity="sha256-Dc0wZV9oRjXo04djaYLzbUXiYH2d3hnaUYDOysslt3M=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+        onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="apple-touch-icon" href="https://EitanWong.github.io/img/Avatar.png">
+<link rel="mask-icon" href="https://EitanWong.github.io/img/Avatar.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://EitanWong.github.io/en/posts/shader/shadowcaster-%E6%B8%B2%E6%9F%93%E9%98%B4%E5%BD%B1/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="ShadowCaster-渲染阴影" />
+<meta property="og:description" content="我们之前编写的基于Lambert、Phong、BlinnPhong光照模型的Shader 存在一个问题🙋 那就是: ** 不能接受阴影** 左图: 自己编写的Shader 右图: 官方内建的Shader 所以为了解决这个问题，我们要在自己的着色器当中实现ShadowCaster 关于不同渲染路径下的S" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://EitanWong.github.io/en/posts/shader/shadowcaster-%E6%B8%B2%E6%9F%93%E9%98%B4%E5%BD%B1/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-05-06T20:27:46+00:00" />
+<meta property="article:modified_time" content="2023-05-06T20:27:46+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ShadowCaster-渲染阴影"/>
+<meta name="twitter:description" content="我们之前编写的基于Lambert、Phong、BlinnPhong光照模型的Shader 存在一个问题🙋 那就是: ** 不能接受阴影** 左图: 自己编写的Shader 右图: 官方内建的Shader 所以为了解决这个问题，我们要在自己的着色器当中实现ShadowCaster 关于不同渲染路径下的S"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "Posts",
+          "item": "https://EitanWong.github.io/en/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "🖼️ Shader",
+          "item": "https://EitanWong.github.io/en/posts/shader/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "ShadowCaster-渲染阴影",
+      "item": "https://EitanWong.github.io/en/posts/shader/shadowcaster-%E6%B8%B2%E6%9F%93%E9%98%B4%E5%BD%B1/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ShadowCaster-渲染阴影",
+  "name": "ShadowCaster-渲染阴影",
+  "description": "我们之前编写的基于Lambert、Phong、BlinnPhong光照模型的Shader 存在一个问题🙋 那就是: ** 不能接受阴影** 左图: 自己编写的Shader 右图: 官方内建的Shader 所以为了解决这个问题，我们要在自己的着色器当中实现ShadowCaster 关于不同渲染路径下的S",
+  "keywords": [
+    
+  ],
+  "articleBody": "我们之前编写的基于Lambert、Phong、BlinnPhong光照模型的Shader\n存在一个问题🙋\n那就是: ** 不能接受阴影**\n左图: 自己编写的Shader\n右图: 官方内建的Shader\n所以为了解决这个问题，我们要在自己的着色器当中实现ShadowCaster\n关于不同渲染路径下的Shadow Unity支持多种类型的渲染路径，在5.0版本之前，主要有3中渲染路径\n分别为正向渲染，延迟渲染以及顶点照明渲染\n在5.0之后，Unity抛弃了顶点照明渲染路径，并用新的延迟渲染路径来替代了旧的延迟渲染路径\nUnity中的正向渲染 Unity中的正向渲染有3中处理光照的方式\n分别为逐顶点处理，逐像素处理以及球谐函数处理\n而决定哪一个光源按照使用那种处理模式取决于光源的类型和渲染模式\n光源的类型指的是该光源是平行光或者其他类型的光\n渲染模式则指的是该光源是否被指定为重要光源\n在正向渲染中一共包含两种Pass，Base Pass和Additional Pass\nBase Pass只会被执行一次，用于计算光照纹理，环境光，自发光，阴影等效果\n而Additional Pass则能够被执行多次，并且默认情况下不支持阴影，但是能够通过使用宏指令来开启阴影\nAdditional Pass会根据影响物体的其他逐像素光源数目被多次调用\nUnity中的顶点照明渲染 顶点照明渲染是对硬件配置要求最少，运算性能最高，\n同时效果也是最差的一种渲染路径。它可以被视为正向渲染的一个子集，\n因为它只能通过逐顶点的方式去计算光照，这也就意味着我们无法使用一些逐像素光照变量。\n顶点照明渲染在5.0以后的版本中作为一种被遗留的渲染路径存在，将来也有被移除的可能。\nUnity中的延迟渲染 Unity中的新旧延迟渲染系统的差别非常小，只是是用来不同的技术来权衡不同的需求。 – 其中包含两个Pass，第一个Pass用于渲染G缓冲，在这个Pass中会把物体的漫反射颜色，高光反射颜色，平滑度，法线，自发光和深度等信息渲染到屏幕空间的G缓冲中，对于每个物体来说这个Pass只会被执行一次。\n第二个Pass用于计算真正的光照模型，这个Pass会使用上一个Pass中渲染的数据来计算最终光照的颜色，再存储到帧缓冲中。 这里要注意的是,如果被接受物体的Shader是Legacy的Diffuse那么在Forward中，是只能接受到Directional Light的阴影的,如果要让其支持其他类型光源的阴影，需要修改渲染路径为延迟渲染\n还需要注意是渲染路径为顶点照明Legacy Vertex Lit的情况下，片元着色器是无法正常工作的\n在新的Pass通道中渲染Shadow 通过Unity的官方文档,可以知道 在新的Pass通道中使用内置渲染管线中的预定义通道标记Tags，为LightMode 增加ShadowCaster\n使对象深度渲染到阴影贴图或深度纹理中.\nPass{ Tags{\"LightMode\"=\"ShadowCaster\"} } 使用FallBack渲染Shadow 可以通过FallBack，当Unity物体需要投射阴影但是没有相关的Pass，就会回落到FallbBack当中\nFallback \"Diffuse\" 手动实现ShadowCaster 以上方式实现的Shadow存在一个问题，那就是着色器本身的对象，不能接受阴影\n如下图所示，左侧的着色器之间并没有投射阴影\nUnity的文档当中对一块内容并没有很清晰的描述\n通过翻阅AutoLight.cginc可以看到，其中对于阴影投射部分做了很多的宏定义\n以旧版本4.x为例，光照以及阴影的宏定义如下\n// ----------------------------- // Light/Shadow helpers (4.x version) // ----------------------------- // This version computes light coordinates in the vertex shader and passes them to the fragment shader. // ---- Spot light shadows #if defined (SHADOWS_DEPTH) \u0026\u0026 defined (SPOT) #define SHADOW_COORDS(idx1) unityShadowCoord4 _ShadowCoord : TEXCOORD##idx1; #define TRANSFER_SHADOW(a) a._ShadowCoord = mul (unity_WorldToShadow[0], mul(unity_ObjectToWorld,v.vertex)); #define SHADOW_ATTENUATION(a) UnitySampleShadowmap(a._ShadowCoord) #endif // ---- Point light shadows #if defined (SHADOWS_CUBE) #define SHADOW_COORDS(idx1) unityShadowCoord3 _ShadowCoord : TEXCOORD##idx1; #define TRANSFER_SHADOW(a) a._ShadowCoord.xyz = mul(unity_ObjectToWorld, v.vertex).xyz - _LightPositionRange.xyz; #define SHADOW_ATTENUATION(a) UnitySampleShadowmap(a._ShadowCoord) #define READ_SHADOW_COORDS(a) unityShadowCoord4(a._ShadowCoord.xyz, 1.0) #endif // ---- Shadows off #if !defined (SHADOWS_SCREEN) \u0026\u0026 !defined (SHADOWS_DEPTH) \u0026\u0026 !defined (SHADOWS_CUBE) #define SHADOW_COORDS(idx1) #define TRANSFER_SHADOW(a) #define SHADOW_ATTENUATION(a) 1.0 #define READ_SHADOW_COORDS(a) 0 #else #ifndef READ_SHADOW_COORDS #define READ_SHADOW_COORDS(a) a._ShadowCoord #endif #endif #ifdef POINT # define DECLARE_LIGHT_COORDS(idx) unityShadowCoord3 _LightCoord : TEXCOORD##idx; # define COMPUTE_LIGHT_COORDS(a) a._LightCoord = mul(unity_WorldToLight, mul(unity_ObjectToWorld, v.vertex)).xyz; # define LIGHT_ATTENUATION(a) (tex2D(_LightTexture0, dot(a._LightCoord,a._LightCoord).rr).r * SHADOW_ATTENUATION(a)) #endif #ifdef SPOT # define DECLARE_LIGHT_COORDS(idx) unityShadowCoord4 _LightCoord : TEXCOORD##idx; # define COMPUTE_LIGHT_COORDS(a) a._LightCoord = mul(unity_WorldToLight, mul(unity_ObjectToWorld, v.vertex)); # define LIGHT_ATTENUATION(a) ( (a._LightCoord.z \u003e 0) * UnitySpotCookie(a._LightCoord) * UnitySpotAttenuate(a._LightCoord.xyz) * SHADOW_ATTENUATION(a) ) #endif #ifdef DIRECTIONAL # define DECLARE_LIGHT_COORDS(idx) # define COMPUTE_LIGHT_COORDS(a) # define LIGHT_ATTENUATION(a) SHADOW_ATTENUATION(a) #endif #ifdef POINT_COOKIE # define DECLARE_LIGHT_COORDS(idx) unityShadowCoord3 _LightCoord : TEXCOORD##idx; # define COMPUTE_LIGHT_COORDS(a) a._LightCoord = mul(unity_WorldToLight, mul(unity_ObjectToWorld, v.vertex)).xyz; # define LIGHT_ATTENUATION(a) (tex2D(_LightTextureB0, dot(a._LightCoord,a._LightCoord).rr).r * texCUBE(_LightTexture0, a._LightCoord).w * SHADOW_ATTENUATION(a)) #endif #ifdef DIRECTIONAL_COOKIE # define DECLARE_LIGHT_COORDS(idx) unityShadowCoord2 _LightCoord : TEXCOORD##idx; # define COMPUTE_LIGHT_COORDS(a) a._LightCoord = mul(unity_WorldToLight, mul(unity_ObjectToWorld, v.vertex)).xy; # define LIGHT_ATTENUATION(a) (tex2D(_LightTexture0, a._LightCoord).w * SHADOW_ATTENUATION(a)) #endif #define UNITY_LIGHTING_COORDS(idx1, idx2) DECLARE_LIGHT_COORDS(idx1) UNITY_SHADOW_COORDS(idx2) #define LIGHTING_COORDS(idx1, idx2) DECLARE_LIGHT_COORDS(idx1) SHADOW_COORDS(idx2) #define UNITY_TRANSFER_LIGHTING(a, coord) COMPUTE_LIGHT_COORDS(a) UNITY_TRANSFER_SHADOW(a, coord) #define TRANSFER_VERTEX_TO_FRAGMENT(a) COMPUTE_LIGHT_COORDS(a) TRANSFER_SHADOW(a) #endif UNITY_LIGHTING_COORDS\t为宏定义的阴影纹理\nTRANSFER_VERTEX_TO_FRAGMENT\t将阴影的纹理从顶点传到片元程序\nLIGHT_ATTENUATION\t光衰减，其中包含了阴影衰减部分，与最终返回的颜色rgb值相乘可以得到正确的阴影投射部分的颜色\n完整代码⬇️\nShader \"ShaderLearning/ShadowCaster/VertexShadowBlinnPhongShader\" { Properties { _MainColor (\"MainColor\", Color) = (1,1,1,1) _SpecularColor (\"SpecularColor\", Color) = (0.5,0.5,0.5,1) _Shineness(\"Shineness\",Range(1,32))=8 } SubShader { Pass { Tags { \"LightMode\"=\"ForwardBase\" } CGPROGRAM #pragma multi_compile_fwdbase #pragma vertex vert #pragma fragment frag #include \"UnityCG.cginc\" #include \"Lighting.cginc\" #include \"AutoLight.cginc\" struct v2f { float4 pos : SV_POSITION; float3 normal : TEXCOORD0; float4 vertex: POSITION1; LIGHTING_COORDS(1,2) }; fixed4 _MainColor; fixed4 _SpecularColor; float _Shineness; v2f vert (appdata_base v) { v2f o; o.pos=UnityObjectToClipPos(v.vertex); o.normal=v.normal; o.vertex=v.vertex; TRANSFER_VERTEX_TO_FRAGMENT(o) return o; } fixed4 frag (v2f i) : COLOR { //环境光颜色 fixed4 col=UNITY_LIGHTMODEL_AMBIENT; //模型坐标系下的法线转位世界坐标系下 float3 N=UnityObjectToWorldNormal(i.normal); //获取世界坐标系下的光照方向 float3 L=normalize(WorldSpaceLightDir(i.vertex)); //计算漫反射 float diffuse=saturate(dot(L,N)); //计算摄像机观察视角向量 float3 V=normalize(WorldSpaceViewDir(i.vertex)); //计算镜面高光,使用半角向量 float specular=pow(saturate(dot(N,normalize(L+V))),_Shineness); //叠加上漫反射与镜面高光的颜色乘上光照颜色 col+= _LightColor0*((_MainColor*diffuse)+(_SpecularColor*specular)); //计算世界坐标系下的顶点位置 float3 wpos=mul(unity_ObjectToWorld,i.vertex).xyz; //计算4个点光源颜色 col.rgb+=Shade4PointLights(unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0, unity_LightColor[0].rgb,unity_LightColor[1].rgb, unity_LightColor[2].rgb,unity_LightColor[3].rgb, unity_4LightAtten0,wpos,N); float atten = LIGHT_ATTENUATION(i); col.rgb*=atten; return col; } ENDCG } } Fallback \"Diffuse\" } 通过使用AutoLight.cginc当中的宏，实现了阴影的投射\n但是对于点光源的阴影，并没有得到正确的结果\n实现Forward Add 通道中点光源阴影的支持 在标准的Forward前向渲染当中，unity中分为两种不同的光照模式通道\nForwardBase\n主要应用于环境光，平行光，它使用标准照明函数计算一个，并通过将它们近似为球谐函数来计算额外的定向光\nForwardAdd\n主要应用附加的像素灯，以及聚光灯，每个灯一个通道\n注意ForwardBase和ForwardAdd之前采用Blend混合片段输出的颜色\n混合方程为：\nfinalValue = sourceFactor * sourceValue operation destinationFactor * destinationValue 在这个等式中：\nfinalValue是 GPU 写入目标缓冲区的值。 sourceFactor在 Blend 命令中定义。 sourceValue是片段着色器输出的值。 operation是混合操作。 destinationFactor在 Blend 命令中定义。 destinationValue是目标缓冲区中已有的值。 所以在ForwardAdd Pass当中片段输出的一句放在了目标缓冲区中，在ForwardAdd Pass中使用Blend命令混合两者的结果\n用法 示例语法 功能 Blend Blend Off 禁用默认渲染目标的混合。这是默认值。 Blend Blend 1 Off 如上所述，但对于给定的渲染目标。(1) Blend Blend One Zero 为默认渲染目标启用混合。设置 RGBA 值的混合因子。 Blend Blend 1 One Zero 如上所述，但对于给定的渲染目标。(1) Blend , Blend One Zero, Zero One 启用混合默认渲染目标。为 RGB 和 alpha 值设置单独的混合因子。(2) Blend , Blend 1 One Zero, Zero One 如上所述，但对于给定的渲染目标。(1) (2) 有效参数值 范围 价值 功能 渲染目标 整数，范围为 0 到 7 渲染目标索引。 状态 Off 禁用混合。 因素 One 此输入的值为一。使用它来使用源颜色或目标颜色的值。 Zero 此输入的值为零。使用它来删除源或目标值。 SrcColor GPU 将此输入的值乘以源颜色值。 SrcAlpha GPU 将此输入的值乘以源 alpha 值。 SrcAlphaSaturate source alphaGPU 将此输入的值乘以和的最小值(1 - destination alpha) DstColor GPU 将此输入的值乘以帧缓冲区源颜色值。 DstAlpha GPU 将此输入的值乘以帧缓冲区源 alpha 值。 OneMinusSrcColor GPU 将此输入的值乘以（1 - 源颜色）。 OneMinusSrcAlpha GPU 将此输入的值乘以（1 - 源 alpha）。 OneMinusDstColor GPU 将此输入的值乘以（1 - 目标颜色）。 OneMinusDstAlpha GPU 将此输入的值乘以（1 - 目标 alpha）。 着色器变体和关键字 在Unity中可以编写着色器代码片段来共享通用代码，但在启用或禁用给定关键字时具有不同功能。\nUnity 编译这些着色器代码片段时，它将为已启用和已禁用关键字的不同组合创建单独的着色器程序。\n这些各个着色器程序被称为着色器变体。\n简而言之就是可以启用或者关闭给定的关键字，来使用各种着色器变体当中的功能，从而实现着色器的效果\n预编译指令multi_compile 的工作方式 指令示例：\n# pragma multi_compile FANCY_STUFF_OFF FANCY_STUFF_ON 此指令示例生成两个着色器变体：一个定义了 FANCY_STUFF_OFF，另一个定义了 FANCY_STUFF_ON。在运行时，Unity 根据材质或全局着色器关键字来激活其中一个变体。如果这两个关键字均未启用，则 Unity 使用第一个关键字（在此示例中为 FANCY_STUFF_OFF）。\n内置 multi_compile 快捷方式 有几个“快捷方式”符号用于编译多个着色器变体。这些变体主要处理 Unity 中的不同光源、阴影和光照贴图类型。请参阅有关渲染管线的文档以了解详细信息。\nmulti_compile_fwdbase 编译 PassType.ForwardBase 所需的所有变体。这些变体处理不同的光照贴图类型以及启用或禁用的方向光主要阴影。 multi_compile_fwdadd 编译 PassType.ForwardAdd 的变体。这将编译变体来处理方向光、聚光灯或点光源类型，以及它们带有剪影纹理的变体。 multi_compile_fwdadd_fullshadows - 与 multi_compile_fwdadd 相同，但还能够让光源具有实时阴影。 multi_compile_fog 扩展为多个变体以处理不同的雾效类型 (off/linear/exp/exp2)。 所以想要实现能够接受点光源的阴影投射，就需要在ForwardAdd通道中 添加预编译指令multi_compile_fwdadd_fullshadows\n完整的光照以及阴影投影支持的代码如下：\nShader \"ShaderLearning/ShadowCaster/VertexShadowBlinnPhongShader\" { Properties { _MainColor (\"MainColor\", Color) = (1,1,1,1) _SpecularColor (\"SpecularColor\", Color) = (0.5,0.5,0.5,1) _Shineness(\"Shineness\",Range(1,32))=8 } SubShader { Pass { Tags { \"LightMode\"=\"ForwardBase\" } CGPROGRAM #pragma multi_compile_fwdbase #pragma vertex vert #pragma fragment frag #include \"UnityCG.cginc\" #include \"Lighting.cginc\" #include \"AutoLight.cginc\" struct v2f { float4 pos : SV_POSITION; float3 normal : TEXCOORD0; float4 vertex: POSITION1; LIGHTING_COORDS(1,2) }; fixed4 _MainColor; fixed4 _SpecularColor; float _Shineness; v2f vert (appdata_base v) { v2f o; o.pos=UnityObjectToClipPos(v.vertex); o.normal=v.normal; o.vertex=v.vertex; TRANSFER_VERTEX_TO_FRAGMENT(o) return o; } fixed4 frag (v2f i) : COLOR { //环境光颜色 fixed4 col=UNITY_LIGHTMODEL_AMBIENT; //模型坐标系下的法线转位世界坐标系下 float3 N=UnityObjectToWorldNormal(i.normal); //获取世界坐标系下的光照方向 float3 L=normalize(WorldSpaceLightDir(i.vertex)); //计算漫反射 float diffuse=saturate(dot(L,N)); //计算摄像机观察视角向量 float3 V=normalize(WorldSpaceViewDir(i.vertex)); //计算镜面高光,使用半角向量 float specular=pow(saturate(dot(N,normalize(L+V))),_Shineness); //叠加上漫反射与镜面高光的颜色乘上光照颜色 col+= _LightColor0*((_MainColor*diffuse)+(_SpecularColor*specular)); //计算世界坐标系下的顶点位置 float3 wpos=mul(unity_ObjectToWorld,i.vertex).xyz; //计算4个点光源颜色 col.rgb+=Shade4PointLights(unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0, unity_LightColor[0].rgb,unity_LightColor[1].rgb, unity_LightColor[2].rgb,unity_LightColor[3].rgb, unity_4LightAtten0,wpos,N); float atten = LIGHT_ATTENUATION(i); col.rgb*=atten; return col; } ENDCG } Pass { Blend One One//使用Blend混合 帧缓冲里的结果 默认方法为Add Tags { \"LightMode\"=\"ForwardAdd\" }// ForwarAdd 附加支持逐像素光以及聚光灯 CGPROGRAM //使用 #pragma multi_compile_fwdadd_fullshadows #pragma vertex vert #pragma fragment frag #include \"UnityCG.cginc\" #include \"Lighting.cginc\" #include \"AutoLight.cginc\" struct v2f { float4 pos : SV_POSITION; float3 normal : TEXCOORD0; float4 vertex: POSITION1; LIGHTING_COORDS(1,2) }; fixed4 _MainColor; fixed4 _SpecularColor; float _Shineness; v2f vert (appdata_base v) { v2f o; o.pos=UnityObjectToClipPos(v.vertex); o.normal=v.normal; o.vertex=v.vertex; TRANSFER_VERTEX_TO_FRAGMENT(o) return o; } fixed4 frag (v2f i) : COLOR { //环境光颜色 //模型坐标系下的法线转位世界坐标系下 float3 N=UnityObjectToWorldNormal(i.normal); //获取世界坐标系下的光照方向 float3 L=normalize(WorldSpaceLightDir(i.vertex)); //计算漫反射 float diffuse=saturate(dot(L,N)); //计算摄像机观察视角向量 float3 V=normalize(WorldSpaceViewDir(i.vertex)); //计算镜面高光,使用半角向量 float specular=pow(saturate(dot(N,normalize(L+V))),_Shineness); //叠加上漫反射与镜面高光的颜色乘上光照颜色 fixed4 col = _LightColor0*((_MainColor*diffuse)+(_SpecularColor*specular)); // //计算世界坐标系下的顶点位置 float3 wpos=mul(unity_ObjectToWorld,i.vertex).xyz; //计算4个点光源颜色 col.rgb+=Shade4PointLights(unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0, unity_LightColor[0].rgb,unity_LightColor[1].rgb, unity_LightColor[2].rgb,unity_LightColor[3].rgb, unity_4LightAtten0,wpos,N); float atten = LIGHT_ATTENUATION(i); col.rgb*=atten; return col; } ENDCG } } Fallback \"Diffuse\" } ",
+  "wordCount" : "4051",
+  "inLanguage": "en",
+  "datePublished": "2023-05-06T20:27:46Z",
+  "dateModified": "2023-05-06T20:27:46Z",
+  "author":{
+    "@type": "Person",
+    "name": "Sulv"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://EitanWong.github.io/en/posts/shader/shadowcaster-%E6%B8%B2%E6%9F%93%E9%98%B4%E5%BD%B1/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Eitan's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://EitanWong.github.io/img/Avatar.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://EitanWong.github.io/en/" accesskey="h" title="Eitan&#39;s Blog (Alt + H)">
+            <img src="https://EitanWong.github.io/img/Avatar.png" alt="logo" aria-label="logo"
+                 height="35">Eitan&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://EitanWong.github.io/en/" title="🏠 Home">
+                <span>🏠 Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/search" title="🔍 Search (Alt &#43; /)" accesskey=/>
+                <span>🔍 Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/posts" title="📚 Posts">
+                <span>📚 Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/tags" title="🧩 Tags">
+                <span>🧩 Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/archives/" title="⏱️ Archives">
+                <span>⏱️ Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://EitanWong.github.io/en/about" title="🙋🏻‍♂️ About">
+                <span>🙋🏻‍♂️ About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://EitanWong.github.io/en/">🏠 Home</a>&nbsp;»&nbsp;<a href="https://EitanWong.github.io/en/posts/">Posts</a>&nbsp;»&nbsp;<a href="https://EitanWong.github.io/en/posts/shader/">🖼️ Shader</a></div>
+            <h1 class="post-title">
+                ShadowCaster-渲染阴影
+            </h1>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-05-06
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>4051字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>9分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>Sulv
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://EitanWong.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">📖 Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%85%b3%e4%ba%8e%e4%b8%8d%e5%90%8c%e6%b8%b2%e6%9f%93%e8%b7%af%e5%be%84%e4%b8%8b%e7%9a%84shadow" aria-label="关于不同渲染路径下的Shadow">关于不同渲染路径下的Shadow</a><ul>
+                        
+                <li>
+                    <a href="#unity%e4%b8%ad%e7%9a%84%e6%ad%a3%e5%90%91%e6%b8%b2%e6%9f%93" aria-label="Unity中的正向渲染">Unity中的正向渲染</a></li>
+                <li>
+                    <a href="#unity%e4%b8%ad%e7%9a%84%e9%a1%b6%e7%82%b9%e7%85%a7%e6%98%8e%e6%b8%b2%e6%9f%93" aria-label="Unity中的顶点照明渲染">Unity中的顶点照明渲染</a></li>
+                <li>
+                    <a href="#unity%e4%b8%ad%e7%9a%84%e5%bb%b6%e8%bf%9f%e6%b8%b2%e6%9f%93" aria-label="Unity中的延迟渲染">Unity中的延迟渲染</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%9c%a8%e6%96%b0%e7%9a%84pass%e9%80%9a%e9%81%93%e4%b8%ad%e6%b8%b2%e6%9f%93shadow" aria-label="在新的Pass通道中渲染Shadow">在新的Pass通道中渲染Shadow</a></li>
+                <li>
+                    <a href="#%e4%bd%bf%e7%94%a8fallback%e6%b8%b2%e6%9f%93shadow" aria-label="使用FallBack渲染Shadow">使用FallBack渲染Shadow</a></li>
+                <li>
+                    <a href="#%e6%89%8b%e5%8a%a8%e5%ae%9e%e7%8e%b0shadowcaster" aria-label="手动实现ShadowCaster">手动实现ShadowCaster</a></li>
+                <li>
+                    <a href="#%e5%ae%9e%e7%8e%b0forward-add-%e9%80%9a%e9%81%93%e4%b8%ad%e7%82%b9%e5%85%89%e6%ba%90%e9%98%b4%e5%bd%b1%e7%9a%84%e6%94%af%e6%8c%81" aria-label="实现Forward Add 通道中点光源阴影的支持">实现Forward Add 通道中点光源阴影的支持</a><ul>
+                        
+                <li>
+                    <a href="#%e6%9c%89%e6%95%88%e5%8f%82%e6%95%b0%e5%80%bc" aria-label="有效参数值">有效参数值</a></li>
+                <li>
+                    <a href="#%e7%9d%80%e8%89%b2%e5%99%a8%e5%8f%98%e4%bd%93%e5%92%8c%e5%85%b3%e9%94%ae%e5%ad%97" aria-label="着色器变体和关键字">着色器变体和关键字</a></li>
+                <li>
+                    <a href="#%e9%a2%84%e7%bc%96%e8%af%91%e6%8c%87%e4%bb%a4multi_compile-%e7%9a%84%e5%b7%a5%e4%bd%9c%e6%96%b9%e5%bc%8f" aria-label="预编译指令multi_compile 的工作方式">预编译指令multi_compile 的工作方式</a></li>
+                <li>
+                    <a href="#%e5%86%85%e7%bd%ae-multi_compile-%e5%bf%ab%e6%8d%b7%e6%96%b9%e5%bc%8f" aria-label="内置 multi_compile 快捷方式">内置 multi_compile 快捷方式</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><p>我们之前编写的基于Lambert、Phong、BlinnPhong光照模型的Shader</p>
+<p>存在一个问题🙋</p>
+<p>那就是: ** 不能接受阴影**</p>
+<p>左图:   自己编写的Shader</p>
+<p>右图:   官方内建的Shader</p>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/202305051753571.png" alt="阴影接受效果对比"  />
+</p>
+<p>所以为了解决这个问题，我们要在自己的着色器当中实现ShadowCaster</p>
+<h2 id="关于不同渲染路径下的shadow">关于不同渲染路径下的Shadow<a hidden class="anchor" aria-hidden="true" href="#关于不同渲染路径下的shadow">#</a></h2>
+<p>Unity支持多种类型的渲染路径，在5.0版本之前，主要有3中渲染路径</p>
+<p>分别为正向渲染，延迟渲染以及顶点照明渲染</p>
+<p>在5.0之后，Unity抛弃了顶点照明渲染路径，并用新的延迟渲染路径来替代了旧的延迟渲染路径</p>
+<h3 id="unity中的正向渲染">Unity中的正向渲染<a hidden class="anchor" aria-hidden="true" href="#unity中的正向渲染">#</a></h3>
+<ul>
+<li>
+<p>Unity中的正向渲染有3中处理光照的方式</p>
+</li>
+<li>
+<p>分别为逐顶点处理，逐像素处理以及球谐函数处理</p>
+</li>
+<li>
+<p>而决定哪一个光源按照使用那种处理模式取决于光源的类型和渲染模式</p>
+</li>
+<li>
+<p>光源的类型指的是该光源是平行光或者其他类型的光</p>
+</li>
+<li>
+<p>渲染模式则指的是该光源是否被指定为重要光源</p>
+</li>
+</ul>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/202305051928761.png" alt="&amp;ldquo;Unity中的正向渲染效果&amp;rdquo;"  />
+</p>
+<ul>
+<li>
+<p>在正向渲染中一共包含两种Pass，Base Pass和Additional Pass</p>
+</li>
+<li>
+<p>Base Pass只会被执行一次，用于计算光照纹理，环境光，自发光，阴影等效果</p>
+</li>
+<li>
+<p>而Additional Pass则能够被执行多次，并且默认情况下不支持阴影，但是能够通过使用宏指令来开启阴影</p>
+</li>
+<li>
+<p>Additional Pass会根据影响物体的其他逐像素光源数目被多次调用</p>
+</li>
+</ul>
+<h3 id="unity中的顶点照明渲染">Unity中的顶点照明渲染<a hidden class="anchor" aria-hidden="true" href="#unity中的顶点照明渲染">#</a></h3>
+<ul>
+<li>
+<p>顶点照明渲染是对硬件配置要求最少，运算性能最高，</p>
+</li>
+<li>
+<p>同时效果也是最差的一种渲染路径。它可以被视为正向渲染的一个子集，</p>
+</li>
+</ul>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/202305051931542.png" alt="&amp;ldquo;顶点照明渲染&amp;rdquo;"  />
+</p>
+<ul>
+<li>
+<p>因为它只能通过逐顶点的方式去计算光照，这也就意味着我们无法使用一些逐像素光照变量。</p>
+</li>
+<li>
+<p>顶点照明渲染在5.0以后的版本中作为一种被遗留的渲染路径存在，将来也有被移除的可能。</p>
+</li>
+</ul>
+<h3 id="unity中的延迟渲染">Unity中的延迟渲染<a hidden class="anchor" aria-hidden="true" href="#unity中的延迟渲染">#</a></h3>
+<ul>
+<li>Unity中的新旧延迟渲染系统的差别非常小，只是是用来不同的技术来权衡不同的需求。</li>
+</ul>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/202305051932017.png" alt="&amp;ldquo;延迟渲染效果&amp;rdquo;"  />
+</p>
+<p>&ndash; 其中包含两个Pass，第一个Pass用于渲染G缓冲，在这个Pass中会把物体的漫反射颜色，高光反射颜色，平滑度，法线，自发光和深度等信息渲染到屏幕空间的G缓冲中，对于每个物体来说这个Pass只会被执行一次。</p>
+<ul>
+<li>第二个Pass用于计算真正的光照模型，这个Pass会使用上一个Pass中渲染的数据来计算最终光照的颜色，再存储到帧缓冲中。</li>
+</ul>
+<blockquote>
+<p>这里要注意的是,如果被接受物体的Shader是Legacy的Diffuse那么在Forward中，是只能接受到Directional Light的阴影的,如果要让其支持其他类型光源的阴影，需要修改渲染路径为延迟渲染</p>
+</blockquote>
+<blockquote>
+<p>还需要注意是渲染路径为顶点照明Legacy Vertex Lit的情况下，片元着色器是无法正常工作的</p>
+</blockquote>
+<h2 id="在新的pass通道中渲染shadow">在新的Pass通道中渲染Shadow<a hidden class="anchor" aria-hidden="true" href="#在新的pass通道中渲染shadow">#</a></h2>
+<p>通过Unity的官方<a href="https://docs.unity3d.com/Manual/shader-predefined-pass-tags-built-in.html">文档</a>,可以知道
+在新的Pass通道中使用内置渲染管线中的预定义通道标记Tags，为LightMode 增加ShadowCaster</p>
+<p>使对象深度渲染到阴影贴图或深度纹理中.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>        Pass{
+</span></span><span style="display:flex;"><span>            Tags{&#34;LightMode&#34;=&#34;ShadowCaster&#34;}
+</span></span><span style="display:flex;"><span>        }
+</span></span></code></pre></div><p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/202305052112769.png" alt="&amp;ldquo;ShadowCaster效果图&amp;rdquo;"  />
+</p>
+<h2 id="使用fallback渲染shadow">使用FallBack渲染Shadow<a hidden class="anchor" aria-hidden="true" href="#使用fallback渲染shadow">#</a></h2>
+<p>可以通过FallBack，当Unity物体需要投射阴影但是没有相关的Pass，就会回落到FallbBack当中</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Fallback &#34;Diffuse&#34;
+</span></span></code></pre></div><h2 id="手动实现shadowcaster">手动实现ShadowCaster<a hidden class="anchor" aria-hidden="true" href="#手动实现shadowcaster">#</a></h2>
+<p>以上方式实现的Shadow存在一个问题，那就是着色器本身的对象，不能接受阴影</p>
+<p>如下图所示，左侧的着色器之间并没有投射阴影</p>
+<p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/202305052121725.png" alt="效果"  />
+</p>
+<p>Unity的文档当中对一块内容并没有很清晰的描述</p>
+<p>通过翻阅AutoLight.cginc可以看到，其中对于阴影投射部分做了很多的宏定义</p>
+<p>以旧版本4.x为例，光照以及阴影的宏定义如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// -----------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//  Light/Shadow helpers (4.x version)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// -----------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// This version computes light coordinates in the vertex shader and passes them to the fragment shader.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ---- Spot light shadows
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#if defined (SHADOWS_DEPTH) &amp;&amp; defined (SPOT)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SHADOW_COORDS(idx1) unityShadowCoord4 _ShadowCoord : TEXCOORD##idx1;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define TRANSFER_SHADOW(a) a._ShadowCoord = mul (unity_WorldToShadow[0], mul(unity_ObjectToWorld,v.vertex));
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SHADOW_ATTENUATION(a) UnitySampleShadowmap(a._ShadowCoord)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ---- Point light shadows
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#if defined (SHADOWS_CUBE)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SHADOW_COORDS(idx1) unityShadowCoord3 _ShadowCoord : TEXCOORD##idx1;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define TRANSFER_SHADOW(a) a._ShadowCoord.xyz = mul(unity_ObjectToWorld, v.vertex).xyz - _LightPositionRange.xyz;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SHADOW_ATTENUATION(a) UnitySampleShadowmap(a._ShadowCoord)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define READ_SHADOW_COORDS(a) unityShadowCoord4(a._ShadowCoord.xyz, 1.0)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ---- Shadows off
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#if !defined (SHADOWS_SCREEN) &amp;&amp; !defined (SHADOWS_DEPTH) &amp;&amp; !defined (SHADOWS_CUBE)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SHADOW_COORDS(idx1)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define TRANSFER_SHADOW(a)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define SHADOW_ATTENUATION(a) 1.0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define READ_SHADOW_COORDS(a) 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#ifndef READ_SHADOW_COORDS
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define READ_SHADOW_COORDS(a) a._ShadowCoord
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifdef POINT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define DECLARE_LIGHT_COORDS(idx) unityShadowCoord3 _LightCoord : TEXCOORD##idx;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define COMPUTE_LIGHT_COORDS(a) a._LightCoord = mul(unity_WorldToLight, mul(unity_ObjectToWorld, v.vertex)).xyz;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define LIGHT_ATTENUATION(a)    (tex2D(_LightTexture0, dot(a._LightCoord,a._LightCoord).rr).r * SHADOW_ATTENUATION(a))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifdef SPOT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define DECLARE_LIGHT_COORDS(idx) unityShadowCoord4 _LightCoord : TEXCOORD##idx;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define COMPUTE_LIGHT_COORDS(a) a._LightCoord = mul(unity_WorldToLight, mul(unity_ObjectToWorld, v.vertex));
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define LIGHT_ATTENUATION(a)    ( (a._LightCoord.z &gt; 0) * UnitySpotCookie(a._LightCoord) * UnitySpotAttenuate(a._LightCoord.xyz) * SHADOW_ATTENUATION(a) )
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifdef DIRECTIONAL
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define DECLARE_LIGHT_COORDS(idx)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define COMPUTE_LIGHT_COORDS(a)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define LIGHT_ATTENUATION(a) SHADOW_ATTENUATION(a)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifdef POINT_COOKIE
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define DECLARE_LIGHT_COORDS(idx) unityShadowCoord3 _LightCoord : TEXCOORD##idx;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define COMPUTE_LIGHT_COORDS(a) a._LightCoord = mul(unity_WorldToLight, mul(unity_ObjectToWorld, v.vertex)).xyz;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define LIGHT_ATTENUATION(a)    (tex2D(_LightTextureB0, dot(a._LightCoord,a._LightCoord).rr).r * texCUBE(_LightTexture0, a._LightCoord).w * SHADOW_ATTENUATION(a))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#ifdef DIRECTIONAL_COOKIE
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define DECLARE_LIGHT_COORDS(idx) unityShadowCoord2 _LightCoord : TEXCOORD##idx;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define COMPUTE_LIGHT_COORDS(a) a._LightCoord = mul(unity_WorldToLight, mul(unity_ObjectToWorld, v.vertex)).xy;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#   define LIGHT_ATTENUATION(a)    (tex2D(_LightTexture0, a._LightCoord).w * SHADOW_ATTENUATION(a))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define UNITY_LIGHTING_COORDS(idx1, idx2) DECLARE_LIGHT_COORDS(idx1) UNITY_SHADOW_COORDS(idx2)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define LIGHTING_COORDS(idx1, idx2) DECLARE_LIGHT_COORDS(idx1) SHADOW_COORDS(idx2)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define UNITY_TRANSFER_LIGHTING(a, coord) COMPUTE_LIGHT_COORDS(a) UNITY_TRANSFER_SHADOW(a, coord)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define TRANSFER_VERTEX_TO_FRAGMENT(a) COMPUTE_LIGHT_COORDS(a) TRANSFER_SHADOW(a)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span></code></pre></div><p>UNITY_LIGHTING_COORDS	为宏定义的阴影纹理</p>
+<p>TRANSFER_VERTEX_TO_FRAGMENT	将阴影的纹理从顶点传到片元程序</p>
+<p>LIGHT_ATTENUATION	光衰减，其中包含了阴影衰减部分，与最终返回的颜色rgb值相乘可以得到正确的阴影投射部分的颜色</p>
+<p>完整代码⬇️</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Shader &#34;ShaderLearning/ShadowCaster/VertexShadowBlinnPhongShader&#34;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    Properties
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        _MainColor (&#34;MainColor&#34;, Color) = (1,1,1,1)
+</span></span><span style="display:flex;"><span>        _SpecularColor (&#34;SpecularColor&#34;, Color) = (0.5,0.5,0.5,1)
+</span></span><span style="display:flex;"><span>        _Shineness(&#34;Shineness&#34;,Range(1,32))=8
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    SubShader
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        Pass
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            Tags { &#34;LightMode&#34;=&#34;ForwardBase&#34; }
+</span></span><span style="display:flex;"><span>            CGPROGRAM
+</span></span><span style="display:flex;"><span>            #pragma multi_compile_fwdbase
+</span></span><span style="display:flex;"><span>            #pragma vertex vert
+</span></span><span style="display:flex;"><span>            #pragma fragment frag
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            #include &#34;UnityCG.cginc&#34;
+</span></span><span style="display:flex;"><span>            #include &#34;Lighting.cginc&#34;
+</span></span><span style="display:flex;"><span>            #include &#34;AutoLight.cginc&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            struct v2f
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                float4 pos : SV_POSITION;
+</span></span><span style="display:flex;"><span>                float3 normal : TEXCOORD0;
+</span></span><span style="display:flex;"><span>                float4 vertex: POSITION1;
+</span></span><span style="display:flex;"><span>                LIGHTING_COORDS(1,2)
+</span></span><span style="display:flex;"><span>            };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            fixed4 _MainColor;
+</span></span><span style="display:flex;"><span>            fixed4 _SpecularColor;
+</span></span><span style="display:flex;"><span>            float _Shineness;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            v2f vert (appdata_base v)
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                v2f o;
+</span></span><span style="display:flex;"><span>                o.pos=UnityObjectToClipPos(v.vertex);
+</span></span><span style="display:flex;"><span>                o.normal=v.normal;
+</span></span><span style="display:flex;"><span>                o.vertex=v.vertex;
+</span></span><span style="display:flex;"><span>                TRANSFER_VERTEX_TO_FRAGMENT(o)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                return o;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            fixed4 frag (v2f i) : COLOR
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                //环境光颜色 
+</span></span><span style="display:flex;"><span>                fixed4 col=UNITY_LIGHTMODEL_AMBIENT;
+</span></span><span style="display:flex;"><span>                //模型坐标系下的法线转位世界坐标系下
+</span></span><span style="display:flex;"><span>                float3 N=UnityObjectToWorldNormal(i.normal);
+</span></span><span style="display:flex;"><span>                //获取世界坐标系下的光照方向
+</span></span><span style="display:flex;"><span>                float3 L=normalize(WorldSpaceLightDir(i.vertex));
+</span></span><span style="display:flex;"><span>                //计算漫反射
+</span></span><span style="display:flex;"><span>                float diffuse=saturate(dot(L,N)); 
+</span></span><span style="display:flex;"><span>                //计算摄像机观察视角向量
+</span></span><span style="display:flex;"><span>                float3 V=normalize(WorldSpaceViewDir(i.vertex));
+</span></span><span style="display:flex;"><span>                //计算镜面高光,使用半角向量
+</span></span><span style="display:flex;"><span>                float specular=pow(saturate(dot(N,normalize(L+V))),_Shineness);
+</span></span><span style="display:flex;"><span>                //叠加上漫反射与镜面高光的颜色乘上光照颜色
+</span></span><span style="display:flex;"><span>                col+= _LightColor0*((_MainColor*diffuse)+(_SpecularColor*specular));
+</span></span><span style="display:flex;"><span>                //计算世界坐标系下的顶点位置 
+</span></span><span style="display:flex;"><span>                float3 wpos=mul(unity_ObjectToWorld,i.vertex).xyz;
+</span></span><span style="display:flex;"><span>                //计算4个点光源颜色
+</span></span><span style="display:flex;"><span>                col.rgb+=Shade4PointLights(unity_4LightPosX0,
+</span></span><span style="display:flex;"><span>                unity_4LightPosY0,
+</span></span><span style="display:flex;"><span>                unity_4LightPosZ0,
+</span></span><span style="display:flex;"><span>                unity_LightColor[0].rgb,unity_LightColor[1].rgb,
+</span></span><span style="display:flex;"><span>                unity_LightColor[2].rgb,unity_LightColor[3].rgb,
+</span></span><span style="display:flex;"><span>                unity_4LightAtten0,wpos,N);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                float atten = LIGHT_ATTENUATION(i);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                col.rgb*=atten;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                return col;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            ENDCG
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    Fallback &#34;Diffuse&#34;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/202305061821403.png" alt="阴影投射效果"  />
+</p>
+<p>通过使用AutoLight.cginc当中的宏，实现了阴影的投射</p>
+<p>但是对于点光源的阴影，并没有得到正确的结果</p>
+<h2 id="实现forward-add-通道中点光源阴影的支持">实现Forward Add 通道中点光源阴影的支持<a hidden class="anchor" aria-hidden="true" href="#实现forward-add-通道中点光源阴影的支持">#</a></h2>
+<p>在标准的Forward前向渲染当中，unity中分为两种不同的光照模式通道</p>
+<p>ForwardBase</p>
+<p>主要应用于环境光，平行光，它使用标准照明函数计算一个，并通过将它们近似为球谐函数来计算额外的定向光</p>
+<p>ForwardAdd</p>
+<p>主要应用附加的像素灯，以及聚光灯，每个灯一个通道</p>
+<p>注意ForwardBase和ForwardAdd之前采用Blend混合片段输出的颜色</p>
+<p>混合方程为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>finalValue = sourceFactor * sourceValue operation destinationFactor * destinationValue
+</span></span></code></pre></div><p>在这个等式中：</p>
+<ul>
+<li><code>finalValue</code>是 GPU 写入目标缓冲区的值。</li>
+<li><code>sourceFactor</code>在 Blend 命令中定义。</li>
+<li><code>sourceValue</code>是片段着色器输出的值。</li>
+<li><code>operation</code>是混合操作。</li>
+<li><code>destinationFactor</code>在 Blend 命令中定义。</li>
+<li><code>destinationValue</code>是目标缓冲区中已有的值。</li>
+</ul>
+<p>所以在ForwardAdd Pass当中片段输出的一句放在了目标缓冲区中，在ForwardAdd Pass中使用Blend命令混合两者的结果</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><strong>用法</strong></th>
+<th style="text-align:left"><strong>示例语法</strong></th>
+<th style="text-align:left"><strong>功能</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>Blend &lt;state&gt;</code></td>
+<td style="text-align:left"><code>Blend Off</code></td>
+<td style="text-align:left">禁用默认渲染目标的混合。这是默认值。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Blend &lt;render target&gt; &lt;state&gt;</code></td>
+<td style="text-align:left"><code>Blend 1 Off</code></td>
+<td style="text-align:left">如上所述，但对于给定的渲染目标。(1)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Blend &lt;source factor&gt; &lt;destination factor&gt;</code></td>
+<td style="text-align:left"><code>Blend One Zero</code></td>
+<td style="text-align:left">为默认渲染目标启用混合。设置 RGBA 值的混合因子。</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Blend &lt;render target&gt; &lt;source factor&gt; &lt;destination factor&gt;</code></td>
+<td style="text-align:left"><code>Blend 1 One Zero</code></td>
+<td style="text-align:left">如上所述，但对于给定的渲染目标。(1)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Blend &lt;source factor RGB&gt; &lt;destination factor RGB&gt;, &lt;source factor alpha&gt; &lt;destination factor alpha&gt;</code></td>
+<td style="text-align:left"><code>Blend One Zero, Zero One</code></td>
+<td style="text-align:left">启用混合默认渲染目标。为 RGB 和 alpha 值设置单独的混合因子。(2)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Blend &lt;render target&gt; &lt;source factor RGB&gt; &lt;destination factor RGB&gt;, &lt;source factor alpha&gt; &lt;destination factor alpha&gt;</code></td>
+<td style="text-align:left"><code>Blend 1 One Zero, Zero One</code></td>
+<td style="text-align:left">如上所述，但对于给定的渲染目标。(1) (2)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="有效参数值">有效参数值<a hidden class="anchor" aria-hidden="true" href="#有效参数值">#</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><strong>范围</strong></th>
+<th style="text-align:left"><strong>价值</strong></th>
+<th style="text-align:left"><strong>功能</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>渲染目标</strong></td>
+<td style="text-align:left">整数，范围为 0 到 7</td>
+<td style="text-align:left">渲染目标索引。</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>状态</strong></td>
+<td style="text-align:left"><code>Off</code></td>
+<td style="text-align:left">禁用混合。</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>因素</strong></td>
+<td style="text-align:left"><code>One</code></td>
+<td style="text-align:left">此输入的值为一。使用它来使用源颜色或目标颜色的值。</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>Zero</code></td>
+<td style="text-align:left">此输入的值为零。使用它来删除源或目标值。</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>SrcColor</code></td>
+<td style="text-align:left">GPU 将此输入的值乘以源颜色值。</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>SrcAlpha</code></td>
+<td style="text-align:left">GPU 将此输入的值乘以源 alpha 值。</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>SrcAlphaSaturate</code></td>
+<td style="text-align:left"><code>source alpha</code>GPU 将此输入的值乘以和的最小值<code>(1 - destination alpha)</code></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>DstColor</code></td>
+<td style="text-align:left">GPU 将此输入的值乘以帧缓冲区源颜色值。</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>DstAlpha</code></td>
+<td style="text-align:left">GPU 将此输入的值乘以帧缓冲区源 alpha 值。</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>OneMinusSrcColor</code></td>
+<td style="text-align:left">GPU 将此输入的值乘以（1 - 源颜色）。</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>OneMinusSrcAlpha</code></td>
+<td style="text-align:left">GPU 将此输入的值乘以（1 - 源 alpha）。</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>OneMinusDstColor</code></td>
+<td style="text-align:left">GPU 将此输入的值乘以（1 - 目标颜色）。</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"><code>OneMinusDstAlpha</code></td>
+<td style="text-align:left">GPU 将此输入的值乘以（1 - 目标 alpha）。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="着色器变体和关键字">着色器变体和关键字<a hidden class="anchor" aria-hidden="true" href="#着色器变体和关键字">#</a></h3>
+<p>在Unity中可以编写着色器代码片段来共享通用代码，但在启用或禁用给定关键字时具有不同功能。</p>
+<p>Unity 编译这些着色器代码片段时，它将为已启用和已禁用关键字的不同组合创建单独的着色器程序。</p>
+<p>这些各个着色器程序被称为着色器变体。</p>
+<blockquote>
+<p>简而言之就是可以启用或者关闭给定的关键字，来使用各种着色器变体当中的功能，从而实现着色器的效果</p>
+</blockquote>
+<h3 id="预编译指令multi_compile-的工作方式">预编译指令multi_compile 的工作方式<a hidden class="anchor" aria-hidden="true" href="#预编译指令multi_compile-的工作方式">#</a></h3>
+<p>指令示例：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># pragma multi_compile FANCY_STUFF_OFF FANCY_STUFF_ON
+</span></span></code></pre></div><p>此指令示例生成两个着色器变体：一个定义了 <code>FANCY_STUFF_OFF</code>，另一个定义了 <code>FANCY_STUFF_ON</code>。在运行时，Unity 根据材质或全局着色器关键字来激活其中一个变体。如果这两个关键字均未启用，则 Unity 使用第一个关键字（在此示例中为 <code>FANCY_STUFF_OFF</code>）。</p>
+<h3 id="内置-multi_compile-快捷方式">内置 multi_compile 快捷方式<a hidden class="anchor" aria-hidden="true" href="#内置-multi_compile-快捷方式">#</a></h3>
+<p>有几个“快捷方式”符号用于编译多个着色器变体。这些变体主要处理 Unity 中的不同光源、阴影和光照贴图类型。请参阅有关<a href="https://docs.unity3d.com/cn/2019.4/Manual/SL-RenderPipeline.html">渲染管线</a>的文档以了解详细信息。</p>
+<ul>
+<li><code>multi_compile_fwdbase</code> 编译 <a href="https://docs.unity3d.com/cn/2019.4/ScriptReference/Rendering.PassType.ForwardBase.html">PassType.ForwardBase</a> 所需的所有变体。这些变体处理不同的光照贴图类型以及启用或禁用的方向光主要阴影。</li>
+<li><code>multi_compile_fwdadd</code> 编译 <a href="https://docs.unity3d.com/cn/2019.4/ScriptReference/Rendering.PassType.ForwardAdd.html">PassType.ForwardAdd</a> 的变体。这将编译变体来处理方向光、聚光灯或点光源类型，以及它们带有剪影纹理的变体。</li>
+<li><code>multi_compile_fwdadd_fullshadows</code> - 与 <code>multi_compile_fwdadd</code> 相同，但还能够让光源具有实时阴影。</li>
+<li><code>multi_compile_fog</code> 扩展为多个变体以处理不同的雾效类型 (off/linear/exp/exp2)。</li>
+</ul>
+<blockquote>
+<p>所以想要实现能够接受点光源的阴影投射，就需要在ForwardAdd通道中
+添加预编译指令multi_compile_fwdadd_fullshadows</p>
+</blockquote>
+<p>完整的光照以及阴影投影支持的代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Shader &#34;ShaderLearning/ShadowCaster/VertexShadowBlinnPhongShader&#34;
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    Properties
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        _MainColor (&#34;MainColor&#34;, Color) = (1,1,1,1)
+</span></span><span style="display:flex;"><span>        _SpecularColor (&#34;SpecularColor&#34;, Color) = (0.5,0.5,0.5,1)
+</span></span><span style="display:flex;"><span>        _Shineness(&#34;Shineness&#34;,Range(1,32))=8
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    SubShader
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        Pass
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            Tags { &#34;LightMode&#34;=&#34;ForwardBase&#34; }
+</span></span><span style="display:flex;"><span>            CGPROGRAM
+</span></span><span style="display:flex;"><span>            #pragma multi_compile_fwdbase
+</span></span><span style="display:flex;"><span>            #pragma vertex vert
+</span></span><span style="display:flex;"><span>            #pragma fragment frag
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            #include &#34;UnityCG.cginc&#34;
+</span></span><span style="display:flex;"><span>            #include &#34;Lighting.cginc&#34;
+</span></span><span style="display:flex;"><span>            #include &#34;AutoLight.cginc&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            struct v2f
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                float4 pos : SV_POSITION;
+</span></span><span style="display:flex;"><span>                float3 normal : TEXCOORD0;
+</span></span><span style="display:flex;"><span>                float4 vertex: POSITION1;
+</span></span><span style="display:flex;"><span>                LIGHTING_COORDS(1,2)
+</span></span><span style="display:flex;"><span>            };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            fixed4 _MainColor;
+</span></span><span style="display:flex;"><span>            fixed4 _SpecularColor;
+</span></span><span style="display:flex;"><span>            float _Shineness;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            v2f vert (appdata_base v)
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                v2f o;
+</span></span><span style="display:flex;"><span>                o.pos=UnityObjectToClipPos(v.vertex);
+</span></span><span style="display:flex;"><span>                o.normal=v.normal;
+</span></span><span style="display:flex;"><span>                o.vertex=v.vertex;
+</span></span><span style="display:flex;"><span>                TRANSFER_VERTEX_TO_FRAGMENT(o)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                return o;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            fixed4 frag (v2f i) : COLOR
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                //环境光颜色 
+</span></span><span style="display:flex;"><span>                fixed4 col=UNITY_LIGHTMODEL_AMBIENT;
+</span></span><span style="display:flex;"><span>                //模型坐标系下的法线转位世界坐标系下
+</span></span><span style="display:flex;"><span>                float3 N=UnityObjectToWorldNormal(i.normal);
+</span></span><span style="display:flex;"><span>                //获取世界坐标系下的光照方向
+</span></span><span style="display:flex;"><span>                float3 L=normalize(WorldSpaceLightDir(i.vertex));
+</span></span><span style="display:flex;"><span>                //计算漫反射
+</span></span><span style="display:flex;"><span>                float diffuse=saturate(dot(L,N)); 
+</span></span><span style="display:flex;"><span>                //计算摄像机观察视角向量
+</span></span><span style="display:flex;"><span>                float3 V=normalize(WorldSpaceViewDir(i.vertex));
+</span></span><span style="display:flex;"><span>                //计算镜面高光,使用半角向量
+</span></span><span style="display:flex;"><span>                float specular=pow(saturate(dot(N,normalize(L+V))),_Shineness);
+</span></span><span style="display:flex;"><span>                //叠加上漫反射与镜面高光的颜色乘上光照颜色
+</span></span><span style="display:flex;"><span>                col+= _LightColor0*((_MainColor*diffuse)+(_SpecularColor*specular));
+</span></span><span style="display:flex;"><span>                //计算世界坐标系下的顶点位置 
+</span></span><span style="display:flex;"><span>                float3 wpos=mul(unity_ObjectToWorld,i.vertex).xyz;
+</span></span><span style="display:flex;"><span>                //计算4个点光源颜色
+</span></span><span style="display:flex;"><span>                col.rgb+=Shade4PointLights(unity_4LightPosX0,
+</span></span><span style="display:flex;"><span>                unity_4LightPosY0,
+</span></span><span style="display:flex;"><span>                unity_4LightPosZ0,
+</span></span><span style="display:flex;"><span>                unity_LightColor[0].rgb,unity_LightColor[1].rgb,
+</span></span><span style="display:flex;"><span>                unity_LightColor[2].rgb,unity_LightColor[3].rgb,
+</span></span><span style="display:flex;"><span>                unity_4LightAtten0,wpos,N);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                float atten = LIGHT_ATTENUATION(i);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                col.rgb*=atten;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                return col;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            ENDCG
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        Pass
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            Blend One One//使用Blend混合 帧缓冲里的结果 默认方法为Add
+</span></span><span style="display:flex;"><span>            Tags { &#34;LightMode&#34;=&#34;ForwardAdd&#34; }// ForwarAdd 附加支持逐像素光以及聚光灯
+</span></span><span style="display:flex;"><span>            CGPROGRAM
+</span></span><span style="display:flex;"><span>            //使用
+</span></span><span style="display:flex;"><span>            #pragma multi_compile_fwdadd_fullshadows
+</span></span><span style="display:flex;"><span>            #pragma vertex vert
+</span></span><span style="display:flex;"><span>            #pragma fragment frag
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            #include &#34;UnityCG.cginc&#34;
+</span></span><span style="display:flex;"><span>            #include &#34;Lighting.cginc&#34;
+</span></span><span style="display:flex;"><span>            #include &#34;AutoLight.cginc&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            struct v2f
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                float4 pos : SV_POSITION;
+</span></span><span style="display:flex;"><span>                float3 normal : TEXCOORD0;
+</span></span><span style="display:flex;"><span>                float4 vertex: POSITION1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                LIGHTING_COORDS(1,2)
+</span></span><span style="display:flex;"><span>            };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            fixed4 _MainColor;
+</span></span><span style="display:flex;"><span>            fixed4 _SpecularColor;
+</span></span><span style="display:flex;"><span>            float _Shineness;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            v2f vert (appdata_base v)
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                v2f o;
+</span></span><span style="display:flex;"><span>                o.pos=UnityObjectToClipPos(v.vertex);
+</span></span><span style="display:flex;"><span>                o.normal=v.normal;
+</span></span><span style="display:flex;"><span>                o.vertex=v.vertex;
+</span></span><span style="display:flex;"><span>                TRANSFER_VERTEX_TO_FRAGMENT(o)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                return o;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            fixed4 frag (v2f i) : COLOR
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                //环境光颜色 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                //模型坐标系下的法线转位世界坐标系下
+</span></span><span style="display:flex;"><span>                float3 N=UnityObjectToWorldNormal(i.normal);
+</span></span><span style="display:flex;"><span>                //获取世界坐标系下的光照方向
+</span></span><span style="display:flex;"><span>                float3 L=normalize(WorldSpaceLightDir(i.vertex));
+</span></span><span style="display:flex;"><span>                //计算漫反射
+</span></span><span style="display:flex;"><span>                float diffuse=saturate(dot(L,N)); 
+</span></span><span style="display:flex;"><span>                //计算摄像机观察视角向量
+</span></span><span style="display:flex;"><span>                float3 V=normalize(WorldSpaceViewDir(i.vertex));
+</span></span><span style="display:flex;"><span>                //计算镜面高光,使用半角向量
+</span></span><span style="display:flex;"><span>                float specular=pow(saturate(dot(N,normalize(L+V))),_Shineness);
+</span></span><span style="display:flex;"><span>                //叠加上漫反射与镜面高光的颜色乘上光照颜色
+</span></span><span style="display:flex;"><span>                fixed4 col = _LightColor0*((_MainColor*diffuse)+(_SpecularColor*specular));
+</span></span><span style="display:flex;"><span>                // //计算世界坐标系下的顶点位置 
+</span></span><span style="display:flex;"><span>                float3 wpos=mul(unity_ObjectToWorld,i.vertex).xyz;
+</span></span><span style="display:flex;"><span>                //计算4个点光源颜色
+</span></span><span style="display:flex;"><span>                col.rgb+=Shade4PointLights(unity_4LightPosX0,
+</span></span><span style="display:flex;"><span>                unity_4LightPosY0,
+</span></span><span style="display:flex;"><span>                unity_4LightPosZ0,
+</span></span><span style="display:flex;"><span>                unity_LightColor[0].rgb,unity_LightColor[1].rgb,
+</span></span><span style="display:flex;"><span>                unity_LightColor[2].rgb,unity_LightColor[3].rgb,
+</span></span><span style="display:flex;"><span>                unity_4LightAtten0,wpos,N);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                float atten = LIGHT_ATTENUATION(i);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                col.rgb*=atten;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                return col;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            ENDCG
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    Fallback &#34;Diffuse&#34;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><img loading="lazy" src="https://raw.gitmirror.com/LONEStudio/Images/master/img/202305061953186.png" alt="最终效果图"  />
+</p>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://EitanWong.github.io/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://EitanWong.github.io/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://EitanWong.github.io/en/posts/coding/%E7%AE%97%E6%B3%95%E7%9A%84%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90/">
+    <span class="title">« 👈 Prev Page</span>
+    <br>
+    <span>算法的复杂度分析</span>
+  </a>
+  <a class="next" href="https://EitanWong.github.io/en/posts/shader/fragmentshader-%E7%89%87%E5%85%83%E7%BA%A7%E5%85%89%E7%85%A7/">
+    <span class="title">Next Page 👉 »</span>
+    <br>
+    <span>FragmentShader-片元级光照</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share ShadowCaster-渲染阴影 on twitter"
+       href="https://twitter.com/intent/tweet/?text=ShadowCaster-%e6%b8%b2%e6%9f%93%e9%98%b4%e5%bd%b1&amp;url=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2fshadowcaster-%25E6%25B8%25B2%25E6%259F%2593%25E9%2598%25B4%25E5%25BD%25B1%2f&amp;hashtags=">
+    <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share ShadowCaster-渲染阴影 on linkedin"
+       href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2fshadowcaster-%25E6%25B8%25B2%25E6%259F%2593%25E9%2598%25B4%25E5%25BD%25B1%2f&amp;title=ShadowCaster-%e6%b8%b2%e6%9f%93%e9%98%b4%e5%bd%b1&amp;summary=ShadowCaster-%e6%b8%b2%e6%9f%93%e9%98%b4%e5%bd%b1&amp;source=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2fshadowcaster-%25E6%25B8%25B2%25E6%259F%2593%25E9%2598%25B4%25E5%25BD%25B1%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share ShadowCaster-渲染阴影 on reddit"
+       href="https://reddit.com/submit?url=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2fshadowcaster-%25E6%25B8%25B2%25E6%259F%2593%25E9%2598%25B4%25E5%25BD%25B1%2f&title=ShadowCaster-%e6%b8%b2%e6%9f%93%e9%98%b4%e5%bd%b1">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share ShadowCaster-渲染阴影 on facebook"
+       href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2fshadowcaster-%25E6%25B8%25B2%25E6%259F%2593%25E9%2598%25B4%25E5%25BD%25B1%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share ShadowCaster-渲染阴影 on whatsapp"
+       href="https://api.whatsapp.com/send?text=ShadowCaster-%e6%b8%b2%e6%9f%93%e9%98%b4%e5%bd%b1%20-%20https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2fshadowcaster-%25E6%25B8%25B2%25E6%259F%2593%25E9%2598%25B4%25E5%25BD%25B1%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve">
+            <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share ShadowCaster-渲染阴影 on telegram"
+       href="https://telegram.me/share/url?text=ShadowCaster-%e6%b8%b2%e6%9f%93%e9%98%b4%e5%bd%b1&amp;url=https%3a%2f%2fEitanWong.github.io%2fen%2fposts%2fshader%2fshadowcaster-%25E6%25B8%25B2%25E6%259F%2593%25E9%2598%25B4%25E5%25BD%25B1%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28">
+            <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo/1.5.8/twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2023-2024
+        <a href="https://EitanWong.github.io/en/" style="color:#939393;">Eitan&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄copy';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻copied!';
+            setTimeout(() => {
+                copybutton.innerText = '📄copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"Eitan's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+
+<script>
+    $("code[class^=language] ").on("mouseover", function () {
+        if (this.clientWidth < this.scrollWidth) {
+            $(this).css("width", "135%")
+            $(this).css("border-top-right-radius", "var(--radius)")
+        }
+    }).on("mouseout", function () {
+        $(this).css("width", "100%")
+        $(this).css("border-top-right-radius", "unset")
+    })
+</script>
+</body>
+
+</html>
