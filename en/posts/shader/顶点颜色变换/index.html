@@ -8,7 +8,7 @@
 <title>顶点颜色变换 | Eitan&#39;s Blog</title>
 <meta name="keywords" content="">
 <meta name="description" content="1、顶点颜色变换 // Upgrade NOTE: replaced &#39;mul(UNITY_MATRIX_MVP,*)&#39; with &#39;UnityObjectToClipPos(*)&#39; Shader &#34;Custom/s_nine&#34; { SubShader{ pass { CGPROGRAM #pragma vertex vert #pragma fragment frag #include &#34;unitycg.cginc&#34; float4x4 mvp; float4x4 rm; float4x4 sm; struct v2f { float4 pos:POSITION; fixed4 color : COLOR; }; v2f vert(appdata_base v) { v2f o; float4x4 m = mul(sm, UNITY_MATRIX_MVP); o.pos = mul(m,v.vertex); if (float(v.vertex.x) &gt; 0) o.color = fixed4(1, 0, 0, 1);//显示为红色 else o.color = fixed4(0,0,1,1);//显示为蓝色 return o; } fixed4 frag(v2f IN) :COLOR{ return IN.color; } ENDCG } } } 运行结果：中间颜色自动渐变 2、改变某个顶点">
-<meta name="author" content="Sulv">
+<meta name="author" content="Eitan">
 <link rel="canonical" href="https://EitanWong.github.io/en/posts/shader/%E9%A1%B6%E7%82%B9%E9%A2%9C%E8%89%B2%E5%8F%98%E6%8D%A2/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.0dcd30655f684635e8d387636982f36d45e2607d9dde19da5180cecacb25b773.css" integrity="sha256-Dc0wZV9oRjXo04djaYLzbUXiYH2d3hnaUYDOysslt3M=" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
@@ -130,7 +130,7 @@ var _hmt = _hmt || [];
   "dateModified": "2023-04-05T22:53:06Z",
   "author":{
     "@type": "Person",
-    "name": "Sulv"
+    "name": "Eitan"
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -298,7 +298,7 @@ var _hmt = _hmt || [];
     </span>
     <span id="post_meta_style_5">
         <span class="fa fa-user-o"></span>
-        <span>Sulv
+        <span>Eitan
             &nbsp;&nbsp;
         </span>
     </span>

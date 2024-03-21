@@ -8,7 +8,7 @@
 <title>顶点位移 | Eitan&#39;s Blog</title>
 <meta name="keywords" content="">
 <meta name="description" content="顶点位移Shader案例 💡 length(xy): 求向量模长度 等同于sqrt(x_x&#43;y_y); 1、抬升地面 Shader &#34;Custom/s_ten&#34; { Properties{ _R(&#34;R&#34;,range(0,5))=1 } SubShader{ pass { CGPROGRAM #pragma vertex vert #pragma fragment frag #include &#34;unitycg.cginc&#34; float dis; float r; float _R; struct v2f { float4 pos:POSITION; fixed4 color : COLOR; }; v2f vert(appdata_base v) { //x、y坐标 float2 xy = v.vertex.xz; //求到圆心的距离，即半径 //float d = sqrt((xy.x - 0)*(xy.x - 0) &#43; (xy.y-0)*(xy.y - 0)); //也可以使用下面的计算摸长的方式 float d = _R - length(xy);">
-<meta name="author" content="Sulv">
+<meta name="author" content="Eitan">
 <link rel="canonical" href="https://EitanWong.github.io/en/posts/shader/%E9%A1%B6%E7%82%B9%E4%BD%8D%E7%A7%BB/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.0dcd30655f684635e8d387636982f36d45e2607d9dde19da5180cecacb25b773.css" integrity="sha256-Dc0wZV9oRjXo04djaYLzbUXiYH2d3hnaUYDOysslt3M=" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
@@ -130,7 +130,7 @@ var _hmt = _hmt || [];
   "dateModified": "2023-04-05T22:55:47Z",
   "author":{
     "@type": "Person",
-    "name": "Sulv"
+    "name": "Eitan"
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -298,7 +298,7 @@ var _hmt = _hmt || [];
     </span>
     <span id="post_meta_style_5">
         <span class="fa fa-user-o"></span>
-        <span>Sulv
+        <span>Eitan
             &nbsp;&nbsp;
         </span>
     </span>

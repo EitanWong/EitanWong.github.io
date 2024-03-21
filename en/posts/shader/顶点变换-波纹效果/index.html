@@ -8,7 +8,7 @@
 <title>顶点变换-波纹效果 | Eitan&#39;s Blog</title>
 <meta name="keywords" content="">
 <meta name="description" content="简易的波纹效果 💡 利用Sin周期函数，让顶点的Y轴进行波动 Shader &#34;ShaderLearning/VertexShader/wave&#34; { Properties{ _Amplitude(&#34;Amplitude&#34;,float)=1 _Frequency(&#34;Frequency&#34;,Range(0,5))=1 _Speed(&#34;_Speed&#34;,float)=1 } SubShader { Pass { CGPROGRAM #pragma vertex vert #pragma fragment frag #include &#34;UnityCG.cginc&#34; float _Amplitude; float _Frequency; float _Speed; struct v2f { float4 vertex : POSITION; float4 color : COLOR; }; v2f vert (appdata_base v) { float up =sin(v.vertex.x)&#43;_Time.y; // float4x4 m={ // 1,0,0,0, // 0,sin(up)/8&#43;0.5,0,0, // 0,0,1,0, // 0,0,0,1 // };//由于Plane模型顶点的y值都为0和矩阵相乘的结果也都为0，所以定位没有进行移动 // v.vertex=mul(m,v.vertex); //A*sin(w*x&#43;t) v.vertex.y&#43;=_Amplitude*sin(v.vertex.z*_Frequency&#43;_Time.y*_Speed); v2f o; o.vertex = UnityObjectToClipPos(v.vertex);">
-<meta name="author" content="Sulv">
+<meta name="author" content="Eitan">
 <link rel="canonical" href="https://EitanWong.github.io/en/posts/shader/%E9%A1%B6%E7%82%B9%E5%8F%98%E6%8D%A2-%E6%B3%A2%E7%BA%B9%E6%95%88%E6%9E%9C/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.0dcd30655f684635e8d387636982f36d45e2607d9dde19da5180cecacb25b773.css" integrity="sha256-Dc0wZV9oRjXo04djaYLzbUXiYH2d3hnaUYDOysslt3M=" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
@@ -130,7 +130,7 @@ var _hmt = _hmt || [];
   "dateModified": "2023-04-05T22:58:07Z",
   "author":{
     "@type": "Person",
-    "name": "Sulv"
+    "name": "Eitan"
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
@@ -298,7 +298,7 @@ var _hmt = _hmt || [];
     </span>
     <span id="post_meta_style_5">
         <span class="fa fa-user-o"></span>
-        <span>Sulv
+        <span>Eitan
             &nbsp;&nbsp;
         </span>
     </span>
