@@ -2,35 +2,44 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>🗣️ English on Eitan&#39;s Blog</title>
-    <link>https://EitanWong.github.io/en/posts/english/</link>
+    <link>http://localhost:1313/en/posts/english/</link>
     <description>Recent content in 🗣️ English on Eitan&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 21 Mar 2024 20:56:20 +0800</lastBuildDate><atom:link href="https://EitanWong.github.io/en/posts/english/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 23 Mar 2024 20:48:29 +0800</lastBuildDate><atom:link href="http://localhost:1313/en/posts/english/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Lesson4: Nominative and accusative forms of pronouns</title>
+      <link>http://localhost:1313/en/posts/english/lesson4_nominative_and_accusative_forms_of_pronouns/</link>
+      <pubDate>Sat, 23 Mar 2024 20:48:29 +0800</pubDate>
+      
+      <guid>http://localhost:1313/en/posts/english/lesson4_nominative_and_accusative_forms_of_pronouns/</guid>
+      <description>We use pronouns every day. in fact, even if you don&amp;rsquo;t know what pronouns are, you use them and in this sentence alone, we&amp;rsquo;ve now used pronouns four times. Pronouns are words (or phrases) you substitute for nouns when your reader or listener already knows which noun you&amp;rsquo;re referring to. For example, you might say, &amp;ldquo;i have a dog.She&amp;rsquo;s brown and white.&amp;rdquo; There&amp;rsquo;s no need to clarify that you&amp;rsquo;re describing your dog in the second sentence because you already mentioned her in the first. By using the pronoun she, you can avoid the annoying repetition of the dog. Pronouns do a whole lot more than helping us avoid repetitiveness. They provide context, make your sentences&amp;rsquo; meanings clearer, and shape how we perceive people and things. Read on to learn about the different ways we use pronouns and how to use</description>
+    </item>
+    
     <item>
       <title>Lesson3: The negative form of the verb &#39;to be&#39;</title>
-      <link>https://EitanWong.github.io/en/posts/english/lesson3_the_negative_form_of_the_verb_to_be/</link>
+      <link>http://localhost:1313/en/posts/english/lesson3_the_negative_form_of_the_verb_to_be/</link>
       <pubDate>Thu, 21 Mar 2024 20:56:20 +0800</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/english/lesson3_the_negative_form_of_the_verb_to_be/</guid>
+      <guid>http://localhost:1313/en/posts/english/lesson3_the_negative_form_of_the_verb_to_be/</guid>
       <description>The negative form of the verb &amp;rsquo;to be&amp;rsquo; is &amp;ldquo;is not&amp;rdquo; &amp;ldquo;are not&amp;rdquo;. To form a sentence, it needs to add &amp;ldquo;not&amp;rdquo; after the verb. For example: I am not a teacher. The nagative form of the verb &amp;ldquo;to be&amp;rdquo; verb &amp;ldquo;to be&amp;rdquo; The negative form am am not is isn&amp;rsquo;s are aren&amp;rsquo;t was wasn&amp;rsquo;t were weren&amp;rsquo;t Example Simple Present tense form The man isn&#39;t back. I am not back. They aren&#39;t back. Simple Past tense form He wasn&#39;t back. They weren&#39;t back. The Question and Answer of Sentence Example 1 Q: Is he a teacher? A: Yes, he is. / No, he isn&#39;t. Example 2 Q: Are you a teacher? A: Yes, i am. / No, i am not. Example 3 Q: Were they teachers? A: Yes, they were. / No, they weren&#39;t. More Examples Question: Is he a</description>
     </item>
     
     <item>
       <title>Lesson2: The Verb &#39;To Be&#39;</title>
-      <link>https://EitanWong.github.io/en/posts/english/lesson2_the_verb_to_be/</link>
+      <link>http://localhost:1313/en/posts/english/lesson2_the_verb_to_be/</link>
       <pubDate>Wed, 20 Mar 2024 20:28:01 +0800</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/english/lesson2_the_verb_to_be/</guid>
+      <guid>http://localhost:1313/en/posts/english/lesson2_the_verb_to_be/</guid>
       <description>The verb &amp;rsquo;to be&amp;rsquo; indicates a state of being or existence. &amp;lsquo;To be&amp;rsquo; is an irregular verb. There are eight forms of the verb to be: 1. Present: am、is、are Example: I am a student. She is a teacher. They are the audience. They are teachers. 2. Simple past: was、were Example He was back. They were back. He was a teacher before 3. Infinitive: be infinitive is a verbal consisting of the word to plus a verb (in its simplest &amp;ldquo;stem&amp;rdquo; form) and functioning as a noun, adjective, or adverb. The term verbal indicates that an infinitive, like the other two kinds of verbals, is based on a verb and therefore expresses action or state of being. Example We need to win. 4. Present participle: being</description>
     </item>
     
     <item>
       <title>Lesson1: The basic sentence patterns</title>
-      <link>https://EitanWong.github.io/en/posts/english/lesson1_the_basic_sentence_patterns/</link>
+      <link>http://localhost:1313/en/posts/english/lesson1_the_basic_sentence_patterns/</link>
       <pubDate>Tue, 19 Mar 2024 23:41:19 +0800</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/english/lesson1_the_basic_sentence_patterns/</guid>
+      <guid>http://localhost:1313/en/posts/english/lesson1_the_basic_sentence_patterns/</guid>
       <description>English is an international language, and being proficient in it allows individuals to communicate effectively with English speakers worldwide. In English, there are five basic sentence patterns. Patterns 1: Subject + Verb Example: Sentence: The universe remains. Note: &amp;lsquo;The universe&amp;rsquo; is the subject of the action of this sentence, certainly, it&amp;rsquo;s the subject of this sentence &amp;lsquo;Remains&amp;rsquo; is the action of this sentence, so it&amp;rsquo;s the verb of this sentence Patterns 2: Subject + Linking Verb + Predicative Example: Sentence: The food is delicious. Note: What is a sentence subject? sentence subject is the subject of the action in the sentence. In English, use a Linking verb to link the subject and Predicative, so is is a Linking Verb. Predicative is relating to or occurring within the predicate of a sentence. Predicate is the part of a sentence that gives</description>
     </item>
     

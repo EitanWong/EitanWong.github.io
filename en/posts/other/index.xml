@@ -2,98 +2,98 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>💡 Other on Eitan&#39;s Blog</title>
-    <link>https://EitanWong.github.io/en/posts/other/</link>
+    <link>http://localhost:1313/en/posts/other/</link>
     <description>Recent content in 💡 Other on Eitan&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 17 Apr 2023 00:35:49 +0000</lastBuildDate><atom:link href="https://EitanWong.github.io/en/posts/other/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 17 Apr 2023 00:35:49 +0000</lastBuildDate><atom:link href="http://localhost:1313/en/posts/other/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>🤖 Auto-GPT：AI的自我驱动</title>
-      <link>https://EitanWong.github.io/en/posts/other/-auto-gptai%E7%9A%84%E8%87%AA%E6%88%91%E9%A9%B1%E5%8A%A8/</link>
+      <link>http://localhost:1313/en/posts/other/-auto-gptai%E7%9A%84%E8%87%AA%E6%88%91%E9%A9%B1%E5%8A%A8/</link>
       <pubDate>Mon, 17 Apr 2023 00:35:49 +0000</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/other/-auto-gptai%E7%9A%84%E8%87%AA%E6%88%91%E9%A9%B1%E5%8A%A8/</guid>
+      <guid>http://localhost:1313/en/posts/other/-auto-gptai%E7%9A%84%E8%87%AA%E6%88%91%E9%A9%B1%E5%8A%A8/</guid>
       <description>前言💬 这段时间github上的Auto-GPT太火了，看看这个恐怖的Star历史曲线 原作者直接惊呼50000 Stars!? 所以，我决定来安装部署以下，体验一下Auto-GPT 什么是Auto-GPT Auto-GPT是一个实验性的开源应用程序，展示了GPT-4语言模型的功能。该计划由GPT-4驱</description>
     </item>
     
     <item>
       <title>yabai-Mac🍎💻下的平铺式窗口管理神器</title>
-      <link>https://EitanWong.github.io/en/posts/other/yabai-mac%E4%B8%8B%E7%9A%84%E5%B9%B3%E9%93%BA%E5%BC%8F%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%A5%9E%E5%99%A8/</link>
+      <link>http://localhost:1313/en/posts/other/yabai-mac%E4%B8%8B%E7%9A%84%E5%B9%B3%E9%93%BA%E5%BC%8F%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%A5%9E%E5%99%A8/</link>
       <pubDate>Sun, 16 Apr 2023 01:27:38 +0000</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/other/yabai-mac%E4%B8%8B%E7%9A%84%E5%B9%B3%E9%93%BA%E5%BC%8F%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%A5%9E%E5%99%A8/</guid>
+      <guid>http://localhost:1313/en/posts/other/yabai-mac%E4%B8%8B%E7%9A%84%E5%B9%B3%E9%93%BA%E5%BC%8F%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E7%A5%9E%E5%99%A8/</guid>
       <description>前言💬 最近日常使用的软件逐渐增多，目前多数人常用的的层叠式窗口管理，似乎开始不适合我的日常使用 所以我决定折腾一下mac下的平铺式窗口管理软件yabai 什么是yabai yabai 是一款适用于 macOS Big Sur 11.0.1+ 和 Monterey 12.0.0+ 的平铺式窗口管理器。 它使用二叉空间分割算法自动修改您的窗口布局，使您能够专注于窗口内容</description>
     </item>
     
     <item>
       <title>macOS&#43;VSCode&#43;Unity的开发环境配置及调试</title>
-      <link>https://EitanWong.github.io/en/posts/other/macosvscodeunity%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%8F%8A%E8%B0%83%E8%AF%95/</link>
+      <link>http://localhost:1313/en/posts/other/macosvscodeunity%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%8F%8A%E8%B0%83%E8%AF%95/</link>
       <pubDate>Thu, 13 Apr 2023 23:52:59 +0000</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/other/macosvscodeunity%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%8F%8A%E8%B0%83%E8%AF%95/</guid>
+      <guid>http://localhost:1313/en/posts/other/macosvscodeunity%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%8F%8A%E8%B0%83%E8%AF%95/</guid>
       <description>前言💬 之前在mac平台上使用Unity，使用Rider作为IDE进行开发，有一说一Rider的功能还是非常强大的，但是在我的老款MacBook上跑就有点笨重了，所以最近决定换到VSCode进行开发 开发环境配置 首先当然是要安装 了 安装完成VSCode之后 需要安装.Net Core运行环</description>
     </item>
     
     <item>
       <title>正则表达式(Regular Expression)</title>
-      <link>https://EitanWong.github.io/en/posts/other/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8Fregular-expression/</link>
+      <link>http://localhost:1313/en/posts/other/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8Fregular-expression/</link>
       <pubDate>Thu, 13 Apr 2023 16:40:33 +0000</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/other/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8Fregular-expression/</guid>
+      <guid>http://localhost:1313/en/posts/other/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8Fregular-expression/</guid>
       <description>正则表达式 什么是正则表达式 正则表达式（Regular Expression）是一种用于匹配和处理文本模式的字符序列。 它是一种强大的文本处理工具，常用于编程和文本处理任务中，可以用来搜索、替换、验证和提取符合特定模式的文本。 语法 正则表达式(regular expression)描述了一</description>
     </item>
     
     <item>
       <title>macOS🍎💻下通过Homebrew🍺安装Anacond🐍并配置环境变量</title>
-      <link>https://EitanWong.github.io/en/posts/other/macos%E4%B8%8B%E9%80%9A%E8%BF%87homebrew%E5%AE%89%E8%A3%85anacond%E5%B9%B6%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/</link>
+      <link>http://localhost:1313/en/posts/other/macos%E4%B8%8B%E9%80%9A%E8%BF%87homebrew%E5%AE%89%E8%A3%85anacond%E5%B9%B6%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/</link>
       <pubDate>Tue, 11 Apr 2023 15:26:17 +0000</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/other/macos%E4%B8%8B%E9%80%9A%E8%BF%87homebrew%E5%AE%89%E8%A3%85anacond%E5%B9%B6%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/</guid>
+      <guid>http://localhost:1313/en/posts/other/macos%E4%B8%8B%E9%80%9A%E8%BF%87homebrew%E5%AE%89%E8%A3%85anacond%E5%B9%B6%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/</guid>
       <description>前言💬 前不久重装了macOS的系统，之前配置的环境都没了，这段时间Python用的比较多，所以准备安装配置anaconda进行使用 什么是Anaconda❓ Anaconda是一个数据科学和机器学习的开发环境，包含多种工具和库，可管理和部署数据分析、科学计算和机器学习项目。它包含常用</description>
     </item>
     
     <item>
       <title>macOS 🍎💻系统下安装⏬并配置终端神器 oh-my-zsh</title>
-      <link>https://EitanWong.github.io/en/posts/other/macos-%E7%B3%BB%E7%BB%9F%E4%B8%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E9%85%8D%E7%BD%AE%E7%BB%88%E7%AB%AF%E7%A5%9E%E5%99%A8-oh-my-zsh/</link>
+      <link>http://localhost:1313/en/posts/other/macos-%E7%B3%BB%E7%BB%9F%E4%B8%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E9%85%8D%E7%BD%AE%E7%BB%88%E7%AB%AF%E7%A5%9E%E5%99%A8-oh-my-zsh/</link>
       <pubDate>Tue, 11 Apr 2023 10:32:08 +0000</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/other/macos-%E7%B3%BB%E7%BB%9F%E4%B8%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E9%85%8D%E7%BD%AE%E7%BB%88%E7%AB%AF%E7%A5%9E%E5%99%A8-oh-my-zsh/</guid>
+      <guid>http://localhost:1313/en/posts/other/macos-%E7%B3%BB%E7%BB%9F%E4%B8%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E9%85%8D%E7%BD%AE%E7%BB%88%E7%AB%AF%E7%A5%9E%E5%99%A8-oh-my-zsh/</guid>
       <description>💬引言 Oh My Zsh 是什么 Oh My Zsh 是一款社区驱动的命令行工具，正如它的主页上说的，Oh My Zsh 是一种生活方式。它基于 zsh 命令行，提供了主题配置，插件机制，已经内置的便捷操作。给我们一种全新的方式使用命令行。 Oh My Zsh 是基于 zsh 命令行的一个扩展工具集，提供了丰富的扩展功能。 安装 Oh My Zsh 前提条件：必须已安装</description>
     </item>
     
     <item>
       <title>OpenCore Legacy Patcher关闭SIP保护🔒</title>
-      <link>https://EitanWong.github.io/en/posts/other/opencore-legacy-patcher%E5%85%B3%E9%97%ADsip%E4%BF%9D%E6%8A%A4/</link>
+      <link>http://localhost:1313/en/posts/other/opencore-legacy-patcher%E5%85%B3%E9%97%ADsip%E4%BF%9D%E6%8A%A4/</link>
       <pubDate>Mon, 10 Apr 2023 13:29:21 +0000</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/other/opencore-legacy-patcher%E5%85%B3%E9%97%ADsip%E4%BF%9D%E6%8A%A4/</guid>
+      <guid>http://localhost:1313/en/posts/other/opencore-legacy-patcher%E5%85%B3%E9%97%ADsip%E4%BF%9D%E6%8A%A4/</guid>
       <description>如果你使用的是黑苹果 或者像我一样使用老款的MacBookPro(2013) 你也许用了OpenCore Legacy Patcher升级到了最新的系统 但是有些程序需要你关闭SIP保护，可是你已经从白苹果成为黑苹果 在这种情况下你应该如何关闭SIP保护呢？ SIP Configure设置项 CSR_ALLOW_UNTRUSTED_KEXTS (允许不受信任的</description>
     </item>
     
     <item>
       <title>如何🧐在macOS🍎系统💻下彻底的卸载🗑️Python🐍</title>
-      <link>https://EitanWong.github.io/en/posts/other/%E5%A6%82%E4%BD%95%E5%9C%A8macos%E7%B3%BB%E7%BB%9F%E4%B8%8B%E5%BD%BB%E5%BA%95%E7%9A%84%E5%8D%B8%E8%BD%BD%EF%B8%8Fpython/</link>
+      <link>http://localhost:1313/en/posts/other/%E5%A6%82%E4%BD%95%E5%9C%A8macos%E7%B3%BB%E7%BB%9F%E4%B8%8B%E5%BD%BB%E5%BA%95%E7%9A%84%E5%8D%B8%E8%BD%BD%EF%B8%8Fpython/</link>
       <pubDate>Sun, 09 Apr 2023 23:35:50 +0000</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/other/%E5%A6%82%E4%BD%95%E5%9C%A8macos%E7%B3%BB%E7%BB%9F%E4%B8%8B%E5%BD%BB%E5%BA%95%E7%9A%84%E5%8D%B8%E8%BD%BD%EF%B8%8Fpython/</guid>
+      <guid>http://localhost:1313/en/posts/other/%E5%A6%82%E4%BD%95%E5%9C%A8macos%E7%B3%BB%E7%BB%9F%E4%B8%8B%E5%BD%BB%E5%BA%95%E7%9A%84%E5%8D%B8%E8%BD%BD%EF%B8%8Fpython/</guid>
       <description>这是你MacBook💻 上面安装了很多不同版本的Python🐍 突然有一天，你不想再看见他们🙈 或者是你抛弃了最原始的python🐍，从而投奔anaconda或者pyenv时 你就需要卸载🗑️他们 那么问题来了，如何彻彻底底的卸载它们呢❓ 图形化操作 1、直接在Mac的“程序坞”中，点击“访达</description>
     </item>
     
     <item>
       <title>Notion笔记📒导出➡️markdown📄，并解决图片路径依赖问题</title>
-      <link>https://EitanWong.github.io/en/posts/other/notion%E7%AC%94%E8%AE%B0%E5%AF%BC%E5%87%BA%EF%B8%8Fmarkdown%E5%B9%B6%E8%A7%A3%E5%86%B3%E5%9B%BE%E7%89%87%E8%B7%AF%E5%BE%84%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</link>
+      <link>http://localhost:1313/en/posts/other/notion%E7%AC%94%E8%AE%B0%E5%AF%BC%E5%87%BA%EF%B8%8Fmarkdown%E5%B9%B6%E8%A7%A3%E5%86%B3%E5%9B%BE%E7%89%87%E8%B7%AF%E5%BE%84%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</link>
       <pubDate>Thu, 06 Apr 2023 00:17:04 +0000</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/other/notion%E7%AC%94%E8%AE%B0%E5%AF%BC%E5%87%BA%EF%B8%8Fmarkdown%E5%B9%B6%E8%A7%A3%E5%86%B3%E5%9B%BE%E7%89%87%E8%B7%AF%E5%BE%84%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</guid>
+      <guid>http://localhost:1313/en/posts/other/notion%E7%AC%94%E8%AE%B0%E5%AF%BC%E5%87%BA%EF%B8%8Fmarkdown%E5%B9%B6%E8%A7%A3%E5%86%B3%E5%9B%BE%E7%89%87%E8%B7%AF%E5%BE%84%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98/</guid>
       <description>💬前言 以前记录一些笔记文章，都用Notion这款软件🖊️📒 但是有一天我发现连不上🚫Notion的网站了(平时主要在线用网页写文章) 误以为Notion跑路🏃了&amp;hellip;.后来才发现是我的网络🛜问题 不过数据在别人那里，总归是有风险的，无论是信息安全🔐，还是数据安全🔐 所以我打算把</description>
     </item>
     
     <item>
       <title></title>
-      <link>https://EitanWong.github.io/en/posts/other/%E6%88%91mac%E4%B8%8B%E7%9A%84%E9%85%8D%E7%BD%AE/</link>
+      <link>http://localhost:1313/en/posts/other/%E6%88%91mac%E4%B8%8B%E7%9A%84%E9%85%8D%E7%BD%AE/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://EitanWong.github.io/en/posts/other/%E6%88%91mac%E4%B8%8B%E7%9A%84%E9%85%8D%E7%BD%AE/</guid>
+      <guid>http://localhost:1313/en/posts/other/%E6%88%91mac%E4%B8%8B%E7%9A%84%E9%85%8D%E7%BD%AE/</guid>
       <description>Joshuto 图片预览 brew install ueberzug</description>
     </item>
     
