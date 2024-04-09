@@ -2,323 +2,323 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>🖼️ Shader on Eitan&#39;s Blog</title>
-    <link>http://localhost:1313/en/posts/shader/</link>
+    <link>https://EitanWong.github.io/en/posts/shader/</link>
     <description>Recent content in 🖼️ Shader on Eitan&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 06 May 2023 20:27:46 +0000</lastBuildDate><atom:link href="http://localhost:1313/en/posts/shader/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 06 May 2023 20:27:46 +0000</lastBuildDate><atom:link href="https://EitanWong.github.io/en/posts/shader/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ShadowCaster-渲染阴影</title>
-      <link>http://localhost:1313/en/posts/shader/shadowcaster-%E6%B8%B2%E6%9F%93%E9%98%B4%E5%BD%B1/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/shadowcaster-%E6%B8%B2%E6%9F%93%E9%98%B4%E5%BD%B1/</link>
       <pubDate>Sat, 06 May 2023 20:27:46 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/shadowcaster-%E6%B8%B2%E6%9F%93%E9%98%B4%E5%BD%B1/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/shadowcaster-%E6%B8%B2%E6%9F%93%E9%98%B4%E5%BD%B1/</guid>
       <description>我们之前编写的基于Lambert、Phong、BlinnPhong光照模型的Shader 存在一个问题🙋 那就是: ** 不能接受阴影** 左图: 自己编写的Shader 右图: 官方内建的Shader 所以为了解决这个问题，我们要在自己的着色器当中实现ShadowCaster 关于不同渲染路径下的S</description>
     </item>
     
     <item>
       <title>FragmentShader-片元级光照</title>
-      <link>http://localhost:1313/en/posts/shader/fragmentshader-%E7%89%87%E5%85%83%E7%BA%A7%E5%85%89%E7%85%A7/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/fragmentshader-%E7%89%87%E5%85%83%E7%BA%A7%E5%85%89%E7%85%A7/</link>
       <pubDate>Thu, 04 May 2023 18:28:56 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/fragmentshader-%E7%89%87%E5%85%83%E7%BA%A7%E5%85%89%E7%85%A7/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/fragmentshader-%E7%89%87%E5%85%83%E7%BA%A7%E5%85%89%E7%85%A7/</guid>
       <description>之前在编写Phong与BlinnPhong的时候，我将光照计算的部分放在顶点程序vert当中 顶点程序是针对顶点的，比如一个模型有8个顶点，就会计算8次 而片段程序当中是针对像素的，有n个像素就会计算n次 所以在之前编写的着色器当中，由于在顶点当中进行,最后光照的效果，出现了斑块，效果</description>
     </item>
     
     <item>
       <title>光照模型-Phong与BlinnPhong</title>
-      <link>http://localhost:1313/en/posts/shader/%E5%85%89%E7%85%A7%E6%A8%A1%E5%9E%8B-phong%E4%B8%8Eblinnphong/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E5%85%89%E7%85%A7%E6%A8%A1%E5%9E%8B-phong%E4%B8%8Eblinnphong/</link>
       <pubDate>Thu, 27 Apr 2023 21:56:17 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E5%85%89%E7%85%A7%E6%A8%A1%E5%9E%8B-phong%E4%B8%8Eblinnphong/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E5%85%89%E7%85%A7%E6%A8%A1%E5%9E%8B-phong%E4%B8%8Eblinnphong/</guid>
       <description>Phong冯氏光照模型 在现实生活当中，光照是一个复杂的过程，在计算机当中模拟这样的光照是非常复杂的 我们可以用一种简化的模型来对现实世界进行近似的光照模拟 Phong冯氏光照就是其中的一种比较简单的光照模型， 它是一个关于模型表面上点的局部照明的经验模型(empirical model) 由 发明 一个</description>
     </item>
     
     <item>
       <title>图形学入门-反射向量与Cg reflect函数</title>
-      <link>http://localhost:1313/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%8F%8D%E5%B0%84%E5%90%91%E9%87%8F%E4%B8%8Ecg-reflect%E5%87%BD%E6%95%B0-2/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%8F%8D%E5%B0%84%E5%90%91%E9%87%8F%E4%B8%8Ecg-reflect%E5%87%BD%E6%95%B0-2/</link>
       <pubDate>Fri, 21 Apr 2023 01:17:33 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%8F%8D%E5%B0%84%E5%90%91%E9%87%8F%E4%B8%8Ecg-reflect%E5%87%BD%E6%95%B0-2/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%8F%8D%E5%B0%84%E5%90%91%E9%87%8F%E4%B8%8Ecg-reflect%E5%87%BD%E6%95%B0-2/</guid>
       <description>前言💬 在计算机图形学中，光照模型是非常重要的一部分。 为了模拟现实中的光照效果，我们需要理解一些基本的光学原理。 本文将介绍反射向量的概念以及如何在Unity引擎中使用Cg reflect函数实现反射效果 一、什么是反射向量 在图形学中，反射向量是一个描述光线如何反射的重要概念。当光线照射</description>
     </item>
     
     <item>
       <title>图形学入门-Diffuse Shader接受多个光源的光照</title>
-      <link>http://localhost:1313/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%8F%8D%E5%B0%84%E5%90%91%E9%87%8F%E4%B8%8Ecg-reflect%E5%87%BD%E6%95%B0/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%8F%8D%E5%B0%84%E5%90%91%E9%87%8F%E4%B8%8Ecg-reflect%E5%87%BD%E6%95%B0/</link>
       <pubDate>Wed, 19 Apr 2023 00:15:03 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%8F%8D%E5%B0%84%E5%90%91%E9%87%8F%E4%B8%8Ecg-reflect%E5%87%BD%E6%95%B0/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%8F%8D%E5%B0%84%E5%90%91%E9%87%8F%E4%B8%8Ecg-reflect%E5%87%BD%E6%95%B0/</guid>
       <description>前言💬 在场景当中可能不止只有Directional Light，还有可能存在点光源等，其他的光源 我们之前实现的Diffuse Shader，只是针对了Directional Light进行光照着色 从上图可以看到，官方的Diffuse着色器针对不同的灯光，都有不同的响应 如果我们要去实现我</description>
     </item>
     
     <item>
       <title>图形学入门—实现漫反射着色器Diffuse Shader</title>
-      <link>http://localhost:1313/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%AE%9E%E7%8E%B0%E6%BC%AB%E5%8F%8D%E5%B0%84%E7%9D%80%E8%89%B2%E5%99%A8diffuse-shader/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%AE%9E%E7%8E%B0%E6%BC%AB%E5%8F%8D%E5%B0%84%E7%9D%80%E8%89%B2%E5%99%A8diffuse-shader/</link>
       <pubDate>Tue, 18 Apr 2023 00:37:52 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%AE%9E%E7%8E%B0%E6%BC%AB%E5%8F%8D%E5%B0%84%E7%9D%80%E8%89%B2%E5%99%A8diffuse-shader/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%AD%A6%E5%85%A5%E9%97%A8-%E5%AE%9E%E7%8E%B0%E6%BC%AB%E5%8F%8D%E5%B0%84%E7%9D%80%E8%89%B2%E5%99%A8diffuse-shader/</guid>
       <description>Ambient+Diffuse Diffuse是漫反射，它实际上包含2个部分，一个是Ambient环境光照，另外一个才是Diffuse 为什么需要环境光照？ 在显示世界当中，光照射在环境上，环境又会反射到物体上，在计算机上，我们为了模拟物体的反光，所以我们就直接使用固定的环境光照 Diffuse光照模型与向量计算 normalized</description>
     </item>
     
     <item>
       <title>光照渲染</title>
-      <link>http://localhost:1313/en/posts/shader/%E5%85%89%E7%85%A7%E6%B8%B2%E6%9F%93/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E5%85%89%E7%85%A7%E6%B8%B2%E6%9F%93/</link>
       <pubDate>Wed, 05 Apr 2023 22:59:59 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E5%85%89%E7%85%A7%E6%B8%B2%E6%9F%93/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E5%85%89%E7%85%A7%E6%B8%B2%E6%9F%93/</guid>
       <description>法线 💡 法线（normal line），是指始终垂直于某平面的直线。 在几何学中，法线指平面上垂直于曲线在某点的切线的一条线。 法线也应用于光学的平面镜反射上。 Python实现的光照渲染Demo （依赖包：numpy、opencv） 1、编写变换的矩阵包括移动、旋转、缩放、投影 import numpy as np from math import</description>
     </item>
     
     <item>
       <title>法向量和光照计算</title>
-      <link>http://localhost:1313/en/posts/shader/%E6%B3%95%E5%90%91%E9%87%8F%E5%92%8C%E5%85%89%E7%85%A7%E8%AE%A1%E7%AE%97/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E6%B3%95%E5%90%91%E9%87%8F%E5%92%8C%E5%85%89%E7%85%A7%E8%AE%A1%E7%AE%97/</link>
       <pubDate>Wed, 05 Apr 2023 22:58:57 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E6%B3%95%E5%90%91%E9%87%8F%E5%92%8C%E5%85%89%E7%85%A7%E8%AE%A1%E7%AE%97/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E6%B3%95%E5%90%91%E9%87%8F%E5%92%8C%E5%85%89%E7%85%A7%E8%AE%A1%E7%AE%97/</guid>
       <description>1、法向量：垂直于平面的向量，包括两个方向 在真正的模型顶点数据就会存储法向量，在存储过后，它抛弃了在数学概念上的两个方向的法向量 只保留了正方向的法向量 2、这里有一个很简单的示意图，蓝色是从顶点引出垂直于平面的法向量， 黄色的是从外部射向表面的光向量 💡 光的方向是相反的，一定是从模型指</description>
     </item>
     
     <item>
       <title>顶点变换-波纹效果</title>
-      <link>http://localhost:1313/en/posts/shader/%E9%A1%B6%E7%82%B9%E5%8F%98%E6%8D%A2-%E6%B3%A2%E7%BA%B9%E6%95%88%E6%9E%9C/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E9%A1%B6%E7%82%B9%E5%8F%98%E6%8D%A2-%E6%B3%A2%E7%BA%B9%E6%95%88%E6%9E%9C/</link>
       <pubDate>Wed, 05 Apr 2023 22:58:07 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E9%A1%B6%E7%82%B9%E5%8F%98%E6%8D%A2-%E6%B3%A2%E7%BA%B9%E6%95%88%E6%9E%9C/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E9%A1%B6%E7%82%B9%E5%8F%98%E6%8D%A2-%E6%B3%A2%E7%BA%B9%E6%95%88%E6%9E%9C/</guid>
       <description>简易的波纹效果 💡 利用Sin周期函数，让顶点的Y轴进行波动 Shader &amp;#34;ShaderLearning/VertexShader/wave&amp;#34; { Properties{ _Amplitude(&amp;#34;Amplitude&amp;#34;,float)=1 _Frequency(&amp;#34;Frequency&amp;#34;,Range(0,5))=1 _Speed(&amp;#34;_Speed&amp;#34;,float)=1 } SubShader { Pass { CGPROGRAM #pragma vertex vert #pragma fragment frag #include &amp;#34;UnityCG.cginc&amp;#34; float _Amplitude; float _Frequency; float _Speed; struct v2f { float4 vertex : POSITION; float4 color : COLOR; }; v2f vert (appdata_base v) { float up =sin(v.vertex.x)+_Time.y; // float4x4 m={ // 1,0,0,0, // 0,sin(up)/8+0.5,0,0, // 0,0,1,0, // 0,0,0,1 // };//由于Plane模型顶点的y值都为0和矩阵相乘的结果也都为0，所以定位没有进行移动 // v.vertex=mul(m,v.vertex); //A*sin(w*x+t) v.vertex.y+=_Amplitude*sin(v.vertex.z*_Frequency+_Time.y*_Speed); v2f o; o.vertex = UnityObjectToClipPos(v.vertex);</description>
     </item>
     
     <item>
       <title>顶点扭曲</title>
-      <link>http://localhost:1313/en/posts/shader/%E9%A1%B6%E7%82%B9%E6%89%AD%E6%9B%B2/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E9%A1%B6%E7%82%B9%E6%89%AD%E6%9B%B2/</link>
       <pubDate>Wed, 05 Apr 2023 22:56:23 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E9%A1%B6%E7%82%B9%E6%89%AD%E6%9B%B2/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E9%A1%B6%E7%82%B9%E6%89%AD%E6%9B%B2/</guid>
       <description>顶点扭曲Shader案例 💡 可以在Shader当中构建旋转矩阵，来实现顶点的旋转，从而达到模型的扭曲效果 Shader &amp;#34;ShaderLeaning/VertexDistortion/vf1&amp;#34; { Properties{ } SubShader{ Pass{ CGPROGRAM #pragma vertex vert #pragma fragment frag #include &amp;#34;UnityCG.cginc&amp;#34; struct v2f { float4 pos: POSITION; fixed4 col: COLOR; }; v2f vert(appdata_base v) { v2f o; float angle=length(v.vertex)*_SinTime.w;//计算顶点到中心点的模长，与SinTime</description>
     </item>
     
     <item>
       <title>顶点位移</title>
-      <link>http://localhost:1313/en/posts/shader/%E9%A1%B6%E7%82%B9%E4%BD%8D%E7%A7%BB/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E9%A1%B6%E7%82%B9%E4%BD%8D%E7%A7%BB/</link>
       <pubDate>Wed, 05 Apr 2023 22:55:47 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E9%A1%B6%E7%82%B9%E4%BD%8D%E7%A7%BB/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E9%A1%B6%E7%82%B9%E4%BD%8D%E7%A7%BB/</guid>
       <description>顶点位移Shader案例 💡 length(xy): 求向量模长度 等同于sqrt(x_x+y_y); 1、抬升地面 Shader &amp;#34;Custom/s_ten&amp;#34; { Properties{ _R(&amp;#34;R&amp;#34;,range(0,5))=1 } SubShader{ pass { CGPROGRAM #pragma vertex vert #pragma fragment frag #include &amp;#34;unitycg.cginc&amp;#34; float dis; float r; float _R; struct v2f { float4 pos:POSITION; fixed4 color : COLOR; }; v2f vert(appdata_base v) { //x、y坐标 float2 xy = v.vertex.xz; //求到圆心的距离，即半径 //float d = sqrt((xy.x - 0)*(xy.x - 0) + (xy.y-0)*(xy.y - 0)); //也可以使用下面的计算摸长的方式 float d = _R - length(xy);</description>
     </item>
     
     <item>
       <title>顶点颜色变换</title>
-      <link>http://localhost:1313/en/posts/shader/%E9%A1%B6%E7%82%B9%E9%A2%9C%E8%89%B2%E5%8F%98%E6%8D%A2/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E9%A1%B6%E7%82%B9%E9%A2%9C%E8%89%B2%E5%8F%98%E6%8D%A2/</link>
       <pubDate>Wed, 05 Apr 2023 22:53:06 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E9%A1%B6%E7%82%B9%E9%A2%9C%E8%89%B2%E5%8F%98%E6%8D%A2/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E9%A1%B6%E7%82%B9%E9%A2%9C%E8%89%B2%E5%8F%98%E6%8D%A2/</guid>
       <description>1、顶点颜色变换 // Upgrade NOTE: replaced &amp;#39;mul(UNITY_MATRIX_MVP,*)&amp;#39; with &amp;#39;UnityObjectToClipPos(*)&amp;#39; Shader &amp;#34;Custom/s_nine&amp;#34; { SubShader{ pass { CGPROGRAM #pragma vertex vert #pragma fragment frag #include &amp;#34;unitycg.cginc&amp;#34; float4x4 mvp; float4x4 rm; float4x4 sm; struct v2f { float4 pos:POSITION; fixed4 color : COLOR; }; v2f vert(appdata_base v) { v2f o; float4x4 m = mul(sm, UNITY_MATRIX_MVP); o.pos = mul(m,v.vertex); if (float(v.vertex.x) &amp;gt; 0) o.color = fixed4(1, 0, 0, 1);//显示为红色 else o.color = fixed4(0,0,1,1);//显示为蓝色 return o; } fixed4 frag(v2f IN) :COLOR{ return IN.color; } ENDCG } } } 运行结果：中间颜色自动渐变 2、改变某个顶点</description>
     </item>
     
     <item>
       <title>Uniform与Properties</title>
-      <link>http://localhost:1313/en/posts/shader/uniform%E4%B8%8Eproperties/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/uniform%E4%B8%8Eproperties/</link>
       <pubDate>Wed, 05 Apr 2023 22:51:59 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/uniform%E4%B8%8Eproperties/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/uniform%E4%B8%8Eproperties/</guid>
       <description>1.声明Properties，并使用其值 Shader &amp;#34;Custom/vertex_shader&amp;#34; { //必须位于SubShader之上 Properties{ _MainColor(&amp;#34;Main Color&amp;#34;,color) = (1,1,1,1) } SubShader{ pass { CGPROGRAM #pragma vertex vert #pragma fragment frag //必须将上面的Properties名称先进行声明，且名字必须与上面的一致 float4 _MainColor; struct v2f { float4 pos:POSITION; float2 objPos:TEXCOORDO; float4 col:COLOR; }; struct appdata_base { float2 pos:POSITION; float4 color:COLOR; }; //使用结构体的方式返回，此时不需要再指定一个具体的语</description>
     </item>
     
     <item>
       <title>MVP矩阵</title>
-      <link>http://localhost:1313/en/posts/shader/mvp%E7%9F%A9%E9%98%B5/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/mvp%E7%9F%A9%E9%98%B5/</link>
       <pubDate>Wed, 05 Apr 2023 22:51:14 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/mvp%E7%9F%A9%E9%98%B5/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/mvp%E7%9F%A9%E9%98%B5/</guid>
       <description>MVP矩阵是图形学中常用的一种矩阵变换方式，用于将三维世界坐标系中的物体转换到二维屏幕坐标系中进行显示。 MVP矩阵是由三个矩阵相乘得到的，它们分别是模型矩阵（Model Matrix）、视图矩阵（View Matrix）和投影矩阵（Projection Matrix）。 模型矩阵用于将物</description>
     </item>
     
     <item>
       <title>矩阵和变换</title>
-      <link>http://localhost:1313/en/posts/shader/%E7%9F%A9%E9%98%B5%E5%92%8C%E5%8F%98%E6%8D%A2/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E7%9F%A9%E9%98%B5%E5%92%8C%E5%8F%98%E6%8D%A2/</link>
       <pubDate>Wed, 05 Apr 2023 22:46:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E7%9F%A9%E9%98%B5%E5%92%8C%E5%8F%98%E6%8D%A2/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E7%9F%A9%E9%98%B5%E5%92%8C%E5%8F%98%E6%8D%A2/</guid>
       <description>2D变换矩阵 平移矩阵 旋转矩阵 示例代码 using UnityEngine; public class Matrix2DTransformDemo : MonoBehaviour { MeshRenderer _renderer; MeshFilter _filter; Mesh _mesh; void Awake() { if (!TryGetComponent(out _renderer)) { _renderer = gameObject.AddComponent(); _renderer.sharedMaterial = new Material(Shader.Find(&amp;#34;Standard&amp;#34;)); } if (!TryGetComponent(out _filter)) { _filter = gameObject.AddComponent(); _mesh=GenerateTriangleMesh(); _filter.sharedMesh = _mesh; } } void FixedUpdate() { Rotate(_mesh,1); } private Mesh GenerateTriangleMesh() { Mesh mesh = new Mesh(); mesh.vertices = new[] { new Vector3(0, 0.25f, 0),//0 new Vector3(0.25f, -0.25f, 0),//1 new Vector3(-0.25f, -0.25f, 0),//2 }; mesh.triangles = new[] {0,1,2}; mesh.RecalculateNormals(); return mesh; } private void Rotate(Mesh mesh,int degree) { float angle = degree * Mathf.PI/180; Vector3[] vertices = mesh.vertices; for (int i = 0; i &amp;lt; vertices.Length; i++) { vertices[i]=TransformVertex(vertices[i],angle); } mesh.SetVertices(vertices); mesh.RecalculateNormals(); } private Vector3 TransformVertex(Vector3 vertex,float angle) { var newX = vertex.x</description>
     </item>
     
     <item>
       <title>Vertex数据的输入与输出</title>
-      <link>http://localhost:1313/en/posts/shader/vertex%E6%95%B0%E6%8D%AE%E7%9A%84%E8%BE%93%E5%85%A5%E4%B8%8E%E8%BE%93%E5%87%BA/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/vertex%E6%95%B0%E6%8D%AE%E7%9A%84%E8%BE%93%E5%85%A5%E4%B8%8E%E8%BE%93%E5%87%BA/</link>
       <pubDate>Wed, 05 Apr 2023 22:42:27 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/vertex%E6%95%B0%E6%8D%AE%E7%9A%84%E8%BE%93%E5%85%A5%E4%B8%8E%E8%BE%93%E5%87%BA/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/vertex%E6%95%B0%E6%8D%AE%E7%9A%84%E8%BE%93%E5%85%A5%E4%B8%8E%E8%BE%93%E5%87%BA/</guid>
       <description>案例 在mesh网格中立方体的范围从-0.5到+0.5，当传入POSITION数据时才用了float2类型， 实际上只传入了xy两个分量，输出的pos经过float4重置组合，将w分量设为1，为了保证矩阵相乘时结果不出错， 把这样的pos传给片元着色器时，片元程序默认pos已经经过矩阵</description>
     </item>
     
     <item>
       <title>3D图形学中的矩阵变换（三）</title>
-      <link>http://localhost:1313/en/posts/shader/3d%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%B8%89/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/3d%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%B8%89/</link>
       <pubDate>Wed, 05 Apr 2023 22:39:33 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/3d%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%B8%89/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/3d%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%B8%89/</guid>
       <description>概述 计算机显示器是一个2D平面。OpenGL渲染时必须将一个3D的场景投影在屏幕上成为一个2D的图片。GL_PROJECTION矩阵的就是用作这种投影变换。首先，其将所有的顶点数据从视觉坐标系（眼坐标系）转化到裁剪空间。然后，通过除以裁剪坐标系中的w分量，将转化后的裁剪坐标变换成</description>
     </item>
     
     <item>
       <title>3D图形学中的矩阵变换（二）</title>
-      <link>http://localhost:1313/en/posts/shader/3d%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%BA%8C/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/3d%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%BA%8C/</link>
       <pubDate>Wed, 05 Apr 2023 22:39:06 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/3d%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%BA%8C/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/3d%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%BA%8C/</guid>
       <description>一. 摄像机 这里涉及到三维图形学中的摄像机的概念。大家肯定都玩过游戏，现在游戏发展速度都特别快，很多游戏世界都是3D的，例如国外的荒野大镖客、巫师以及国内最近比较火的原神。游戏世界中所有的物体，例如桌子、树木、动物以及交通工具等等，它们在游戏世界中都有一个特定的位置，这个位置就是它</description>
     </item>
     
     <item>
       <title>3D图形学中的矩阵变换（一）</title>
-      <link>http://localhost:1313/en/posts/shader/3d%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%B8%80/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/3d%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%B8%80/</link>
       <pubDate>Wed, 05 Apr 2023 22:38:24 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/3d%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%B8%80/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/3d%E5%9B%BE%E5%BD%A2%E5%AD%A6%E4%B8%AD%E7%9A%84%E7%9F%A9%E9%98%B5%E5%8F%98%E6%8D%A2%E4%B8%80/</guid>
       <description>一. 点和向量 平面中任意一个点可以用一个二元数列表示，在笛卡尔坐标系中(0, 0)点表示原点，(1, 1)表示原点往x轴方向移动1步，往y轴方向移动1步得到的点，而向量就形象的表示了这一过程，(0, 0)至(1, 1)点的向量就是(1 - 0, 1 - 0)，即(1, 1)。向量是一个表示方向和大小的概</description>
     </item>
     
     <item>
       <title>矩阵的逆</title>
-      <link>http://localhost:1313/en/posts/shader/%E7%9F%A9%E9%98%B5%E7%9A%84%E9%80%86/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E7%9F%A9%E9%98%B5%E7%9A%84%E9%80%86/</link>
       <pubDate>Wed, 05 Apr 2023 22:36:46 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E7%9F%A9%E9%98%B5%E7%9A%84%E9%80%86/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E7%9F%A9%E9%98%B5%E7%9A%84%E9%80%86/</guid>
       <description>逆的定义 $$ 矩阵的逆可以理解为 如果有一个矩阵M，它与它的逆M^{-1}相乘能够得到单位矩阵I $$ $$ 那么矩阵M^{-1}和矩阵M互为逆的关系 $$ 矩阵的逆满足于不管是左乘还是右乘它的逆，都能够得到单位矩阵 矩阵的求逆是一个重要的矩阵运算，这个运算只能用于方阵。 相乘时，结果时单位矩阵。用公式表</description>
     </item>
     
     <item>
       <title>矩阵行列式与余子式</title>
-      <link>http://localhost:1313/en/posts/shader/%E7%9F%A9%E9%98%B5%E8%A1%8C%E5%88%97%E5%BC%8F%E4%B8%8E%E4%BD%99%E5%AD%90%E5%BC%8F/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E7%9F%A9%E9%98%B5%E8%A1%8C%E5%88%97%E5%BC%8F%E4%B8%8E%E4%BD%99%E5%AD%90%E5%BC%8F/</link>
       <pubDate>Wed, 05 Apr 2023 22:35:22 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E7%9F%A9%E9%98%B5%E8%A1%8C%E5%88%97%E5%BC%8F%E4%B8%8E%E4%BD%99%E5%AD%90%E5%BC%8F/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E7%9F%A9%E9%98%B5%E8%A1%8C%E5%88%97%E5%BC%8F%E4%B8%8E%E4%BD%99%E5%AD%90%E5%BC%8F/</guid>
       <description>矩阵的行列式 方形矩阵M的行列式表示为M。 2 x 2矩阵的行列式如下： 更容易记住的方式，沿对角线和反对角线分别让元素相乘，然后使用对角线元素相乘的结果减去反对角线元素相乘的结果即可。 3 x 3矩阵的行列式如下： 使用容易记录的方式：先并排编写矩阵M的两个副本，然后沿对角线和反对角线分别让元素</description>
     </item>
     
     <item>
       <title>3D数学基础-矩阵</title>
-      <link>http://localhost:1313/en/posts/shader/3d%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80-%E7%9F%A9%E9%98%B5/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/3d%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80-%E7%9F%A9%E9%98%B5/</link>
       <pubDate>Wed, 05 Apr 2023 22:29:38 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/3d%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80-%E7%9F%A9%E9%98%B5/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/3d%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80-%E7%9F%A9%E9%98%B5/</guid>
       <description>矩阵 矩阵的维度和记法 矩阵类似于一个二维数组一样的东西，在计算机当中有些时候可以把二维数组当作矩阵来使用 只不过在数学的概念上是完全不同的 一般的用 NXC 表示一个N行C列的矩阵 矩阵的元素从1开始，每个元素分别用i和j表示它的行数和列数 m[i][j] 矩阵的转置 💡 矩阵的转置，就是将矩阵的行变成矩阵的列，矩</description>
     </item>
     
     <item>
       <title>3D数学基础-向量</title>
-      <link>http://localhost:1313/en/posts/shader/3d%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80-%E5%90%91%E9%87%8F/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/3d%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80-%E5%90%91%E9%87%8F/</link>
       <pubDate>Wed, 05 Apr 2023 22:28:23 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/3d%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80-%E5%90%91%E9%87%8F/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/3d%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80-%E5%90%91%E9%87%8F/</guid>
       <description>向量的基本定义 💡 向量(vector)描述了方向和大小。向量也有自己的运算规则 向量的加减法与数乘的意义见下图 在Unity中有三类向量，如下图所示 向量的加法 💡 将向量的对应分量进行相加即可 向量的减法 💡 将向量对应的分量相减，谁是被减数，结果向量就指向谁 向量和标量的乘法 💡 将标量与向量当中的</description>
     </item>
     
     <item>
       <title>3D数学基础-坐标系</title>
-      <link>http://localhost:1313/en/posts/shader/3d%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80-%E5%9D%90%E6%A0%87%E7%B3%BB/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/3d%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80-%E5%9D%90%E6%A0%87%E7%B3%BB/</link>
       <pubDate>Wed, 05 Apr 2023 22:27:23 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/3d%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80-%E5%9D%90%E6%A0%87%E7%B3%BB/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/3d%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80-%E5%9D%90%E6%A0%87%E7%B3%BB/</guid>
       <description>模型坐标系 2D中的模型坐标系 3D当中的模型坐标系 世界坐标系 2D中的世界坐标系 3D中的世界坐标系 摄像机坐标系 屏幕投影坐标系</description>
     </item>
     
     <item>
       <title>CG语言-函数</title>
-      <link>http://localhost:1313/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E5%87%BD%E6%95%B0/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E5%87%BD%E6%95%B0/</link>
       <pubDate>Wed, 05 Apr 2023 22:25:52 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E5%87%BD%E6%95%B0/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E5%87%BD%E6%95%B0/</guid>
       <description>自定义函数 在ShaderLabCG中函数的定义与C语言类似 void func () { } 定义函数的格式如下 返回值类型 函数名 (参数1,参数2,参数3,......) { //函数体 return//返回值 } 函数的前项声明 💡 在Cg语言当中函数的定义要写在后面调用它的方法之前 如果一定要写在后面可以使用前项声明 如</description>
     </item>
     
     <item>
       <title>CG语言-流程控制</title>
-      <link>http://localhost:1313/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</link>
       <pubDate>Wed, 05 Apr 2023 22:24:59 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</guid>
       <description>switch…case 💡 需要注意的是早期版本Cg不支持switch…case语句，但是保留了这些关键字！ switch(条件变量) { case 条件1: [语句块] break; case 条件2: [语句块] break; ... default: [语句块] break; } 示例如下： Shader &amp;#34;lxt610/NewSurfaceShaderTest2&amp;#34; { SubShader { Pass { CGPROGRAM #pragma fragment frag #pragma vertex vert void vert(in float2 objPos:POSITION,out float4 pos:POSITION,out float4 col:COLOR0) { pos = float4(objPos,0,1); col = pos; } void frag(inout float4 col:COLOR0) { col = float4(1,1,0,1); /</description>
     </item>
     
     <item>
       <title>CG语言-数据类型和swizzle操作</title>
-      <link>http://localhost:1313/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8Cswizzle%E6%93%8D%E4%BD%9C/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8Cswizzle%E6%93%8D%E4%BD%9C/</link>
       <pubDate>Wed, 05 Apr 2023 22:23:17 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8Cswizzle%E6%93%8D%E4%BD%9C/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8Cswizzle%E6%93%8D%E4%BD%9C/</guid>
       <description>Shader targets ‘#pragma target’ 值列表 这是 Unity 使用的着色器模型列表 注意：Unity 的着色器模型与 DirectX 着色器模型和 OpenGL 版本要求类似，但并不完全对应。 仔细阅读说明以确保您了解其中的差异。 值 描述 支持 Equivalent #pragma require values 2.0 相当于 DirectX 着色器模型 2.0。有限数量的算术和纹理指令； 8个内插器； 没有顶点纹理采样；</description>
     </item>
     
     <item>
       <title>CG语言- Profile和基本数据类型</title>
-      <link>http://localhost:1313/en/posts/shader/cg%E8%AF%AD%E8%A8%80-profile%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/cg%E8%AF%AD%E8%A8%80-profile%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</link>
       <pubDate>Wed, 05 Apr 2023 22:22:32 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/cg%E8%AF%AD%E8%A8%80-profile%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/cg%E8%AF%AD%E8%A8%80-profile%E5%92%8C%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</guid>
       <description>Profile 一个 Cg Profile定义了一个“被特定图形硬件或API所支持的Cg语言子集” 任意一种shader language都是基于可编程图形硬件的寄存器、指令集等 这也就意味着：不同的图形硬件对应着不同的功能子集。这些可选的语言功能包括某些控制结构和标准函数库。 profile还定义了数据类</description>
     </item>
     
     <item>
       <title>CG语言-输入输出和语义</title>
-      <link>http://localhost:1313/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%92%8C%E8%AF%AD%E4%B9%89/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%92%8C%E8%AF%AD%E4%B9%89/</link>
       <pubDate>Wed, 05 Apr 2023 22:21:39 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%92%8C%E8%AF%AD%E4%B9%89/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/cg%E8%AF%AD%E8%A8%80-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%92%8C%E8%AF%AD%E4%B9%89/</guid>
       <description>和编写表面着色器不一样，在编写基于顶点和片元着色器当中，需要在SubShader中写上Pass通道，（至少要有一个Pass通道） SubShader { pass { } } 在ShaderLab中作为CG语言处理 在Pass通道中使用CGPROGRAM 和ENDCG 包裹住编写的CG代码片段 Shader &amp;#34;Leaning/CGPROGRAM/cg1&amp;#34; { SubShader { pass { CGPROGRAM //编写的代</description>
     </item>
     
     <item>
       <title>SurfaceShader 表面着色器</title>
-      <link>http://localhost:1313/en/posts/shader/surfaceshader-%E8%A1%A8%E9%9D%A2%E7%9D%80%E8%89%B2%E5%99%A8/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/surfaceshader-%E8%A1%A8%E9%9D%A2%E7%9D%80%E8%89%B2%E5%99%A8/</link>
       <pubDate>Wed, 05 Apr 2023 22:16:55 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/surfaceshader-%E8%A1%A8%E9%9D%A2%E7%9D%80%E8%89%B2%E5%99%A8/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/surfaceshader-%E8%A1%A8%E9%9D%A2%E7%9D%80%E8%89%B2%E5%99%A8/</guid>
       <description>完整案例代码 Shader &amp;#34;Learning/2.SurfaceShader/SurfaceShader1&amp;#34; { Properties { _Color (&amp;#34;Color&amp;#34;, Color) = (1,1,1,1) _MainTex (&amp;#34;Albedo (RGB)&amp;#34;, 2D) = &amp;#34;white&amp;#34; {} _Glossiness (&amp;#34;Smoothness&amp;#34;, Range(0,1)) = 0.5 _Metallic (&amp;#34;Metallic&amp;#34;, Range(0,1)) = 0.0 } SubShader { Tags { &amp;#34;RenderType&amp;#34;=&amp;#34;Opaque&amp;#34; } LOD 200 CGPROGRAM // Physically based Standard lighting model, and enable shadows on all light types #pragma surface surf Standard fullforwardshadows // Use shader model 3.0 target, to get nicer looking lighting #pragma target 3.0 sampler2D _MainTex; struct Input { float2 uv_MainTex; }; half _Glossiness; half _Metallic; fixed4 _Color; // Add instancing support for this shader. You need to check &amp;#39;Enable Instancing&amp;#39; on materials that use the shader. // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing. // #pragma instancing_options assumeuniformscaling UNITY_INSTANCING_BUFFER_START(Props) // put more per-instance properties here UNITY_INSTANCING_BUFFER_END(Props) void surf (Input IN, inout SurfaceOutputStandard o) { // Albedo comes from</description>
     </item>
     
     <item>
       <title>Fixed function shader固定功能着色器</title>
-      <link>http://localhost:1313/en/posts/shader/fixed-function-shader%E5%9B%BA%E5%AE%9A%E5%8A%9F%E8%83%BD%E7%9D%80%E8%89%B2%E5%99%A8/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/fixed-function-shader%E5%9B%BA%E5%AE%9A%E5%8A%9F%E8%83%BD%E7%9D%80%E8%89%B2%E5%99%A8/</link>
       <pubDate>Wed, 05 Apr 2023 22:02:56 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/fixed-function-shader%E5%9B%BA%E5%AE%9A%E5%8A%9F%E8%83%BD%E7%9D%80%E8%89%B2%E5%99%A8/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/fixed-function-shader%E5%9B%BA%E5%AE%9A%E5%8A%9F%E8%83%BD%E7%9D%80%E8%89%B2%E5%99%A8/</guid>
       <description>Fixed function shader从字面意思理解，就是固定功能的渲染着色器 这种Shader功能有限，但速度却是最快的 但是能够在基本上所有的硬件平台上执行 案例1：固定着色 Shader&amp;#34;Unlit/firstFixedShader&amp;#34; { SubShader { pass { color(1,1,1,1) } } } Properties 使用Properties，提供外部的Shader属性参数配置 案例 Shader&amp;#34;Unlit/firstFixedShader&amp;#34; { Properties { _Color(&amp;#34;Main Color&amp;#34;,color)=(1,1,1,1) } SubShader { pass { //color(1,0,0,1) color[_Color] } } } () 小括号是固</description>
     </item>
     
     <item>
       <title>ShaderLab基本结构</title>
-      <link>http://localhost:1313/en/posts/shader/shaderlab%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/shaderlab%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/</link>
       <pubDate>Wed, 05 Apr 2023 21:58:23 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/shaderlab%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/shaderlab%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/</guid>
       <description>Shader&amp;#34;ParentName/ShaderName&amp;#34; { Properties { } SubShader { Pass { } } } 格式 Propertyies参数列表 提供暴露的配置字段配置Shader 属性的格式 _属性名 (&amp;quot;外部名称&amp;quot;, 属性类型) = 初始化值 SubShader 一个Shader中至少包含一个SubShader 一个ShaderLab中不能没有SubShader 一个Shade</description>
     </item>
     
     <item>
       <title>Shader的组织形式</title>
-      <link>http://localhost:1313/en/posts/shader/shader%E7%9A%84%E7%BB%84%E7%BB%87%E5%BD%A2%E5%BC%8F/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/shader%E7%9A%84%E7%BB%84%E7%BB%87%E5%BD%A2%E5%BC%8F/</link>
       <pubDate>Wed, 05 Apr 2023 21:57:14 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/shader%E7%9A%84%E7%BB%84%E7%BB%87%E5%BD%A2%E5%BC%8F/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/shader%E7%9A%84%E7%BB%84%E7%BB%87%E5%BD%A2%E5%BC%8F/</guid>
       <description>UnityShader的形态 SurfaceShader 💡 这是一种在早期Unity版本中被鼓励使用的Shader，在Unity中创建Shader代码时，默认创建的就是SurfaceShader 💡 图形渲染管线能够识别的就只有两种Shader，VertexShader和FragmentShader Surfac</description>
     </item>
     
     <item>
       <title>图形处理器（GPU）简史</title>
-      <link>http://localhost:1313/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86%E5%99%A8gpu%E7%AE%80%E5%8F%B2/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86%E5%99%A8gpu%E7%AE%80%E5%8F%B2/</link>
       <pubDate>Wed, 05 Apr 2023 21:56:22 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86%E5%99%A8gpu%E7%AE%80%E5%8F%B2/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86%E5%99%A8gpu%E7%AE%80%E5%8F%B2/</guid>
       <description>GPU发展简史 GPU（Graphic Processing Unit），中文翻译为“图形处理器”，在现代计算机系统中的作用变得原来越重要。 20世纪六、七十年代，受硬件条件的限制，图形显示器只是计算机输出的一种工具。限于硬件发展水平，人们只是纯粹聪软件实现的角度来考虑图形用户界面的规范问题。此时还没有G</description>
     </item>
     
     <item>
       <title>Shader和渲染管线</title>
-      <link>http://localhost:1313/en/posts/shader/shader%E5%92%8C%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF/</link>
+      <link>https://EitanWong.github.io/en/posts/shader/shader%E5%92%8C%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF/</link>
       <pubDate>Wed, 05 Apr 2023 21:54:28 +0000</pubDate>
       
-      <guid>http://localhost:1313/en/posts/shader/shader%E5%92%8C%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF/</guid>
+      <guid>https://EitanWong.github.io/en/posts/shader/shader%E5%92%8C%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF/</guid>
       <description>什么是Shader Shader着色器，是一种较为短小的程序片段，用于告诉图形硬件如何计算和输出图像，过去由汇编语言来编写，现在也可以使用高级语言来编写。 💡 Shader是可编程图形管线的算法片段 它主要分为Vertex Shader和Fragment Shader 什么是渲染管线 渲染管线也称为渲染流</description>
     </item>
     
